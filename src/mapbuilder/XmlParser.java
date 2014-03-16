@@ -99,7 +99,7 @@ public class XmlParser {
 	
 	
 
-	public void parseAddress(String filepath) {
+	public MapNode parseAddress(String filepath) {
 		
 		try {
 			File xmlfile = new File(filepath);
@@ -116,6 +116,7 @@ public class XmlParser {
 				double lat = Double.parseDouble(getAddInfo("place", "lat", el));
 				double lon = Double.parseDouble(getAddInfo("place", "lon", el));
 				MapNode mn = new MapNode(place_id, lat, lon);
+				return mn;
 			}
 			else {
 				//Dialogue box needed
@@ -126,6 +127,7 @@ public class XmlParser {
 			System.out.println("ERROR: Problem in parseAddress");
 			e.printStackTrace();
 		}
+		return null;
 		
 	}
 	
