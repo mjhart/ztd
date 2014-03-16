@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project default="jar">
+  <basename property="project" file="${basedir}"/>
+
+  <property name="main.src" location="src"/>
+  <property name="main.derived" location="derived"/>
+  <property name="derived.classes" location="${main.derived}/classes"/>
+  <property name="derived.jar" location="${main.derived}/${project}.jar"/>
+  <property name="derived.javadoc" location="${main.derived}/javadoc"/>
+
+  <path id="class.path">
+    <fileset dir="lib">
+      <include name="**/*.jar"/>
+      <include name="**/*.zip"/>
+    </fileset>
+  </path>
+
+  <target name="compile">
+    <mkdir dir="${derived.classes}"/>
+    <javac srcdir="${main.src}" destdir="${derived.classes}" debug="true" includeantruntime="true">
+      <classpath refid="class.path"/>
+      <compilerarg value="-Xlint:all"/>
+      <compilerarg value="-Werror"/>
+    </javac>
+  </target>
+
+  <target name="jar" depends="compile">
+    <jar destfile="${derived.jar}" basedir="${derived.classes}" includes="**/*.class"/>
+  </target>
+
+  <target name="javadoc">
+    <javadoc sourcepath="src" destdir="${derived.javadoc}">
+      <classpath refid="class.path"/>
+    </javadoc>
+  </target>
+
+  <target name="clean">
+    <delete dir="${app.derived}"/>
+  </target>
+
+</project>
