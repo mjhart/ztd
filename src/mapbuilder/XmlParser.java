@@ -57,11 +57,13 @@ public class XmlParser {
 					
 					List<String> mapnodeids = getMapNodes("nd", el);
 					for (String id: mapnodeids) {
-						if (mnhash.get(id) == null) {
+						MapNode n = mnhash.get(id);
+						if ((n = mnhash.get(id)) == null) {
 							System.out.println("ERROR: Ways and nodes do not match in input file");
 						}
 						else {
-							mw.addNode(mnhash.get(id));
+							mw.addNode(n);
+							n.addWay(mw);
 						}
 					}
 					
@@ -140,6 +142,18 @@ public class XmlParser {
 			res = el.getAttribute(att);
 		}
 		return res;
+	}
+	
+	public List<MapWay> getWays() {
+		return mapways;
+	}
+	
+	public List<MapNode> getNodes() {
+		return mapnodes;
+	}
+	
+	public HashMap<String, MapNode> getNodesHash() {
+		return mnhash;
 	}
 
 }

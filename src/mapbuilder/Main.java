@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
-
+import cs195n.Vec2f;
 import gui.SpriteImp;
 
 /**
@@ -17,10 +17,11 @@ public class Main {
 	public static void main(String[] argv) {
 		XmlParser x = new XmlParser();
 		x.parseBox("69bs.xml");
-		Retriever r = new Retriever();
-		r.getBox(-71.40794, 41.82544, -71.40086, 41.82944);
-		r.getFromAddress("228 East Meade Street, Philadelphia PA");
-		x.parseAddress("address2.xml");
+		//System.out.println(PathFinder.findSrcs(x.getNodes(), new Vec2f(-71.4003000f, 41.8292000f), new Vec2f(-71.4052900f, 41.8256900f)));
+		//Retriever r = new Retriever();
+		//r.getBox(-71.40794, 41.82544, -71.40086, 41.82944);
+		//r.getFromAddress("228 East Meade Street, Philadelphia PA");
+		//x.parseAddress("address2.xml");
 		JFrame j = new GuiFrame();
 	}
 	
