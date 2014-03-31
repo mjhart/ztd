@@ -99,10 +99,9 @@ public class XmlParser {
 	
 	
 
-	public MapNode parseAddress(String filepath) {
+	public MapNode parseAddress(File xmlfile) {
 		
 		try {
-			File xmlfile = new File(filepath);
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document doc = db.parse(xmlfile);
@@ -116,6 +115,9 @@ public class XmlParser {
 				double lat = Double.parseDouble(getAddInfo("place", "lat", el));
 				double lon = Double.parseDouble(getAddInfo("place", "lon", el));
 				MapNode mn = new MapNode(place_id, lat, lon);
+				System.out.println(mn.id);
+				System.out.println(mn.lat);
+				System.out.println(mn.lon);
 				return mn;
 			}
 			else {
