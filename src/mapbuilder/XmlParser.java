@@ -17,18 +17,19 @@ public class XmlParser {
 	private List<MapNode> mapnodes;
 	private List<MapWay> mapways;
 	private HashMap<String, MapNode> mnhash;
+	private boolean doneparsing;
 	
 	public XmlParser() {
 		mapnodes = new ArrayList<MapNode>(0);
 		mapways = new ArrayList<MapWay>(0);
 		mnhash = new HashMap<String, MapNode>();
+		doneparsing = false;
 	}
 		
-	public void parseBox(String filepath) {
+	public List<MapWay> parseBox(File xmlfile) {
 		
 		try {
-		
-			File xmlfile = new File(filepath);
+
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document doc = db.parse(xmlfile);
@@ -45,7 +46,6 @@ public class XmlParser {
 					mapnodes.add(mn);
 				}
 			}
-
 			
 			NodeList wnodes = doc.getElementsByTagName("way");
 			for (int i = 0; i < wnodes.getLength(); i++) {
@@ -53,9 +53,9 @@ public class XmlParser {
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
 					Element el = (Element) node;
 					MapWay mw = new MapWay(el.getAttribute("id"));
+					mapways.add(mw);
 					
-					
-					List<String> mapnodeids = getMapNodes("nd", el);
+					List<String> mapnodeids = XmlParser.getMapNodes("nd", el);
 					for (String id: mapnodeids) {
 						MapNode n = mnhash.get(id);
 						if ((n = mnhash.get(id)) == null) {
@@ -69,6 +69,12 @@ public class XmlParser {
 					
 				}
 			}
+			
+			System.out.println("Node hashmap size " + mnhash.size());
+			System.out.println("Node list size " + mapnodes.size());
+			System.out.println("Way list size " + mapways.size());
+			doneparsing = true;
+			return mapways;
 		
 		}
 		catch (NumberFormatException nfe) {
@@ -79,7 +85,7 @@ public class XmlParser {
 			e.printStackTrace();
 		}
 		
-	
+		return null;
 	
 	}
 	
@@ -145,6 +151,10 @@ public class XmlParser {
 		}
 		return res;
 	}
+	
+	
+	
+	//TODO Make these contingent on doneparsing
 	
 	public List<MapWay> getWays() {
 		return mapways;

@@ -1,11 +1,15 @@
-package mapbuilder;
+package ztdpac;
 
 import java.awt.BorderLayout;
 import java.io.File;
 
 import javax.swing.JFrame;
 
+import mapbuilder.Retriever;
+import mapbuilder.XmlParser;
+
 import cs195n.Vec2f;
+import gui.MaxGuiFrame;
 import gui.SpriteImp;
 
 /**
@@ -17,13 +21,13 @@ import gui.SpriteImp;
 public class Main {
 	public static void main(String[] argv) {
 		XmlParser x = new XmlParser();
-
 //		x.parseBox("/gpfs/main/home/mmkaplan/course/cs032/ztd/69bs.xml");
-		Retriever r = new Retriever();
-//		r.getBox(-71.40794, 41.82544, -71.40086, 41.82944);
-		File sta = r.getFromAddress("228 East Meade Street, Philadelphia PA");
+		File box = Retriever.getBox(-71.40794, 41.82544, -71.40086, 41.82944);
+
+		File sta = Retriever.getFromAddress("228 East Meade Street, Philadelphia PA");
 		x.parseAddress(sta);
-//		JFrame j = new GuiFrame();
+		MaxGuiFrame j = new MaxGuiFrame();
+		j.drawWays(x.parseBox(box));
 		System.out.println("Done");
 		return;
 

@@ -16,7 +16,7 @@ public class Retriever {
 	
 	
 	
-	public File getBox(double left, double bottom, double right, double top) {
+	public static File getBox(double left, double bottom, double right, double top) {
 		String address = "http://api.openstreetmap.org/api/0.6/map?bbox=";
 		address = address + left + ",";
 		address = address + bottom + ",";
@@ -34,7 +34,7 @@ public class Retriever {
 			while (line != null) {
 				System.out.println(line);
 				pw.write(line);
-				in.readLine();
+				line = in.readLine();
 			}
 			
 			in.close();
@@ -57,7 +57,7 @@ public class Retriever {
 	}
 	
 	
-	public File getFromAddress(String stadd) {
+	public static File getFromAddress(String stadd) {
 		String address = "http://nominatim.openstreetmap.org/search?q=";
 		String[] staddarr = stadd.split("\\s+");
 		int len = staddarr.length;
