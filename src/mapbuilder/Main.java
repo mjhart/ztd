@@ -5,7 +5,7 @@ import java.io.File;
 
 import javax.swing.JFrame;
 
-
+import cs195n.Vec2f;
 import gui.SpriteImp;
 
 /**
@@ -17,6 +17,7 @@ import gui.SpriteImp;
 public class Main {
 	public static void main(String[] argv) {
 		XmlParser x = new XmlParser();
+
 //		x.parseBox("/gpfs/main/home/mmkaplan/course/cs032/ztd/69bs.xml");
 		Retriever r = new Retriever();
 //		r.getBox(-71.40794, 41.82544, -71.40086, 41.82944);
@@ -25,6 +26,7 @@ public class Main {
 //		JFrame j = new GuiFrame();
 		System.out.println("Done");
 		return;
+
 	}
 	
 }
@@ -39,7 +41,7 @@ class GuiFrame extends JFrame {
 		setSize(600, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(true);
-		SpriteImp s = new SpriteImp("/gpfs/main/home/mmkaplan/course/cs032/ztd/castle.jpg");
+		SpriteImp s = new SpriteImp("castle.jpg");
 		this.add(s);
 		setVisible(true);
 	}

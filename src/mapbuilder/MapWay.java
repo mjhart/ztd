@@ -1,6 +1,7 @@
 package mapbuilder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MapWay {
@@ -18,7 +19,7 @@ public class MapWay {
 	}
 	
 	public List<MapNode> getNodes() {
-		return mapnodes;
+		return Collections.unmodifiableList(mapnodes);
 	}
 	
 
