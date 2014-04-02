@@ -21,8 +21,8 @@ import gui.SpriteImp;
 public class Main {
 	public static void main(String[] argv) {
 		XmlParser x = new XmlParser();
-//		x.parseBox("/gpfs/main/home/mmkaplan/course/cs032/ztd/69bs.xml");
 		File box = Retriever.getBox(-71.40794, 41.82544, -71.40086, 41.82944);
+//		File box = Retriever.getBox(-117.87651, 34.04432, -117.86809, 34.04876);
 
 		File sta = Retriever.getFromAddress("228 East Meade Street, Philadelphia PA");
 		x.parseAddress(sta);
