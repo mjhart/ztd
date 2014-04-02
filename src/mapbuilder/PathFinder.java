@@ -21,19 +21,19 @@ public class PathFinder {
 	public List<MapNode> findSrcs(List<MapNode> nodeList, Vec2f max, Vec2f min) {
 		List<MapNode> results = new LinkedList<MapNode>();
 		for(MapNode n : nodeList) {
-			if(n.lon >= max.x) {
+			if(n.lon <= max.x && n.lon + 0.0001 > max.x) {
 				results.add(n);
 				continue;
 			}
-			if(n.lat >= max.y) {
+			if(n.lat <= max.y && n.lat + 0.0001 > max.y) {
 				results.add(n);
 				continue;
 			}
-			if(n.lon <= min.x) {
+			if(n.lon >= min.x && n.lon - 0.0001 < min.x) {
 				results.add(n);
 				continue;
 			}
-			if(n.lat <= min.y) {
+			if(n.lat >= min.y && n.lat - 0.0001 < min.y) {
 				results.add(n);
 				continue;
 			}
@@ -41,7 +41,7 @@ public class PathFinder {
 		return results;
 	}
 	
-	public void findPaths(List<MapNode> srcList, MapNode base, List<MapNode> nodes, List<MapWay> ways) {
+	public List<MapNode> findPaths(List<MapNode> srcList, MapNode base, List<MapNode> nodes, List<MapWay> ways) {
 		//HashMap<MapNode, MapNode> prev = new HashMap<MapNode, MapNode>();
 		HashSet<MapNode> visited = new HashSet<MapNode>();
 		HashMap<MapNode, Integer> dist = new HashMap<MapNode, Integer>();
@@ -61,6 +61,7 @@ public class PathFinder {
 		while(!pq.isEmpty()) {
 			node = pq.poll();
 			System.out.println(node);
+			Vec2f nv = new Vec2f((float)node.lon,(float) node.lat);
 			visited.add(node);
 			
 			if(srcList.contains(node)) {
@@ -70,8 +71,12 @@ public class PathFinder {
 			
 			for(MapNode nbor : getAdjacentNodes(node)) {
 				if(!visited.contains(nbor)) {
-					if(dist.get(node) + 1 < dist.get(nbor)) {
-						dist.put(nbor, dist.get(node)+1);
+					
+					Vec2f nv2 = new Vec2f((float)node.lon,(float) node.lat);
+					float d = nv.dist2(nv2);
+					
+					if(dist.get(node) + d < dist.get(nbor)) {
+						dist.put(nbor, (int) (dist.get(node)+d));
 						pq.remove(nbor);
 						pq.add(nbor);
 						nbor.setNext(node);
@@ -80,7 +85,7 @@ public class PathFinder {
 			}
 		}
 		
-		System.out.println(spawns);
+		return spawns;
 	}
 	
 	private List<MapNode> getAdjacentNodes(MapNode node) {
