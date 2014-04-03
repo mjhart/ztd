@@ -12,7 +12,6 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import mapbuilder.Const;
 import mapbuilder.DistConverter;
 import mapbuilder.MapNode;
 import mapbuilder.MapWay;
@@ -34,8 +33,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private MapNode base;
 	
 	private Vec2i size;
-	private double[] wMin;
-	private double[] wMax;
+	private double[] wMin = {0,0};
+	private double[] wMax = {0,0};
 	
 	public TestFrontEnd(String title, boolean fullscreen) {
 		super(title, fullscreen);
@@ -48,13 +47,15 @@ public class TestFrontEnd extends SwingFrontEnd {
 		
 //		File sta = Retriever.getFromAddress("228 East Meade Street, Philadelphia, PA");
 //		File sta = Retriever.getFromAddress("69 Brown Street, Providence, RI");
-		File sta = Retriever.getFromAddress("Av. Andres Bello 2800, Las Condes, Santiago, Chile");
+//		File sta = Retriever.getFromAddress("Av. Andres Bello 2800, Las Condes, Santiago, Chile");
+//		File sta = Retriever.getFromAddress("8 East 86th Street, New York, United States");
+		File sta = Retriever.getFromAddress("Eiffel Tower");
+
 			
 
 		XmlParser x = new XmlParser();
 		MapNode cent = x.parseAddress(sta);
-		Const c = new Const(cent.lat, cent.lon);
-		DistConverter dc = new DistConverter(c);
+		DistConverter dc = new DistConverter(cent.lat, cent.lon);
 		System.out.println(dc.getLeft(cent.lon));
 		System.out.println(dc.getBott(cent.lat));
 		System.out.println(dc.getRight(cent.lon));
