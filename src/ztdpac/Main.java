@@ -24,11 +24,12 @@ import gui.SpriteImp;
  */
 public class Main {
 	public static void main(String[] argv) {
-		XmlParser x = new XmlParser();
-//		File box = Retriever.getBox(-71.40794, 41.82544, -71.40086, 41.82944);
-		File sta = Retriever.getFromAddress("228 East Meade Street, Philadelphia, PA");
+//		File sta = Retriever.getFromAddress("228 East Meade Street, Philadelphia, PA");
 //		File sta = Retriever.getFromAddress("69 Brown Street, Providence, RI");
+		File sta = Retriever.getFromAddress("Av. Andres Bello 2800, Las Condes, Santiago, Chile");
+			
 
+		XmlParser x = new XmlParser();
 		MapNode cent = x.parseAddress(sta);
 		Const c = new Const(cent.lat, cent.lon);
 		DistConverter dc = new DistConverter(c);

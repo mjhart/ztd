@@ -12,6 +12,8 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import mapbuilder.Const;
+import mapbuilder.DistConverter;
 import mapbuilder.MapNode;
 import mapbuilder.MapWay;
 import mapbuilder.PathFinder;
@@ -32,8 +34,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private MapNode base;
 	
 	private Vec2i size;
-	private double[] wMin = {-71.40794f-0.003, 41.82544f-0.003};
-	private double[] wMax = {-71.40086f+0.003, 41.82944f+0.003};
+	private double[] wMin;
+	private double[] wMax;
 	
 	public TestFrontEnd(String title, boolean fullscreen) {
 		super(title, fullscreen);
@@ -44,16 +46,36 @@ public class TestFrontEnd extends SwingFrontEnd {
 		super(title, fullscreen, size);
 		super.setDebugMode(true);
 		
-		
+//		File sta = Retriever.getFromAddress("228 East Meade Street, Philadelphia, PA");
+//		File sta = Retriever.getFromAddress("69 Brown Street, Providence, RI");
+		File sta = Retriever.getFromAddress("Av. Andres Bello 2800, Las Condes, Santiago, Chile");
+			
+
 		XmlParser x = new XmlParser();
-		File box = Retriever.getBox(-71.40794, 41.82544, -71.40086, 41.82944);
+		MapNode cent = x.parseAddress(sta);
+		Const c = new Const(cent.lat, cent.lon);
+		DistConverter dc = new DistConverter(c);
+		System.out.println(dc.getLeft(cent.lon));
+		System.out.println(dc.getBott(cent.lat));
+		System.out.println(dc.getRight(cent.lon));
+		System.out.println(dc.getTop(cent.lat));
+		wMin[0] = dc.getLeft(cent.lon);
+		wMin[1] = dc.getBott(cent.lat);
+		wMax[0] = dc.getRight(cent.lon);
+		wMax[1] = dc.getTop(cent.lat);
+
+		
+		File box = Retriever.getBox(dc.getLeft(cent.lon), dc.getBott(cent.lat), dc.getRight(cent.lon), dc.getTop(cent.lat));
+		
+//		XmlParser x = new XmlParser();
+//		File box = Retriever.getBox(-71.40794, 41.82544, -71.40086, 41.82944);
 		ways = x.parseBox(box);
 		nodes = x.getNodes();
 		
-		PathFinder pf = new PathFinder();
-		base = x.getNodesHash().get("1955930561");
-		srcs = pf.findSrcs(x.getNodes(), new Vec2f(-71.40086f, 41.82944f), new Vec2f(-71.40794f, 41.82544f));
-		srcs = pf.findPaths(srcs, base, x.getNodes(), x.getWays());
+//		PathFinder pf = new PathFinder();
+//		base = x.getNodesHash().get("5980360728");
+//		srcs = pf.findSrcs(x.getNodes(), new Vec2f(-71.40086f, 41.82944f), new Vec2f(-71.40794f, 41.82544f));
+//		srcs = pf.findPaths(srcs, base, x.getNodes(), x.getWays());
 		super.startup();
 	}
 
@@ -78,26 +100,26 @@ public class TestFrontEnd extends SwingFrontEnd {
 		
 		g.setColor(java.awt.Color.RED);
 		g.setStroke(new BasicStroke(3));
-		for(MapNode n : srcs) {
-			MapNode cur = n;
-			MapNode next = cur.getNext();
-			while(next!=null) {
-				g.drawLine(lonToX(cur.lon), latToY(cur.lat), lonToX(next.lon), latToY(next.lat));
-				//System.out.println(String.format("Drawing line from : %d %d to %d %d", lonToX(cur.lon), latToY(cur.lat), lonToX(cur.lon), latToY(cur.lat)));
-				cur = next;
-				next = next.getNext();
-			}
-			//System.out.println("new path\n");
-		}
+//		for(MapNode n : srcs) {
+//			MapNode cur = n;
+//			MapNode next = cur.getNext();
+//			while(next!=null) {
+//				g.drawLine(lonToX(cur.lon), latToY(cur.lat), lonToX(next.lon), latToY(next.lat));
+//				//System.out.println(String.format("Drawing line from : %d %d to %d %d", lonToX(cur.lon), latToY(cur.lat), lonToX(cur.lon), latToY(cur.lat)));
+//				cur = next;
+//				next = next.getNext();
+//			}
+//			//System.out.println("new path\n");
+//		}
 		//System.exit(0);
 		
 		g.setColor(java.awt.Color.ORANGE);
-		for(MapNode n : srcs) {
-			g.drawOval(lonToX(n.lon), latToY(n.lat), 3, 3);
-		}
+//		for(MapNode n : srcs) {
+//			g.drawOval(lonToX(n.lon), latToY(n.lat), 3, 3);
+//		}
 		
 		g.setColor(java.awt.Color.GREEN);
-		g.drawOval(lonToX(base.lon), latToY(base.lat), 3, 3);
+//		g.drawOval(lonToX(base.lon), latToY(base.lat), 3, 3);
 		
 	}
 
