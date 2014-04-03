@@ -12,6 +12,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import mapbuilder.DebugPathFinder;
 import mapbuilder.MapNode;
 import mapbuilder.MapWay;
 import mapbuilder.PathFinder;
@@ -28,12 +29,15 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private List<MapNode> nodes;
 	private List<MapWay> ways;
 	private List<MapNode> srcs;
+	private List<MapNode> spawns;
 	
 	private MapNode base;
+	private DebugPathFinder pf;
+	private XmlParser x;
 	
 	private Vec2i size;
-	private double[] wMin = {-71.40794f-0.003, 41.82544f-0.003};
-	private double[] wMax = {-71.40086f+0.003, 41.82944f+0.003};
+	private double[] wMin = {-71.40794f, 41.82544f};
+	private double[] wMax = {-71.40086f, 41.82944f};
 	
 	public TestFrontEnd(String title, boolean fullscreen) {
 		super(title, fullscreen);
@@ -45,15 +49,16 @@ public class TestFrontEnd extends SwingFrontEnd {
 		super.setDebugMode(true);
 		
 		
-		XmlParser x = new XmlParser();
+		x = new XmlParser();
 		File box = Retriever.getBox(-71.40794, 41.82544, -71.40086, 41.82944);
 		ways = x.parseBox(box);
 		nodes = x.getNodes();
 		
-		PathFinder pf = new PathFinder();
+		
 		base = x.getNodesHash().get("1955930561");
-		srcs = pf.findSrcs(x.getNodes(), new Vec2f(-71.40086f, 41.82944f), new Vec2f(-71.40794f, 41.82544f));
-		srcs = pf.findPaths(srcs, base, x.getNodes(), x.getWays());
+		pf = new DebugPathFinder(base, x.getNodes());
+		spawns = pf.findSrcs(x.getNodes(), new Vec2f(-71.40086f, 41.82944f), new Vec2f(-71.40794f, 41.82544f));
+		srcs = pf.findPaths(spawns, base, x.getNodes(), x.getWays());
 		super.startup();
 	}
 
@@ -78,18 +83,47 @@ public class TestFrontEnd extends SwingFrontEnd {
 		
 		g.setColor(java.awt.Color.RED);
 		g.setStroke(new BasicStroke(3));
+		///*
 		for(MapNode n : srcs) {
 			MapNode cur = n;
 			MapNode next = cur.getNext();
 			while(next!=null) {
+				
 				g.drawLine(lonToX(cur.lon), latToY(cur.lat), lonToX(next.lon), latToY(next.lat));
-				//System.out.println(String.format("Drawing line from : %d %d to %d %d", lonToX(cur.lon), latToY(cur.lat), lonToX(cur.lon), latToY(cur.lat)));
 				cur = next;
-				next = next.getNext();
+				next = cur.getNext();
 			}
 			//System.out.println("new path\n");
 		}
-		//System.exit(0);
+		//*/
+		/*
+		for(MapNode n : nodes) {
+			
+			if(n.getNext()!=null) {
+				MapNode cur = n;
+				MapNode next = cur.getNext();
+				
+				g.drawLine(lonToX(cur.lon), latToY(cur.lat), lonToX(next.lon), latToY(next.lat));
+				cur = next;
+				next = cur.getNext();
+			}
+			//System.out.println("new path\n");
+		}
+		*/
+		g.setColor(java.awt.Color.BLUE);
+		/*
+		for(MapNode n : nodes) {
+
+			if(n.getNext()!=null) {
+				g.drawString(Double.toString(pf.dist.get(n)),lonToX(n.lon), latToY(n.lat));
+			}
+			//System.out.println("new path\n");
+		}
+		*/
+		
+		for(MapNode n : pf.visited) {
+			g.drawOval(lonToX(n.lon), latToY(n.lat), 1, 1);
+		}
 		
 		g.setColor(java.awt.Color.ORANGE);
 		for(MapNode n : srcs) {
@@ -110,6 +144,40 @@ public class TestFrontEnd extends SwingFrontEnd {
 	@Override
 	protected void onKeyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
+		//System.out.println(e.getKeyCode());
+		if(e.getKeyCode()==39) {
+			wMax[0]+=0.0005;
+			wMin[0]+=0.0005;
+		}
+		if(e.getKeyCode()==37) {
+			wMax[0]-=0.0005;
+			wMin[0]-=0.0005;
+		}
+		if(e.getKeyCode()==38) {
+			wMax[1]+=0.0005;
+			wMin[1]+=0.0005;
+		}
+		if(e.getKeyCode()==40) {
+			wMax[1]-=0.0005;
+			wMin[1]-=0.0005;
+		}
+		if(e.getKeyCode()==81) {
+			wMax[0]-=0.0005;
+			wMin[0]+=0.0005;
+			wMax[1]-=0.0005;
+			wMin[1]+=0.0005;			
+		}
+		if(e.getKeyCode()==65) {
+			wMax[0]+=0.0005;
+			wMin[0]-=0.0005;
+			wMax[1]+=0.0005;
+			wMin[1]-=0.0005;			
+		}
+		
+		if(e.getKeyCode()==82) {
+			pf.run = true;
+			srcs = pf.findPaths(spawns, base, x.getNodes(), x.getWays());
+		}
 
 	}
 

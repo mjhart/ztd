@@ -10,12 +10,28 @@ import java.util.PriorityQueue;
 
 import cs195n.Vec2f;
 
-public class PathFinder {
+public class DebugPathFinder {
 	
 	private List<MapNode> spawns;
+	public HashMap<MapNode, Double> dist;
+	public HashSet<MapNode> visited;
+	private PriorityQueue<MapNode> pq;
+	public boolean run;
 	
-	public PathFinder() {
+	public DebugPathFinder(MapNode base, List<MapNode> nodes) {
 		spawns = new LinkedList<MapNode>();
+		dist = new HashMap<MapNode, Double>();
+		visited = new HashSet<MapNode>();
+		for(MapNode n : nodes) {
+			dist.put(n, Double.MAX_VALUE);
+		}
+		
+		visited.add(base);
+		dist.put(base, 0d);
+		
+		pq = new PriorityQueue<MapNode>(10, new MyComparator(dist));
+		
+		pq.add(base);
 	}
 	
 	public List<MapNode> findSrcs(List<MapNode> nodeList, Vec2f max, Vec2f min) {
@@ -42,25 +58,13 @@ public class PathFinder {
 	}
 	
 	public List<MapNode> findPaths(List<MapNode> srcList, MapNode base, List<MapNode> nodes, List<MapWay> ways) {
-		//HashMap<MapNode, MapNode> prev = new HashMap<MapNode, MapNode>();
-		HashSet<MapNode> visited = new HashSet<MapNode>();
-		HashMap<MapNode, Double> dist = new HashMap<MapNode, Double>();
 		
-		for(MapNode n : nodes) {
-			dist.put(n, Double.MAX_VALUE);
-		}
-		
-		visited.add(base);
-		dist.put(base, 0d);
-		
-		PriorityQueue<MapNode> pq = new PriorityQueue<MapNode>(10, new MyComparator(dist));
-		
-		pq.add(base);
 		
 		MapNode node;
-		while(!pq.isEmpty()) {
+		while(!pq.isEmpty() && run) {
 			node = pq.poll();
-			System.out.println(node);
+			System.out.println("Popped: " + node);
+			System.out.println("Popped dist: " + dist.get(node));
 			Vec2f nv = new Vec2f((float)node.lon,(float) node.lat);
 			visited.add(node);
 			
@@ -72,8 +76,10 @@ public class PathFinder {
 			for(MapNode nbor : getAdjacentNodes(node)) {
 				if(!visited.contains(nbor)) {
 					
-					Vec2f nv2 = new Vec2f((float)node.lon,(float) nbor.lat);
+					Vec2f nv2 = new Vec2f((float)nbor.lon,(float) nbor.lat);
 					float d = nv.dist2(nv2);
+					System.out.println(nbor.id);
+					System.out.println("distance to: " + Double.toString((dist.get(node) + d)));
 					
 					if(dist.get(node) + d < dist.get(nbor)) {
 						dist.put(nbor, dist.get(node)+d);
@@ -83,6 +89,7 @@ public class PathFinder {
 					}
 				}
 			}
+			//run = false;
 		}
 		
 		return spawns;
@@ -109,7 +116,7 @@ public class PathFinder {
 				}
 			}
 		}
-		System.out.println("adj: " + results);
+		//System.out.println("adj: " + results);
 		return results;
 	}
 	
