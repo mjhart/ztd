@@ -32,7 +32,6 @@ public class Retriever {
 			String line = in.readLine();
 			
 			while (line != null) {
-				System.out.println(line);
 				pw.write(line);
 				line = in.readLine();
 			}

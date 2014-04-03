@@ -17,13 +17,13 @@ public class XmlParser {
 	private List<MapNode> mapnodes;
 	private List<MapWay> mapways;
 	private HashMap<String, MapNode> mnhash;
-	private boolean doneparsing;
+	private boolean doneparsebox;
 	
 	public XmlParser() {
 		mapnodes = new ArrayList<MapNode>(0);
 		mapways = new ArrayList<MapWay>(0);
 		mnhash = new HashMap<String, MapNode>();
-		doneparsing = false;
+		doneparsebox = false;
 	}
 		
 	public List<MapWay> parseBox(File xmlfile) {
@@ -73,7 +73,7 @@ public class XmlParser {
 			System.out.println("Node hashmap size " + mnhash.size());
 			System.out.println("Node list size " + mapnodes.size());
 			System.out.println("Way list size " + mapways.size());
-			doneparsing = true;
+			doneparsebox = true;
 			return mapways;
 		
 		}
@@ -123,9 +123,9 @@ public class XmlParser {
 				double lat = Double.parseDouble(getAddInfo("place", "lat", el));
 				double lon = Double.parseDouble(getAddInfo("place", "lon", el));
 				MapNode mn = new MapNode(place_id, lat, lon);
-				System.out.println(mn.id);
-				System.out.println(mn.lat);
-				System.out.println(mn.lon);
+				System.out.println("Node ID: " + mn.id);
+				System.out.println("Centlat: " + mn.lat);
+				System.out.println("CentLon: " + mn.lon);
 				return mn;
 			}
 			else {

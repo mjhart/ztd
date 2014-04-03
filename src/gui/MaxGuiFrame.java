@@ -22,7 +22,7 @@ public class MaxGuiFrame extends JFrame {
 
 	public final int _width = 900;
 	public final int _height = 500;
-	public final int _consoleh = 300;
+	public final int _consoleh = 400;
 	private RoadMap _roadmap;
 
 

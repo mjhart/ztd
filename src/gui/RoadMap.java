@@ -17,6 +17,7 @@ import java.awt.geom.Point2D;
 
 import javax.swing.JPanel;
 
+
 import mapbuilder.MapNode;
 import mapbuilder.MapWay;
 
@@ -76,7 +77,7 @@ public class RoadMap extends JPanel {
 	    
 
 	    //Draw the roads
-		g2.setStroke(new BasicStroke(3));
+//		g2.setStroke(new BasicStroke(3));
 		g2.setColor(Color.BLACK);
 		for (Line2D line: _lines) {
 			g2.draw(line);
@@ -122,6 +123,10 @@ public class RoadMap extends JPanel {
 		 this.repaint();
 	}
 
+	
+	
+
+	
 	
 	/**
 	 * Handles clicking to get nearest node as well as dragging in order to zoom
