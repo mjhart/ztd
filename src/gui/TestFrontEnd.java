@@ -28,6 +28,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	private List<MapNode> nodes;
 	private List<MapWay> ways;
+	private List<MapWay> highs;
 	private List<MapNode> srcs;
 	
 	private MapNode base;
@@ -46,10 +47,10 @@ public class TestFrontEnd extends SwingFrontEnd {
 		super.setDebugMode(true);
 		
 //		File sta = Retriever.getFromAddress("228 East Meade Street, Philadelphia, PA");
-//		File sta = Retriever.getFromAddress("69 Brown Street, Providence, RI");
+		File sta = Retriever.getFromAddress("69 Brown Street, Providence, RI");
 //		File sta = Retriever.getFromAddress("Av. Andres Bello 2800, Las Condes, Santiago, Chile");
 //		File sta = Retriever.getFromAddress("8 East 86th Street, New York, United States");
-		File sta = Retriever.getFromAddress("Eiffel Tower");
+//		File sta = Retriever.getFromAddress("Eiffel Tower");
 
 			
 
@@ -70,8 +71,10 @@ public class TestFrontEnd extends SwingFrontEnd {
 		
 //		XmlParser x = new XmlParser();
 //		File box = Retriever.getBox(-71.40794, 41.82544, -71.40086, 41.82944);
-		ways = x.parseBox(box);
+		x.parseBox(box);
+		ways = x.getWays();
 		nodes = x.getNodes();
+		highs = x.getHighs();
 		
 //		PathFinder pf = new PathFinder();
 //		base = x.getNodesHash().get("5980360728");
@@ -87,7 +90,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onDraw(Graphics2D g) {
-		// TODO Auto-generated method stub
 		for(MapNode n : nodes) {
 			g.drawOval(lonToX(n.lon), latToY(n.lat), 1, 1);
 		}
@@ -98,8 +100,18 @@ public class TestFrontEnd extends SwingFrontEnd {
 			}
 		}
 		
+		g.setColor(java.awt.Color.GREEN);
+		for(MapWay h : highs) {
+			List<MapNode> nList = h.getNodes();
+			for(int i=1; i<nList.size(); i++) {
+				g.drawLine(lonToX(nList.get(i-1).lon), latToY(nList.get(i-1).lat), lonToX(nList.get(i).lon), latToY(nList.get(i).lat));
+			}
+		}
 		
 		g.setColor(java.awt.Color.RED);
+		g.draw(new MenuScreen(0,0,50,50,g));
+		
+
 		g.setStroke(new BasicStroke(3));
 //		for(MapNode n : srcs) {
 //			MapNode cur = n;
