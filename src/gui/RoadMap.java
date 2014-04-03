@@ -114,7 +114,6 @@ public class RoadMap extends JPanel {
 				 MapNode t = waynodes.get(i+1);
 				 Point2D start = s.getPoint();
 				 Point2D end = t.getPoint();
-				 System.out.println(start);
 				 _lines.add(new Line2D.Double(start, end));
 			 }
 

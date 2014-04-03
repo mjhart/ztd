@@ -26,8 +26,8 @@ public class Main {
 	public static void main(String[] argv) {
 		XmlParser x = new XmlParser();
 //		File box = Retriever.getBox(-71.40794, 41.82544, -71.40086, 41.82944);
-
-		File sta = Retriever.getFromAddress("69 Brown Street, Providence, RI");
+		File sta = Retriever.getFromAddress("228 East Meade Street, Philadelphia, PA");
+//		File sta = Retriever.getFromAddress("69 Brown Street, Providence, RI");
 
 		MapNode cent = x.parseAddress(sta);
 		Const c = new Const(cent.lat, cent.lon);
@@ -38,11 +38,6 @@ public class Main {
 		System.out.println(dc.getTop(cent.lat));
 		
 		File box = Retriever.getBox(dc.getLeft(cent.lon), dc.getBott(cent.lat), dc.getRight(cent.lon), dc.getTop(cent.lat));
-		x.parseBox(box);
-		List<MapNode> nodes = x.getNodes();
-		for (MapNode mn: nodes) {
-			System.out.println(dc.convertLLToAB(mn));
-		}
 		MaxGuiFrame j = new MaxGuiFrame();
 		j.drawWays(x.parseBox(box));
 		System.out.println("Done");
