@@ -4,9 +4,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
-public class MenuScreen extends Rectangle2D.Float {
+public class Console extends Rectangle2D.Float {
 	
-	public MenuScreen(float x, float y, float w, float h, Graphics2D g) {
+	public Console(float x, float y, float w, float h, Graphics2D g) {
 		super(x,y,w,h);
 		this.onDraw(g);
 	}

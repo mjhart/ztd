@@ -158,22 +158,29 @@ public class XmlParser {
 	
 	
 	
-
+	/**
+	 * This mehtod takes in an xml file containing all OSM infor for a particular address
+	 * and parses it to obtain it's lat and lon.
+	 * @param xmlfile An xml file from OSM containing relevant info
+	 * @return A mapnode containing the lat and lon of the location
+	 */
 	public MapNode parseAddress(File xmlfile) {
-		
 		try {
+			//Start up the DOM
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document doc = db.parse(xmlfile);
 			doc.getDocumentElement().normalize();
+			
+			//Get a list of all nodes marked search results (there will only be one node in this list)
 			NodeList nnodes = doc.getElementsByTagName("searchresults");
 			
 			Node node = nnodes.item(0);
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				Element el = (Element) node;
-				String place_id = getAddInfo("place", "place_id", el);
-				double lat = Double.parseDouble(getAddInfo("place", "lat", el));
-				double lon = Double.parseDouble(getAddInfo("place", "lon", el));
+				String place_id = XmlParser.getAddInfo("place", "place_id", el);
+				double lat = Double.parseDouble(XmlParser.getAddInfo("place", "lat", el));
+				double lon = Double.parseDouble(XmlParser.getAddInfo("place", "lon", el));
 				MapNode mn = new MapNode(place_id, lat, lon);
 				System.out.println("Node ID: " + mn.id);
 				System.out.println("Centlat: " + mn.lat);
@@ -186,6 +193,7 @@ public class XmlParser {
 			}
 		}
 		catch (Exception e) {
+			//Dialogue box needed
 			System.out.println("ERROR: Problem in parseAddress");
 			e.printStackTrace();
 		}
@@ -193,6 +201,14 @@ public class XmlParser {
 		
 	}
 	
+	/**
+	 * This method takes in a tag, an attribute, and an element and returns the value
+	 * of the attribute. This method should only be used in parseAddress
+	 * @param tag The xml tag
+	 * @param att The xml attribute
+	 * @param e The element of interest
+	 * @return The value of the attribute
+	 */
 	private static String getAddInfo(String tag, String att, Element e) {
 		NodeList nl = e.getElementsByTagName(tag);
 		Node n = nl.item(0);

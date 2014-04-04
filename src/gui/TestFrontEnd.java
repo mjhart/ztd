@@ -109,7 +109,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		}
 		
 		g.setColor(java.awt.Color.RED);
-		g.draw(new MenuScreen(0,0,50,50,g));
+		g.draw(new Console(0,0,50,50,g));
 		
 
 		g.setStroke(new BasicStroke(3));
