@@ -46,6 +46,10 @@ public class TestFrontEnd extends SwingFrontEnd {
 		super(title, fullscreen, size);
 		super.setDebugMode(true);
 		
+		
+		
+/**
+		
 //		File sta = Retriever.getFromAddress("228 East Meade Street, Philadelphia, PA");
 		File sta = Retriever.getFromAddress("69 Brown Street, Providence, RI");
 //		File sta = Retriever.getFromAddress("Av. Andres Bello 2800, Las Condes, Santiago, Chile");
@@ -80,6 +84,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 //		base = x.getNodesHash().get("5980360728");
 //		srcs = pf.findSrcs(x.getNodes(), new Vec2f(-71.40086f, 41.82944f), new Vec2f(-71.40794f, 41.82544f));
 //		srcs = pf.findPaths(srcs, base, x.getNodes(), x.getWays());
+ * 
+ * 
+ */
 		super.startup();
 	}
 
@@ -90,6 +97,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onDraw(Graphics2D g) {
+		
+		/**
 		for(MapNode n : nodes) {
 			g.drawOval(lonToX(n.lon), latToY(n.lat), 1, 1);
 		}
@@ -108,8 +117,10 @@ public class TestFrontEnd extends SwingFrontEnd {
 			}
 		}
 		
+		*/
+		
 		g.setColor(java.awt.Color.RED);
-		g.draw(new Console(0,0,50,50,g));
+		new Console(0,0,size.x/5,size.y,g);
 		
 
 		g.setStroke(new BasicStroke(3));
