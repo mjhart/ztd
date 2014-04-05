@@ -109,7 +109,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		}
 		
 		g.setColor(java.awt.Color.RED);
-		g.draw(new Console(0,0,50,50,g));
+		new Console(0,0,(int) size.x/5,size.y,g);
 		
 
 		g.setStroke(new BasicStroke(3));
@@ -197,7 +197,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 	}
 	
 	public static void main(String[] args) {
-		//new TestFrontEnd("ZTD", true);
 		new TestFrontEnd("ZTD", false, new Vec2i(600, 500));
 	}
 	
