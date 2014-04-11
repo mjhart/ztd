@@ -26,8 +26,8 @@ public class Main {
 
 		File sta = Retriever.getFromAddress("228 East Meade Street, Philadelphia PA");
 		x.parseAddress(sta);
-		MaxGuiFrame j = new MaxGuiFrame();
-		j.drawWays(x.parseBox(box));
+		GuiFrame j = new GuiFrame();
+		//j.drawWays(x.parseBox(box));
 		System.out.println("Done");
 		return;
 

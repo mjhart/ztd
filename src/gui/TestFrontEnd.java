@@ -36,8 +36,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private XmlParser x;
 	
 	private Vec2i size;
-	private double[] wMin = {-71.40794f, 41.82544f};
-	private double[] wMax = {-71.40086f, 41.82944f};
+	private double[] wMin = {-117.87651f, 34.04432f};
+	private double[] wMax = {-117.86809f, 34.04876f};
 	
 	public TestFrontEnd(String title, boolean fullscreen) {
 		super(title, fullscreen);
@@ -50,12 +50,13 @@ public class TestFrontEnd extends SwingFrontEnd {
 		
 		
 		x = new XmlParser();
-		File box = Retriever.getBox(-71.40794, 41.82544, -71.40086, 41.82944);
+		//File box = Retriever.getBox(-71.40794, 41.82544, -71.40086, 41.82944);
+		File box = Retriever.getBox(-117.87651, 34.04432, -117.86809, 34.04876);
 		ways = x.parseBox(box);
 		nodes = x.getNodes();
 		
 		
-		base = x.getNodesHash().get("1955930561");
+		base = x.getNodesHash().get("2079169288");
 		pf = new DebugPathFinder(base, x.getNodes());
 		spawns = pf.findSrcs(x.getNodes(), new Vec2f(-71.40086f, 41.82944f), new Vec2f(-71.40794f, 41.82544f));
 		srcs = pf.findPaths(spawns, base, x.getNodes(), x.getWays());
