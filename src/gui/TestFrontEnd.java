@@ -119,8 +119,10 @@ public class TestFrontEnd extends SwingFrontEnd {
 		
 		*/
 		
-		g.setColor(java.awt.Color.RED);
-		new Console(0,0,size.x/5,size.y,g);
+		g.setColor(java.awt.Color.BLUE);
+//		new Console(0,0,size.x,size.y,g);
+		new MainMenu(size.x, size.y, g);
+		
 		
 
 		g.setStroke(new BasicStroke(3));

@@ -77,7 +77,7 @@ public class Console {
 	
 	
 	
-	
+	//Work in terms of vectors or x y?
 	private void contains(int x, int y) {
 		for (Rectangle2D r: cbs.keySet()) {
 			if (r.contains(x, y)) {
