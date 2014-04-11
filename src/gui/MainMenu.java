@@ -41,8 +41,8 @@ public class MainMenu {
 		
 		int c = 30;
 		
-		_addline1 = new EditableTextBox("Address Line 1", 50, _w/2, _h/5 + c);
-		_addline2 = new EditableTextBox("Address Line 1", 50, _w/2, _h/5 + 2*c);
+		_addline1 = new EditableTextBox("Address Line 1 should be this long", 50, _w/2, _h/5 + c); //If you change this, change the int in keyTyped method
+		_addline2 = new EditableTextBox("Address Line 2 should be this long", 50, _w/2, _h/5 + 2*c);
 		
 		
 		_cbs.add(new ControlButton("Brown University", 3*_w/2, _h/5 + 2*c));
@@ -52,8 +52,8 @@ public class MainMenu {
 		_cbs.add(new ControlButton("Statue of Liberty", 3*_w/2, _h/5 + 6*c));
 	}
 
-	public void draw() {
-		System.out.println("MM drawn");
+	public void draw(Graphics2D g) {
+		this.g = g;
 		
 		java.awt.Color colorholder = g.getColor();
 		g.setColor(Color.BLUE);
@@ -128,13 +128,11 @@ public class MainMenu {
 	
 	
 	private class EditableTextBox {
-		
 		private String _text;
 		private Rectangle2D _r;
 		private Rectangle2D _bb;
 		private float x;
 		private float y;
-		
 		public EditableTextBox(String name, float textwidth, float rightline, float y) {
 			float x = centerX(name, rightline);
 			this.x = x;
@@ -156,13 +154,13 @@ public class MainMenu {
 			g.drawString(_text, x+5,(int) (y+_bb.getHeight()+1));
 		}
 		public void addLetter(String letter) {
-			System.out.println(_text);
+			System.out.println("Text before: " + _text);
 			_text = _text + letter;
-			System.out.println(_text);
+			System.out.println("Text after: " + _text);
 		}
 		public void backspace() {
 			int len = _text.length();
-			_text = _text.substring(0, len);
+			_text = _text.substring(0, len-1);
 		}
 		public String getText() {
 			return _text;
@@ -173,17 +171,14 @@ public class MainMenu {
 			}
 			return false;
 		}
-
 	}
 	
 	
 	
 	private class Text {
-		
 		public Text(String name, float x, float y) {
 			g.drawString(name, x, y);
 		}
-		
 	}
 	
 	
@@ -216,15 +211,28 @@ public class MainMenu {
 		System.out.println("Toggle: " + _toggle);
 		System.out.println("Letter gotten: " + letter);
 		EditableTextBox holder = null;
-		if (_toggle == 1) {
+		if ((_toggle == 1) && (_addline1.getText().length() < 33)) {
 			holder = _addline1;
 		}
 		else {
 			holder = _addline2;
 		}
 		
-		if (letter.equals(null)) {
-			holder.backspace();
+		if (letter.length() > 1) {
+			if (letter.equals("backspace")) {
+				System.out.println("Deleting");
+				holder.backspace();
+
+			}
+			if (letter.equals("enter")) {
+				if (_toggle == 1) {
+					_toggle = 2;
+				}
+				else {
+					_toggle = 1;
+				}
+
+			}
 		}
 		else {
 			System.out.println("Add letter called");

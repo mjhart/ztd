@@ -105,27 +105,38 @@ public class TestFrontEnd extends SwingFrontEnd {
 			_hasMain = true;
 		}
 		
-		_mm.draw();
+		_mm.draw(g);
 
 		
 	}
 
 	@Override
 	protected void onKeyTyped(KeyEvent e) {
-		String s = Character.toString(e.getKeyChar());
-		System.out.println("Typed: " + s);
-		_mm.keyTyped(s);
+
 
 	}
 
 	@Override
 	protected void onKeyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-
+		String s = Character.toString(e.getKeyChar());
+		System.out.println("Typed char: " + e.getKeyChar());
+		System.out.println("Typed String: " + s);
+		if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+			s = "backspace";
+			System.out.println("back");
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			s = "enter";
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+			s = ""; //Don't print shift
+		}
+		_mm.keyTyped(s);
 	}
 
 	@Override
 	protected void onKeyReleased(KeyEvent e) {
+
 		// TODO Auto-generated method stub
 
 	}
