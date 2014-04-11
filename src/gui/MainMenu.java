@@ -30,11 +30,12 @@ public class MainMenu {
 	private ControlButton _go;
 	
 	public MainMenu(float w, float h, Graphics2D g) {
+		System.out.println("making new mm");
 		_w = w;
 		_h = h;
-		this.g = g;
 		_cbs = new ArrayList<ControlButton>();
 		_toggle = 1;
+		this.g = g;
 		
 		_go = new ControlButton("GO", _w/2, 3*_h/5);
 		
@@ -49,14 +50,13 @@ public class MainMenu {
 		_cbs.add(new ControlButton("The White House", 3*_w/2, _h/5 + 4*c));
 		_cbs.add(new ControlButton("Eiffel Tower", 3*_w/2, _h/5 + 5*c));
 		_cbs.add(new ControlButton("Statue of Liberty", 3*_w/2, _h/5 + 6*c));
-
-		
-		this.draw();
 	}
 
 	public void draw() {
+		System.out.println("MM drawn");
+		
 		java.awt.Color colorholder = g.getColor();
-		g.setColor(Color.GRAY);
+		g.setColor(Color.BLUE);
 		g.fill(new Rectangle2D.Float(0,0,_w,_h));
 		
 		g.setColor(Color.WHITE);
@@ -146,6 +146,7 @@ public class MainMenu {
 			_r = new Rectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5));
 			g.draw(_r);
 			_text = "";
+			System.out.println("MADE NEW ETB");
 			g.drawString(_text, x+5,(int) (y+_bb.getHeight()+1));
 		}
 		public void draw() {
@@ -155,7 +156,9 @@ public class MainMenu {
 			g.drawString(_text, x+5,(int) (y+_bb.getHeight()+1));
 		}
 		public void addLetter(String letter) {
+			System.out.println(_text);
 			_text = _text + letter;
+			System.out.println(_text);
 		}
 		public void backspace() {
 			int len = _text.length();
@@ -210,6 +213,8 @@ public class MainMenu {
 	}
 	
 	public void keyTyped(String letter) {
+		System.out.println("Toggle: " + _toggle);
+		System.out.println("Letter gotten: " + letter);
 		EditableTextBox holder = null;
 		if (_toggle == 1) {
 			holder = _addline1;
@@ -222,6 +227,7 @@ public class MainMenu {
 			holder.backspace();
 		}
 		else {
+			System.out.println("Add letter called");
 			holder.addLetter(letter);
 		}
 	}

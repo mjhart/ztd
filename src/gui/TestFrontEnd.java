@@ -31,6 +31,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private List<MapWay> highs;
 	private List<MapNode> srcs;
 	
+	private MainMenu _mm;
+	private boolean _hasMain;
+	
 	private MapNode base;
 	
 	private Vec2i size;
@@ -46,7 +49,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		super(title, fullscreen, size);
 		super.setDebugMode(true);
 		
-		
+		_hasMain = false;
 		
 /**
 		
@@ -97,61 +100,21 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onDraw(Graphics2D g) {
-		
-		/**
-		for(MapNode n : nodes) {
-			g.drawOval(lonToX(n.lon), latToY(n.lat), 1, 1);
-		}
-		for(MapWay w : ways) {
-			List<MapNode> nList = w.getNodes();
-			for(int i=1; i<nList.size(); i++) {
-				g.drawLine(lonToX(nList.get(i-1).lon), latToY(nList.get(i-1).lat), lonToX(nList.get(i).lon), latToY(nList.get(i).lat));
-			}
+		if (_hasMain == false) {
+			_mm = new MainMenu(size.x, size.y, g);
+			_hasMain = true;
 		}
 		
-		g.setColor(java.awt.Color.GREEN);
-		for(MapWay h : highs) {
-			List<MapNode> nList = h.getNodes();
-			for(int i=1; i<nList.size(); i++) {
-				g.drawLine(lonToX(nList.get(i-1).lon), latToY(nList.get(i-1).lat), lonToX(nList.get(i).lon), latToY(nList.get(i).lat));
-			}
-		}
-		
-		*/
-		
-		g.setColor(java.awt.Color.BLUE);
-//		new Console(0,0,size.x,size.y,g);
-		new MainMenu(size.x, size.y, g);
-		
-		
+		_mm.draw();
 
-		g.setStroke(new BasicStroke(3));
-//		for(MapNode n : srcs) {
-//			MapNode cur = n;
-//			MapNode next = cur.getNext();
-//			while(next!=null) {
-//				g.drawLine(lonToX(cur.lon), latToY(cur.lat), lonToX(next.lon), latToY(next.lat));
-//				//System.out.println(String.format("Drawing line from : %d %d to %d %d", lonToX(cur.lon), latToY(cur.lat), lonToX(cur.lon), latToY(cur.lat)));
-//				cur = next;
-//				next = next.getNext();
-//			}
-//			//System.out.println("new path\n");
-//		}
-		//System.exit(0);
-		
-		g.setColor(java.awt.Color.ORANGE);
-//		for(MapNode n : srcs) {
-//			g.drawOval(lonToX(n.lon), latToY(n.lat), 3, 3);
-//		}
-		
-		g.setColor(java.awt.Color.GREEN);
-//		g.drawOval(lonToX(base.lon), latToY(base.lat), 3, 3);
 		
 	}
 
 	@Override
 	protected void onKeyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
+		String s = Character.toString(e.getKeyChar());
+		System.out.println("Typed: " + s);
+		_mm.keyTyped(s);
 
 	}
 
