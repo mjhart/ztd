@@ -67,8 +67,16 @@ public class XmlParser {
 			for (int i = 0; i < wnodes.getLength(); i++) {
 				Node node = wnodes.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					
+					
 					Element el = (Element) node;
 					MapWay mw = new MapWay(el.getAttribute("id"));
+					
+					boolean isHighway = false;
+					if (XmlParser.isHighway("tag", el) == true) {
+						isHighway = true;
+						highways.add(mw);
+					}
 
 					List<String> mapnodeids = XmlParser.getMapNodes("nd", el); //Get the nodes on this way
 					for (String id: mapnodeids) {
@@ -76,18 +84,21 @@ public class XmlParser {
 						if ((n = mnhash.get(id)) == null) {
 							System.out.println("ERROR: Ways and nodes do not match in input file");
 						}
-						else { //Add node to way and way to node
+						else { //Add way to node
+							if (isHighway) {
+								n.addWay(mw);
+							}
 							mw.addNode(n);
-							n.addWay(mw);
 						}
 					}
-					
-					mapways.add(mw);
-					
-					//Add to highways if it is a highway
-					if (XmlParser.isHighway("tag", el) == true) {
-						highways.add(mw);
+					if(!isHighway) {
+						mapways.add(mw);
 					}
+					
+//					//Add to highways if it is a highway
+//					if (XmlParser.isHighway("tag", el) == true) {
+//						highways.add(mw);
+//					}
 					
 				}
 			}
