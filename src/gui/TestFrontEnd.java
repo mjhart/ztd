@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import mapbuilder.Map;
 
@@ -54,11 +55,14 @@ public class TestFrontEnd extends SwingFrontEnd {
 	public TestFrontEnd(String title, boolean fullscreen, Vec2i size) {
 		super(title, fullscreen, size);
 		super.setDebugMode(true);
-		_m = new Map("69 Brown Street, Providence, RI");
+		
 		_ref = new Referee(_m);
+		_m = new Map("69 Brown Street, Providence, RI", _ref);
 		srcs = _m.getSources();
 		System.out.println(srcs);
-		_ref.getZombies().add(new BasicZombie(srcs.get(0)));
+		_ref.getZombies().add(new BasicZombie(srcs.get(5)));
+		_ref.getZombies().add(new BasicZombie(srcs.get(15)));
+		_ref.getZombies().add(new BasicZombie(srcs.get(1)));
 //		PathFinder pf = new PathFinder();
 //		base = x.getNodesHash().get("5980360728");
 //		srcs = pf.findSrcs(x.getNodes(), new Vec2f(-71.40086f, 41.82944f), new Vec2f(-71.40794f, 41.82544f));
@@ -69,7 +73,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	@Override
 	protected void onTick(long nanosSincePreviousTick) {
 		// TODO Auto-generated method stub
-		//_ref.tick(nanosSincePreviousTick);
+		_ref.tick(nanosSincePreviousTick);
 	}
 
 	@Override
@@ -111,14 +115,42 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onKeyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	@Override
 	protected void onKeyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-
+		_m.keyPressed(e);
+		if(e.getKeyCode()==39) {
+			wMax[0]+=0.0005;
+			wMin[0]+=0.0005;
+		}
+		if(e.getKeyCode()==37) {
+			wMax[0]-=0.0005;
+			wMin[0]-=0.0005;
+		}
+		if(e.getKeyCode()==38) {
+			wMax[1]+=0.0005;
+			wMin[1]+=0.0005;
+		}
+		if(e.getKeyCode()==40) {
+			wMax[1]-=0.0005;
+			wMin[1]-=0.0005;
+		}
+		if(e.getKeyCode()==81) {
+			wMax[0]-=0.0005;
+			wMin[0]+=0.0005;
+			wMax[1]-=0.0005;
+			wMin[1]+=0.0005;			
+		}
+		if(e.getKeyCode()==65) {
+			wMax[0]+=0.0005;
+			wMin[0]-=0.0005;
+			wMax[1]+=0.0005;
+			wMin[1]-=0.0005;			
+		}
 	}
 
 	@Override
@@ -182,6 +214,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 		return (int) ((lon - wMin[0])/(wMax[0]-wMin[0]) * _size.x);
 	}
 	
+	public Collection<Zombie> getZombie() {
+		return _ref.getZombies();
+	}
 	
 
 }

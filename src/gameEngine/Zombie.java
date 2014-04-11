@@ -12,13 +12,16 @@ public abstract class Zombie {
 	protected float _speed;
 
 	public void move() {
-		if(_coords.dist2(_tCoords) < 0.005) {
+		if(_coords.dist2(_tCoords) < 0.00000001) {
+			if(_target.getNext() == null) {
+				return;
+			}
 			_target = _target.getNext();
 			_tCoords = new Vec2f((float)_target.lon, (float) _target.lat);
 		}
 		
 		Vec2f path = _tCoords.minus(_coords);
-		_coords.plus(path.normalized().smult(_speed));
+		_coords = _coords.plus(path.normalized().smult(_speed));
 	}
 	
 	public Zombie takeDamage(int damage) {

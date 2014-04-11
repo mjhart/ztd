@@ -1,6 +1,11 @@
 package mapbuilder;
 
+import gameEngine.Referee;
+import gameEngine.Zombie;
+
+import java.awt.BasicStroke;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -29,8 +34,13 @@ public class Map {
 	private PathFinder _pf;
 	private MapNode _base;
 	private BufferedImage _baseSprite;
+	private List<MapNode> srcs;
+	private Referee _ref;
 	
-	public Map(String address) {
+	public Map(String address, Referee ref) {
+		
+		_ref = ref;
+		
 		wMin = new double[2];
 		wMax = new double[2];
 		
@@ -91,7 +101,32 @@ public class Map {
 			}
 		}
 		
-		g.drawImage(_baseSprite, lonToX(_base.lon), latToY(_base.lat), _baseSprite.getWidth()/2, _baseSprite.getHeight()/2, null);
+		g.setColor(java.awt.Color.BLUE);
+		g.setStroke(new BasicStroke(3));
+		for(MapNode n : srcs) {
+			MapNode cur = n;
+			MapNode next = cur.getNext();
+			while(next!=null) {
+				g.drawLine(lonToX(cur.lon), latToY(cur.lat), lonToX(next.lon), latToY(next.lat));
+				cur = next;
+				next = next.getNext();
+			}
+			//System.out.println("new path\n");
+		}
+		
+		//g.drawImage(_baseSprite, lonToX(_base.lon), latToY(_base.lat), _baseSprite.getWidth()/2, _baseSprite.getHeight()/2, null);
+		g.setColor(java.awt.Color.BLUE);
+		g.drawOval(lonToX(_base.lon)-1, latToY(_base.lat)-1, 3, 3);
+		
+		g.setColor(java.awt.Color.ORANGE);
+		for(MapNode n : srcs) {
+			g.fillOval(lonToX(n.lon)-2, latToY(n.lat)-2, 5, 5);
+		}
+		
+		g.setColor(java.awt.Color.RED);
+		for(Zombie z : _ref.getZombies()) {
+			g.drawOval(lonToX(z.getCoords().x), latToY(z.getCoords().y), 3, 3);
+		}
 	}
 	
 	
@@ -224,7 +259,68 @@ public class Map {
 	
 	public List<MapNode> getSources() {
 		List<MapNode> srcs = potentialSrcs();
-		return findPaths(srcs, _base);
+		this.srcs = findPaths(srcs, _base);
+		return this.srcs;
+	}
+	
+	/* for debugging */
+	
+	public void keyPressed(KeyEvent e) {
+		if(e.getKeyCode()==39) {
+			wMax[0]+=0.0005;
+			wMin[0]+=0.0005;
+		}
+		if(e.getKeyCode()==37) {
+			wMax[0]-=0.0005;
+			wMin[0]-=0.0005;
+		}
+		if(e.getKeyCode()==38) {
+			wMax[1]+=0.0005;
+			wMin[1]+=0.0005;
+		}
+		if(e.getKeyCode()==40) {
+			wMax[1]-=0.0005;
+			wMin[1]-=0.0005;
+		}
+		if(e.getKeyCode()==81) {if(e.getKeyCode()==39) {
+			wMax[0]+=0.0005;
+			wMin[0]+=0.0005;
+		}
+		if(e.getKeyCode()==37) {
+			wMax[0]-=0.0005;
+			wMin[0]-=0.0005;
+		}
+		if(e.getKeyCode()==38) {
+			wMax[1]+=0.0005;
+			wMin[1]+=0.0005;
+		}
+		if(e.getKeyCode()==40) {
+			wMax[1]-=0.0005;
+			wMin[1]-=0.0005;
+		}
+		if(e.getKeyCode()==81) {
+			wMax[0]-=0.0005;
+			wMin[0]+=0.0005;
+			wMax[1]-=0.0005;
+			wMin[1]+=0.0005;			
+		}
+		if(e.getKeyCode()==65) {
+			wMax[0]+=0.0005;
+			wMin[0]-=0.0005;
+			wMax[1]+=0.0005;
+			wMin[1]-=0.0005;			
+		}
+			wMax[0]-=0.0005;
+			wMin[0]+=0.0005;
+			wMax[1]-=0.0005;
+			wMin[1]+=0.0005;			
+		}
+		if(e.getKeyCode()==65) {
+			wMax[0]+=0.0005;
+			wMin[0]-=0.0005;
+			wMax[1]+=0.0005;
+			wMin[1]-=0.0005;			
+		}
 	}
 	
 }

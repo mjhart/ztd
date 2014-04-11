@@ -7,7 +7,7 @@ public class BasicZombie extends Zombie {
 	
 	public BasicZombie(MapNode src) {
 		super._health = 5;
-		super._speed = 1;
+		super._speed = 0.00001f;
 		super._strength = 1;
 		super._target = src.getNext();
 		super._coords = new Vec2f((float) src.lon, (float) src.lat);
