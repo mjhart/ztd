@@ -143,7 +143,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onMouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
+		_mm.contains(e.getX(), e.getY());
 
 	}
 
