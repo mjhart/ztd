@@ -31,6 +31,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private List<MapWay> highs;
 	private List<MapNode> srcs;
 	
+	private MainMenu _mm;
+	private boolean _hasMain;
+	
 	private MapNode base;
 	
 	private Vec2i size;
@@ -45,6 +48,10 @@ public class TestFrontEnd extends SwingFrontEnd {
 	public TestFrontEnd(String title, boolean fullscreen, Vec2i size) {
 		super(title, fullscreen, size);
 		super.setDebugMode(true);
+		
+		_hasMain = false;
+		
+/**
 		
 //		File sta = Retriever.getFromAddress("228 East Meade Street, Philadelphia, PA");
 		File sta = Retriever.getFromAddress("69 Brown Street, Providence, RI");
@@ -80,6 +87,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 //		base = x.getNodesHash().get("5980360728");
 //		srcs = pf.findSrcs(x.getNodes(), new Vec2f(-71.40086f, 41.82944f), new Vec2f(-71.40794f, 41.82544f));
 //		srcs = pf.findPaths(srcs, base, x.getNodes(), x.getWays());
+ * 
+ * 
+ */
 		super.startup();
 	}
 
@@ -90,73 +100,52 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onDraw(Graphics2D g) {
-		for(MapNode n : nodes) {
-			g.drawOval(lonToX(n.lon), latToY(n.lat), 1, 1);
+		if (_hasMain == false) {
+			_mm = new MainMenu(size.x, size.y, g);
+			_hasMain = true;
 		}
-		for(MapWay w : ways) {
-			List<MapNode> nList = w.getNodes();
-			for(int i=1; i<nList.size(); i++) {
-				g.drawLine(lonToX(nList.get(i-1).lon), latToY(nList.get(i-1).lat), lonToX(nList.get(i).lon), latToY(nList.get(i).lat));
-			}
-		}
-		
-		g.setColor(java.awt.Color.GREEN);
-		for(MapWay h : highs) {
-			List<MapNode> nList = h.getNodes();
-			for(int i=1; i<nList.size(); i++) {
-				g.drawLine(lonToX(nList.get(i-1).lon), latToY(nList.get(i-1).lat), lonToX(nList.get(i).lon), latToY(nList.get(i).lat));
-			}
-		}
-		
-		g.setColor(java.awt.Color.RED);
-		new Console(0,0,(int) size.x/5,size.y,g);
 		
 
-		g.setStroke(new BasicStroke(3));
-//		for(MapNode n : srcs) {
-//			MapNode cur = n;
-//			MapNode next = cur.getNext();
-//			while(next!=null) {
-//				g.drawLine(lonToX(cur.lon), latToY(cur.lat), lonToX(next.lon), latToY(next.lat));
-//				//System.out.println(String.format("Drawing line from : %d %d to %d %d", lonToX(cur.lon), latToY(cur.lat), lonToX(cur.lon), latToY(cur.lat)));
-//				cur = next;
-//				next = next.getNext();
-//			}
-//			//System.out.println("new path\n");
-//		}
-		//System.exit(0);
-		
-		g.setColor(java.awt.Color.ORANGE);
-//		for(MapNode n : srcs) {
-//			g.drawOval(lonToX(n.lon), latToY(n.lat), 3, 3);
-//		}
-		
-		g.setColor(java.awt.Color.GREEN);
-//		g.drawOval(lonToX(base.lon), latToY(base.lat), 3, 3);
+		_mm.draw(g);
+
+
 		
 	}
 
 	@Override
 	protected void onKeyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
+
 
 	}
 
 	@Override
 	protected void onKeyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-
+		String s = Character.toString(e.getKeyChar());
+		System.out.println("Typed char: " + e.getKeyChar());
+		System.out.println("Typed String: " + s);
+		if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+			s = "backspace";
+			System.out.println("back");
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			s = "enter";
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+			s = ""; //Don't print shift
+		}
+		_mm.keyTyped(s);
 	}
 
 	@Override
 	protected void onKeyReleased(KeyEvent e) {
+
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	protected void onMouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
+		_mm.contains(e.getX(), e.getY());
 
 	}
 

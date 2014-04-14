@@ -69,4 +69,4 @@
 
 //TODO
 //Scaling factor for DLAT in constants
-//
+//Are vectors always resized?
