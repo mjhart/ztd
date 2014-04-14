@@ -32,7 +32,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private List<MapNode> srcs;
 	
 	private MainMenu _mm;
+	private Console2 _console;
 	private boolean _hasMain;
+	private boolean _hasConsole;
 	
 	private MapNode base;
 	
@@ -50,6 +52,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		super.setDebugMode(true);
 		
 		_hasMain = false;
+		_hasConsole = false;
 		
 /**
 		
@@ -100,13 +103,22 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onDraw(Graphics2D g) {
-		if (_hasMain == false) {
-			_mm = new MainMenu(size.x, size.y, g);
-			_hasMain = true;
-		}
+//		if (_hasMain == false) {
+//			_mm = new MainMenu(size.x, size.y, g);
+//			_hasMain = true;
+//		}
+//		
+//		_mm.draw(g);
+		
 		
 
-		_mm.draw(g);
+		if (_hasConsole == false) {
+			_console = new Console2(0,0,size.x, size.y, g);
+			_hasConsole = true;
+		}
+	
+		_console.draw(g);
+
 
 
 		
@@ -133,7 +145,10 @@ public class TestFrontEnd extends SwingFrontEnd {
 		else if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
 			s = ""; //Don't print shift
 		}
-		_mm.keyTyped(s);
+		//_mm.keyTyped(s);
+		if (s.equals("p")) {
+			_console.setResources(87);
+		}
 	}
 
 	@Override
@@ -145,7 +160,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onMouseClicked(MouseEvent e) {
-		_mm.contains(e.getX(), e.getY());
+		_console.contains(e.getX(), e.getY());
 
 	}
 
