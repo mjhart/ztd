@@ -22,10 +22,10 @@ public class Console {
 		width = w;
 		height = h;
 		cbs = new HashMap<Rectangle2D, String>();
-		this.onDraw(x,y,w,h,g);
+		this.draw(x,y,w,h,g);
 	}
 
-	public void onDraw(float x, float y, float w, float h, Graphics2D g) {
+	public void draw(float x, float y, float w, float h, Graphics2D g) {
 		java.awt.Color colorholder = g.getColor();
 		g.setColor(Color.RED);
 		g.fill(new Rectangle2D.Float(x,y,w,h));

@@ -3,18 +3,13 @@ package gui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Graphics;
+
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.TextField;
-import java.awt.event.KeyEvent;
+
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import cs195n.Vec2i;
 
 public class MainMenu {
 
