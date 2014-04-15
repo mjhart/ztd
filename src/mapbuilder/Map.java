@@ -37,8 +37,6 @@ public class Map {
 	private List<MapNode> srcs;
 	private Referee _ref;
 	
-	public boolean debug = true;
-	
 	public Map(String address, Referee ref) {
 		
 		_ref = ref;
@@ -178,23 +176,24 @@ public class Map {
 	private List<MapNode> findPaths(List<MapNode> srcList, MapNode base) {
 		LinkedList<MapNode> spawns = new LinkedList<MapNode>();
 		HashSet<MapNode> visited = new HashSet<MapNode>();
-		HashMap<MapNode, Integer> dist = new HashMap<MapNode, Integer>();
+		HashMap<MapNode, Double> dist = new HashMap<MapNode, Double>();
 		
 		for(MapNode n : _nodes) {
-			dist.put(n, Integer.MAX_VALUE);
+			dist.put(n, Double.MAX_VALUE);
 		}
 		
 		visited.add(base);
-		dist.put(base, 0);
+		dist.put(base, 0d);
 		
 		PriorityQueue<MapNode> pq = new PriorityQueue<MapNode>(10, new MyComparator(dist));
 		
 		pq.add(base);
 		
+		/*
 		MapNode node;
 		while(!pq.isEmpty()) {
 			node = pq.poll();
-			//System.out.println(node);
+			System.out.println(node);
 			Vec2f nv = new Vec2f((float)node.lon,(float) node.lat);
 			visited.add(node);
 			
@@ -206,11 +205,11 @@ public class Map {
 			for(MapNode nbor : getAdjacentNodes(node)) {
 				if(!visited.contains(nbor)) {
 					
-					Vec2f nv2 = new Vec2f((float)node.lon,(float) node.lat);
+					Vec2f nv2 = new Vec2f((float)nbor.lon,(float) nbor.lat);
 					float d = nv.dist2(nv2);
 					
 					if(dist.get(node) + d < dist.get(nbor)) {
-						dist.put(nbor, (int) (dist.get(node)+d));
+						dist.put(nbor, (int) (dist.get(nbor)+d));
 						pq.remove(nbor);
 						pq.add(nbor);
 						nbor.setNext(node);
@@ -218,6 +217,41 @@ public class Map {
 				}
 			}
 		}
+		*/
+		
+		///*
+		MapNode node;
+		while(!pq.isEmpty()) {
+			node = pq.poll();
+			System.out.println("Popped: " + node);
+			System.out.println("Popped dist: " + dist.get(node));
+			Vec2f nv = new Vec2f((float)node.lon,(float) node.lat);
+			visited.add(node);
+			
+			if(srcList.contains(node)) {
+				spawns.add(node);
+				srcList.remove(node);
+			}
+			
+			for(MapNode nbor : getAdjacentNodes(node)) {
+				if(!visited.contains(nbor)) {
+					
+					Vec2f nv2 = new Vec2f((float)nbor.lon,(float) nbor.lat);
+					float d = nv.dist2(nv2);
+					System.out.println(nbor.id);
+					System.out.println("distance to: " + Double.toString((dist.get(node) + d)));
+					
+					if(dist.get(node) + d < dist.get(nbor)) {
+						dist.put(nbor, dist.get(node)+d);
+						pq.remove(nbor);
+						pq.add(nbor);
+						nbor.setNext(node);
+					}
+				}
+			}
+			//run = false;
+		}
+		//*/
 		
 		return spawns;
 	}
@@ -243,15 +277,15 @@ public class Map {
 				}
 			}
 		}
-		//System.out.println("adj: " + results);
+		System.out.println("adj: " + results);
 		return results;
 	}
 	
 	class MyComparator implements Comparator<MapNode> {
 		
-		private HashMap<MapNode, Integer> dist;
+		private HashMap<MapNode, Double> dist;
 		
-		public MyComparator(HashMap<MapNode, Integer> distMap) {
+		public MyComparator(HashMap<MapNode, Double> distMap) {
 			dist = distMap;
 		}
 

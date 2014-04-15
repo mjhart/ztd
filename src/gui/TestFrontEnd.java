@@ -2,6 +2,7 @@ package gui;
 
 import gameEngine.BasicZombie;
 import gameEngine.Referee;
+import gameEngine.SprintZombie;
 import gameEngine.Zombie;
 
 import java.awt.BasicStroke;
@@ -15,6 +16,7 @@ import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
+
 import mapbuilder.Map;
 
 import javax.swing.JFrame;
@@ -26,7 +28,6 @@ import mapbuilder.MapWay;
 import mapbuilder.PathFinder;
 import mapbuilder.Retriever;
 import mapbuilder.XmlParser;
-
 import cs195n.CS195NFrontEnd;
 import cs195n.SwingFrontEnd;
 import cs195n.Vec2f;
@@ -63,11 +64,11 @@ public class TestFrontEnd extends SwingFrontEnd {
 			e.printStackTrace();
 		}
 		srcs = _m.getSources();
-		/*
+		///*
 		_ref.getZombies().add(new BasicZombie(srcs.get(5)));
 		_ref.getZombies().add(new BasicZombie(srcs.get(15)));
-		_ref.getZombies().add(new BasicZombie(srcs.get(1)));
-		*/
+		_ref.getZombies().add(new SprintZombie(srcs.get(1)));
+		//*/
 		super.startup();
 	}
 
