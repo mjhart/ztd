@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -20,7 +21,6 @@ import javax.imageio.ImageIO;
 
 import cs195n.Vec2f;
 import cs195n.Vec2i;
-
 import mapbuilder.MapWay;
 import mapbuilder.PathFinder.MyComparator;
 
@@ -37,6 +37,8 @@ public class Map {
 	private List<MapNode> srcs;
 	private Referee _ref;
 	
+	public boolean debug = true;
+	
 	public Map(String address, Referee ref) {
 		
 		_ref = ref;
@@ -44,7 +46,8 @@ public class Map {
 		wMin = new double[2];
 		wMax = new double[2];
 		
-		File stadd = Retriever.getFromAddress(address);
+		//File stadd = Retriever.getFromAddress(address);
+		File stadd = new File("stadd.xml");
 		XmlParser x = new XmlParser();
 		MapNode cent = x.parseAddress(stadd);
 		DistConverter dc = new DistConverter(cent.lat, cent.lon);
@@ -52,7 +55,8 @@ public class Map {
 		wMin[1] = dc.getBott(cent.lat);
 		wMax[0] = dc.getRight(cent.lon);
 		wMax[1] = dc.getTop(cent.lat);
-		File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
+		//File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
+		File box = new File("box.xml");
 		x.parseBox(box);
 		_ways = x.getWays();
 		_nodes = x.getNodes();
@@ -84,6 +88,7 @@ public class Map {
 			g.drawOval(lonToX(n.lon), latToY(n.lat), 1, 1);
 		}
 		*/
+		//g.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 		for(MapWay w : _ways) {
 			List<MapNode> nList = w.getNodes();
 			for(int i=1; i<nList.size(); i++) {
@@ -102,7 +107,7 @@ public class Map {
 		}
 		
 		g.setColor(java.awt.Color.BLUE);
-		g.setStroke(new BasicStroke(3));
+		//g.setStroke(new BasicStroke(3));
 		for(MapNode n : srcs) {
 			MapNode cur = n;
 			MapNode next = cur.getNext();
@@ -116,7 +121,7 @@ public class Map {
 		
 		//g.drawImage(_baseSprite, lonToX(_base.lon), latToY(_base.lat), _baseSprite.getWidth()/2, _baseSprite.getHeight()/2, null);
 		g.setColor(java.awt.Color.BLUE);
-		g.drawOval(lonToX(_base.lon)-1, latToY(_base.lat)-1, 3, 3);
+		g.drawOval(lonToX(_base.lon)-2, latToY(_base.lat)-2, 3, 3);
 		
 		g.setColor(java.awt.Color.ORANGE);
 		for(MapNode n : srcs) {
@@ -166,7 +171,7 @@ public class Map {
 				continue;
 			}
 		}
-		System.out.println(results);
+		//System.out.println(results);
 		return results;
 	}
 	
@@ -189,7 +194,7 @@ public class Map {
 		MapNode node;
 		while(!pq.isEmpty()) {
 			node = pq.poll();
-			System.out.println(node);
+			//System.out.println(node);
 			Vec2f nv = new Vec2f((float)node.lon,(float) node.lat);
 			visited.add(node);
 			
@@ -238,7 +243,7 @@ public class Map {
 				}
 			}
 		}
-		System.out.println("adj: " + results);
+		//System.out.println("adj: " + results);
 		return results;
 	}
 	
@@ -262,6 +267,8 @@ public class Map {
 		this.srcs = findPaths(srcs, _base);
 		return this.srcs;
 	}
+	
+	
 	
 	/* for debugging */
 	

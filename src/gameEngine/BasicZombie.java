@@ -6,11 +6,7 @@ import mapbuilder.MapNode;
 public class BasicZombie extends Zombie {
 	
 	public BasicZombie(MapNode src) {
-		super._health = 5;
-		super._speed = 0.00001f;
-		super._strength = 1;
-		super._target = src.getNext();
-		super._coords = new Vec2f((float) src.lon, (float) src.lat);
-		super._tCoords = new Vec2f((float) super._target.lon, (float) super._target.lat);
+		super(new Vec2f((float) src.lon, (float) src.lat), 5, 1, src.getNext(), new Vec2f((float) src.getNext().lon, (float) src.getNext().lat), 0.00001f);
+		//System.out.println()
 	}
 }

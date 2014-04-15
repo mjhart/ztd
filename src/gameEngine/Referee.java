@@ -3,12 +3,15 @@ package gameEngine;
 import java.awt.Graphics2D;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
+import cs195n.Vec2f;
 import mapbuilder.Map;
 
 public class Referee {
-	private int round;
+	private int _round;
 	private Map _m;
 	private HashSet<Zombie> _zombies;
 	
@@ -31,5 +34,47 @@ public class Referee {
 	
 	public Collection<Zombie> getZombies() {
 		return _zombies;
+	}
+	
+	/**
+	 * Gets all the zombies within a given radius of a set of 
+	 * coordinates.
+	 * @param coords coordinates to be used for comparison
+	 * @param radius distance within zombies will be added to 
+	 * return set
+	 * @return list of zombies
+	 */
+	public List<Zombie> getZombiesInR(Vec2f coords, double radius) {
+		List<Zombie> results = new LinkedList<Zombie>();
+		for(Zombie z : _zombies) {
+			if(z.getCoords().dist2(coords) <= radius) {
+				results.add(z);
+			}
+		}
+		return results;
+	}
+	
+	/**
+	 * Deals damage to a set of zombies. If the two lists 
+	 * this method is called with have different lengths, 
+	 * the call will have no effect. 
+	 * 
+	 * @param zlist list of zombies to be dealt damage
+	 * @param dlist list of damage amounts to be dealt
+	 */
+	public void dealDamage(List<Zombie> zlist, List<Integer> dlist) {
+		if(zlist.size() != dlist.size()) {
+			return;
+		}
+		List<Zombie> toRemove = new LinkedList<Zombie>();
+		Iterator<Zombie> zIter = zlist.iterator();
+		Iterator<Integer> dIter = dlist.iterator();
+		while(zIter.hasNext()) {
+			Zombie z = zIter.next();
+			if(z.takeDamage(dIter.next()) != null) {
+				toRemove.add(z);
+			}
+		}
+		_zombies.removeAll(toRemove);
 	}
 }

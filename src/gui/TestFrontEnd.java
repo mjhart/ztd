@@ -57,16 +57,17 @@ public class TestFrontEnd extends SwingFrontEnd {
 		super.setDebugMode(true);
 		
 		_ref = new Referee(_m);
-		_m = new Map("69 Brown Street, Providence, RI", _ref);
+		try {
+			_m = new Map("69 Brown Street, Providence, RI", _ref);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		srcs = _m.getSources();
-		System.out.println(srcs);
+		/*
 		_ref.getZombies().add(new BasicZombie(srcs.get(5)));
 		_ref.getZombies().add(new BasicZombie(srcs.get(15)));
 		_ref.getZombies().add(new BasicZombie(srcs.get(1)));
-//		PathFinder pf = new PathFinder();
-//		base = x.getNodesHash().get("5980360728");
-//		srcs = pf.findSrcs(x.getNodes(), new Vec2f(-71.40086f, 41.82944f), new Vec2f(-71.40794f, 41.82544f));
-//		srcs = pf.findPaths(srcs, base, x.getNodes(), x.getWays());
+		*/
 		super.startup();
 	}
 
@@ -87,7 +88,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		g.setColor(java.awt.Color.RED);
 		new Console(0,0,(int) _size.x/5,_size.y,g);
 		
-
+		/*
 		g.setStroke(new BasicStroke(3));
 		for(MapNode n : srcs) {
 			MapNode cur = n;
@@ -110,7 +111,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		for(Zombie z : _ref.getZombies()) {
 			g.drawOval(lonToX(z.getCoords().x), latToY(z.getCoords().y), 3, 3);
 		}
-		
+		*/
 	}
 
 	@Override

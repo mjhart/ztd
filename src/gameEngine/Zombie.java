@@ -4,12 +4,22 @@ import mapbuilder.MapNode;
 import cs195n.Vec2f;
 
 public abstract class Zombie {
-	protected Vec2f _coords;
-	protected int _health;
-	protected int _strength;
-	protected MapNode _target;
-	protected Vec2f _tCoords;
-	protected float _speed;
+	private Vec2f _coords;
+	private int _health;
+	private int _strength;
+	private MapNode _target;
+	private Vec2f _tCoords;
+	private float _speed;
+	
+	public Zombie(Vec2f coords, int health, int strength, MapNode target, Vec2f tCoords, float speed) {
+		_coords = coords;
+		_health = health;
+		_strength = strength;
+		_target = target;
+		_tCoords = tCoords;
+		_speed = speed;
+		
+	}
 
 	public void move() {
 		if(_coords.dist2(_tCoords) < 0.00000001) {
