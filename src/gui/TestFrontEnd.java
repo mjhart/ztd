@@ -1,45 +1,20 @@
 package gui;
 
-import gameEngine.BasicZombie;
+import gameEngine.AbstractTower;
 import gameEngine.Referee;
 import gameEngine.Zombie;
 
-import java.awt.BasicStroke;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.awt.geom.AffineTransform;
-import java.io.File;
-
-import java.util.ArrayList;
-
 import java.util.Collection;
-
 import java.util.List;
 
 import mapbuilder.Map;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
-import ztdpac.AbstractTower;
-import ztdpac.BasicTower;
-import ztdpac.FlameTower;
-import ztdpac.RefStub;
-
-
-import mapbuilder.DistConverter;
 import mapbuilder.MapNode;
 import mapbuilder.MapWay;
-import mapbuilder.PathFinder;
-import mapbuilder.Retriever;
-import mapbuilder.XmlParser;
-import cs195n.CS195NFrontEnd;
 import cs195n.SwingFrontEnd;
-import cs195n.Vec2f;
 import cs195n.Vec2i;
 
 public class TestFrontEnd extends SwingFrontEnd {
@@ -102,33 +77,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 		_m.draw(g);
 		
 		g.setColor(java.awt.Color.RED);
-		new Console2(0,0,(int) _size.x/5,_size.y,g);
+		Console2 c = new Console2(0,0,(int) _size.x/5,_size.y,g);
+		c.draw(g);
 		
-		/*
-		g.setStroke(new BasicStroke(3));
-		for(MapNode n : srcs) {
-			MapNode cur = n;
-			MapNode next = cur.getNext();
-			while(next!=null) {
-				g.drawLine(lonToX(cur.lon), latToY(cur.lat), lonToX(next.lon), latToY(next.lat));
-				cur = next;
-				next = next.getNext();
-			}
-			//System.out.println("new path\n");
-		}
-		//System.exit(0);
-		
-		g.setColor(java.awt.Color.ORANGE);
-		for(MapNode n : srcs) {
-			g.drawOval(lonToX(n.lon), latToY(n.lat), 3, 3);
-		}
->>>>>>> zombies
-		
-		g.setColor(java.awt.Color.RED);
-		for(Zombie z : _ref.getZombies()) {
-			g.drawOval(lonToX(z.getCoords().x), latToY(z.getCoords().y), 3, 3);
-		}
-		*/
 	}
 
 	@Override
@@ -242,11 +193,11 @@ public class TestFrontEnd extends SwingFrontEnd {
 		new TestFrontEnd("ZTD", false, new Vec2i(600, 500));
 	}
 	
-	private int latToY(double lat) {
+	public int latToY(double lat) {
 		return (int) ((wMax[1]-lat)/(wMax[1]-wMin[1]) * _size.y);
 	}
 	
-	private int lonToX(double lon) {
+	public int lonToX(double lon) {
 		return (int) ((lon - wMin[0])/(wMax[0]-wMin[0]) * _size.x);
 	}
 	

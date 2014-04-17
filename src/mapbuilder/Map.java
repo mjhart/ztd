@@ -1,5 +1,6 @@
 package mapbuilder;
 
+import gameEngine.AbstractTower;
 import gameEngine.Referee;
 import gameEngine.Zombie;
 
@@ -45,8 +46,8 @@ public class Map {
 		wMin = new double[2];
 		wMax = new double[2];
 		
-		//File stadd = Retriever.getFromAddress(address);
-		File stadd = new File("stadd.xml");
+		File stadd = Retriever.getFromAddress(address);
+		//File stadd = new File("stadd.xml");
 		XmlParser x = new XmlParser();
 		MapNode cent = x.parseAddress(stadd);
 		DistConverter dc = new DistConverter(cent.lat, cent.lon);
@@ -54,8 +55,8 @@ public class Map {
 		wMin[1] = dc.getBott(cent.lat);
 		wMax[0] = dc.getRight(cent.lon);
 		wMax[1] = dc.getTop(cent.lat);
-		//File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
-		File box = new File("box.xml");
+		File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
+		//File box = new File("box.xml");
 		x.parseBox(box);
 		_ways = x.getWays();
 		_nodes = x.getNodes();
@@ -88,6 +89,8 @@ public class Map {
 		}
 		*/
 		//g.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+		
+		
 		for(MapWay w : _ways) {
 			List<MapNode> nList = w.getNodes();
 			for(int i=1; i<nList.size(); i++) {
@@ -130,6 +133,10 @@ public class Map {
 		g.setColor(java.awt.Color.RED);
 		for(Zombie z : _ref.getZombies()) {
 			g.drawOval(lonToX(z.getCoords().x), latToY(z.getCoords().y), 3, 3);
+		}
+		
+		for(AbstractTower t : _ref.towers()) {
+			t.draw(g);
 		}
 	}
 	

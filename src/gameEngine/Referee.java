@@ -17,10 +17,13 @@ public class Referee {
 	private boolean _running;
 	private Map _m;
 	private HashSet<Zombie> _zombies;
+	private List<AbstractTower> _towers;
 	
 	public Referee(Map m) {
 		_m = m;
 		_zombies = new HashSet<Zombie>();
+		_towers = new LinkedList<AbstractTower>();
+		_towers.add(new BasicTower(new Vec2f(300, 300), this));
 	}
 	
 	public void tick(long nanosSincePreviousTick) {
@@ -87,20 +90,18 @@ public class Referee {
 	 * @param zlist list of zombies to be dealt damage
 	 * @param dlist list of damage amounts to be dealt
 	 */
-	public void dealDamage(List<Zombie> zlist, List<Integer> dlist) {
-		if(zlist.size() != dlist.size()) {
-			return;
+	public void dealDamage(Zombie z, Integer d) {
+		if(z.takeDamage(d) != null) {
+			_zombies.remove(z);
 		}
-		List<Zombie> toRemove = new LinkedList<Zombie>();
-		Iterator<Zombie> zIter = zlist.iterator();
-		Iterator<Integer> dIter = dlist.iterator();
-		while(zIter.hasNext()) {
-			Zombie z = zIter.next();
-			if(z.takeDamage(dIter.next()) != null) {
-				toRemove.add(z);
-			}
+	}
+	
+	public Zombie getFarthest(Vec2f coords, double radius) {
+		List<Zombie> z = getZombiesInR(coords, radius);
+		if(z.size() > 0) {
+			return z.get(0);
 		}
-		_zombies.removeAll(toRemove);
+		return null;
 	}
 	
 	public void startRound() {
@@ -112,5 +113,9 @@ public class Referee {
 	
 	public void setMap(Map m) {
 		_m = m;
+	}
+	
+	public List<AbstractTower> towers() {
+		return _towers;
 	}
 }
