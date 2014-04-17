@@ -18,7 +18,7 @@ public class PathFinder {
 		spawns = new LinkedList<MapNode>();
 	}
 	
-	public List<MapNode> findSrcs(List<MapNode> nodeList, Vec2f max, Vec2f min) {
+	private List<MapNode> findSrcs(List<MapNode> nodeList, Vec2f max, Vec2f min) {
 		List<MapNode> results = new LinkedList<MapNode>();
 		for(MapNode n : nodeList) {
 			if(n.lon <= max.x && n.lon + 0.0001 > max.x) {
@@ -126,6 +126,12 @@ public class PathFinder {
 			return dist.get(o1).compareTo(dist.get(o2));
 		}
 		
+	}
+	
+	public List<MapNode> getSources() {
+		//List<MapNode> srcs = findSrcs(x.getNodes(), new Vec2f(-71.40086f, 41.82944f), new Vec2f(-71.40794f, 41.82544f));
+//		srcs = pf.findPaths(srcs, base, x.getNodes(), x.getWays());
+		return null;
 	}
 	
 }
