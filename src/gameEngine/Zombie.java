@@ -10,6 +10,7 @@ public abstract class Zombie {
 	private MapNode _target;
 	private Vec2f _tCoords;
 	private float _speed;
+	private long _nanoSincePrevAttack;
 	
 	public Zombie(Vec2f coords, int health, int strength, MapNode target, Vec2f tCoords, float speed) {
 		_coords = coords;
@@ -44,6 +45,15 @@ public abstract class Zombie {
 	
 	public Vec2f getCoords() {
 		return _coords;
+	}
+	
+	public int atttack(long nanoSincePrevTick) {
+		_nanoSincePrevAttack+=nanoSincePrevTick;
+		if(_nanoSincePrevAttack > 1000000000) {
+			_nanoSincePrevAttack = 0;
+			return _strength;
+		}
+		return 0;
 	}
 	
 }

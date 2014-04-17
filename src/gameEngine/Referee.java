@@ -15,15 +15,17 @@ public class Referee {
 	private int _numZombies;
 	private long _nanoSinceSpawn;
 	private boolean _running;
+	private Base _b;
 	private Map _m;
 	private HashSet<Zombie> _zombies;
 	private List<AbstractTower> _towers;
 	
 	public Referee(Map m) {
 		_m = m;
+		_b  = _m.getBase();
 		_zombies = new HashSet<Zombie>();
 		_towers = new LinkedList<AbstractTower>();
-		_towers.add(new BasicTower(new Vec2f(300, 300), this));
+		_towers.add(new BasicTower(new Vec2f(-71.4027f, 41.827f), this));
 	}
 	
 	public void tick(long nanosSincePreviousTick) {
@@ -40,10 +42,21 @@ public class Referee {
 				}
 			}
 			
+			// tell towers to attack
+			for(AbstractTower t : _towers) {
+				t.doAction(nanosSincePreviousTick);
+			}
+			
 			
 			// move zombies
 			for(Zombie z : _zombies) {
 				z.move();
+			}
+			
+			for(Zombie z : _zombies) {
+				if(z.getCoords().dist2(new Vec2f((float)_b.lon, (float)_b.lat)) < 0.00000001) {
+					_b.dealDamage(z.atttack(nanosSincePreviousTick));
+				}
 			}
 		}
 		

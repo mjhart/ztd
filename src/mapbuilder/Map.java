@@ -1,6 +1,7 @@
 package mapbuilder;
 
 import gameEngine.AbstractTower;
+import gameEngine.Base;
 import gameEngine.Referee;
 import gameEngine.Zombie;
 
@@ -34,7 +35,7 @@ public class Map {
 	private double[] wMax;
 	private Vec2i _size;
 	private PathFinder _pf;
-	private MapNode _base;
+	private Base _base;
 	private BufferedImage _baseSprite;
 	private List<MapNode> _srcs;
 	private Referee _ref;
@@ -69,7 +70,7 @@ public class Map {
 				double d2 = (n.lon-cent.lon)*(n.lon-cent.lon) + (n.lat-cent.lat)*(n.lat-cent.lat);
 				if(d2 < dist) {
 					dist = d2;
-					_base = n;
+					_base = new Base(n.id, n.lat, n.lon);
 				}
 			}
 		}
@@ -82,78 +83,6 @@ public class Map {
 		
 	}
 	
-	public void draw(Graphics2D g) {
-		/*
-		for(MapNode n : _nodes) {
-			g.drawOval(lonToX(n.lon), latToY(n.lat), 1, 1);
-		}
-		*/
-		//g.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-		
-		
-		for(MapWay w : _ways) {
-			List<MapNode> nList = w.getNodes();
-			for(int i=1; i<nList.size(); i++) {
-				g.drawLine(lonToX(nList.get(i-1).lon), latToY(nList.get(i-1).lat), lonToX(nList.get(i).lon), latToY(nList.get(i).lat));
-				//g.drawLine((int)nList.get(i-1).lon,(int) nList.get(i-1).lat,(int) nList.get(i).lon, (int)nList.get(i).lat);
-			}
-		}
-		
-		g.setColor(java.awt.Color.GREEN);
-		for(MapWay h : _highways) {
-			List<MapNode> nList = h.getNodes();
-			for(int i=1; i<nList.size(); i++) {
-				g.drawLine(lonToX(nList.get(i-1).lon), latToY(nList.get(i-1).lat), lonToX(nList.get(i).lon), latToY(nList.get(i).lat));
-				//g.drawLine((int)nList.get(i-1).lon,(int) nList.get(i-1).lat,(int) nList.get(i).lon, (int)nList.get(i).lat);
-			}
-		}
-		
-		g.setColor(java.awt.Color.BLUE);
-		//g.setStroke(new BasicStroke(3));
-		for(MapNode n : _srcs) {
-			MapNode cur = n;
-			MapNode next = cur.getNext();
-			while(next!=null) {
-				g.drawLine(lonToX(cur.lon), latToY(cur.lat), lonToX(next.lon), latToY(next.lat));
-				cur = next;
-				next = next.getNext();
-			}
-			//System.out.println("new path\n");
-		}
-		
-		//g.drawImage(_baseSprite, lonToX(_base.lon), latToY(_base.lat), _baseSprite.getWidth()/2, _baseSprite.getHeight()/2, null);
-		g.setColor(java.awt.Color.BLUE);
-		g.drawOval(lonToX(_base.lon)-2, latToY(_base.lat)-2, 3, 3);
-		
-		//g.setColor(java.awt.Color.ORANGE);
-		for(MapNode n : _srcs) {
-			g.fillOval(lonToX(n.lon)-2, latToY(n.lat)-2, 5, 5);
-		}
-		
-		g.setColor(java.awt.Color.RED);
-		for(Zombie z : _ref.getZombies()) {
-			g.drawOval(lonToX(z.getCoords().x), latToY(z.getCoords().y), 3, 3);
-		}
-		
-		for(AbstractTower t : _ref.towers()) {
-			t.draw(g);
-		}
-	}
-	
-	
-	private int latToY(double lat) {
-		return (int) ((wMax[1]-lat)/(wMax[1]-wMin[1]) * _size.y);
-	}
-	
-	private int lonToX(double lon) {
-		System.out.println("+++++++");
-		System.out.println(lon);
-		System.out.println(wMin[0]);
-		System.out.println(wMax[0]);
-		System.out.println(_size.x);
-		System.out.println("+++++++++");
-		return (int) ((lon - wMin[0])/(wMax[0]-wMin[0]) * _size.x);
-	}
 	
 	public void setSize(Vec2i size) {
 		_size = size;
@@ -161,6 +90,19 @@ public class Map {
 	
 	public List<MapNode> getSourceList() {
 		return Collections.unmodifiableList(_srcs);
+	}
+	
+
+	public Base getBase() {
+		return _base;
+	}
+	
+	public List<MapWay> getWays() {
+		return Collections.unmodifiableList(_ways);
+	}
+	
+	public List<MapWay> getHighways() {
+		return Collections.unmodifiableList(_highways);
 	}
 	
 	
@@ -320,66 +262,12 @@ public class Map {
 		return this._srcs;
 	}
 	
+	public double[] getwMax() {
+		return wMax;
+	}
 	
-	
-	/* for debugging */
-	
-	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode()==39) {
-			wMax[0]+=0.0005;
-			wMin[0]+=0.0005;
-		}
-		if(e.getKeyCode()==37) {
-			wMax[0]-=0.0005;
-			wMin[0]-=0.0005;
-		}
-		if(e.getKeyCode()==38) {
-			wMax[1]+=0.0005;
-			wMin[1]+=0.0005;
-		}
-		if(e.getKeyCode()==40) {
-			wMax[1]-=0.0005;
-			wMin[1]-=0.0005;
-		}
-		if(e.getKeyCode()==81) {if(e.getKeyCode()==39) {
-			wMax[0]+=0.0005;
-			wMin[0]+=0.0005;
-		}
-		if(e.getKeyCode()==37) {
-			wMax[0]-=0.0005;
-			wMin[0]-=0.0005;
-		}
-		if(e.getKeyCode()==38) {
-			wMax[1]+=0.0005;
-			wMin[1]+=0.0005;
-		}
-		if(e.getKeyCode()==40) {
-			wMax[1]-=0.0005;
-			wMin[1]-=0.0005;
-		}
-		if(e.getKeyCode()==81) {
-			wMax[0]-=0.0005;
-			wMin[0]+=0.0005;
-			wMax[1]-=0.0005;
-			wMin[1]+=0.0005;			
-		}
-		if(e.getKeyCode()==65) {
-			wMax[0]+=0.0005;
-			wMin[0]-=0.0005;
-			wMax[1]+=0.0005;
-			wMin[1]-=0.0005;			
-		}
-			wMax[0]-=0.0005;
-			wMin[0]+=0.0005;
-			wMax[1]-=0.0005;
-			wMin[1]+=0.0005;			
-		}
-		if(e.getKeyCode()==65) {
-			wMax[0]+=0.0005;
-			wMin[0]-=0.0005;
-			wMax[1]+=0.0005;
-			wMin[1]-=0.0005;			
-		}
+	public double[] getwMin() {
+		return wMin;
 	}
 	
 }

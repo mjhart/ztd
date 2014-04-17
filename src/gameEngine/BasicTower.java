@@ -9,7 +9,7 @@ import cs195n.Vec2f;
 public class BasicTower extends AbstractTower {
 
 	public BasicTower(Vec2f vec, Referee ref) {
-		super(10, 10, 1, vec, ref);
+		super(10, 10, 1000000000, vec, ref);
 		
 	}
 	
@@ -27,7 +27,9 @@ public class BasicTower extends AbstractTower {
 
 	@Override
 	public void action() {
+		
 		Zombie z = _ref.getFarthest(_vec, _radius);
+		System.out.println("Zombie: " + z);
 		if (z != null) {
 			_ref.dealDamage(z, _damage);
 		}
