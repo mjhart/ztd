@@ -7,10 +7,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import ztdpac.AbstractTower;
+import ztdpac.BasicTower;
+import ztdpac.FlameTower;
+import ztdpac.RefStub;
+import ztdpac.Referee;
 
 import mapbuilder.DistConverter;
 import mapbuilder.MapNode;
@@ -35,6 +42,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private Console2 _console;
 	private boolean _hasMain;
 	private boolean _hasConsole;
+	private List<AbstractTower> _towers;
 	
 	private MapNode base;
 	
@@ -94,6 +102,10 @@ public class TestFrontEnd extends SwingFrontEnd {
  * 
  */
 		super.startup();
+		Referee ref = new RefStub();
+		_towers = new ArrayList<>();
+		_towers.add(new BasicTower(new Vec2f(300,300), ref));
+		_towers.add(new FlameTower(new Vec2f(400,300), ref));
 	}
 
 	@Override
@@ -110,7 +122,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 //		
 //		_mm.draw(g);
 		
-		
+		for (AbstractTower t: _towers) {
+			t.draw(g);
+		}
 
 		if (_hasConsole == false) {
 			_console = new Console2(0,0,size.x, size.y, g);
