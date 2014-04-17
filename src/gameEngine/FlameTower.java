@@ -11,7 +11,7 @@ public class FlameTower extends AbstractTower {
 	
 	
 	public FlameTower(Vec2f vec, Referee ref) {
-		super(5, 5, .5, vec, ref);
+		super(5, 5, 500000000, vec, ref);
 	}
 
 	@Override

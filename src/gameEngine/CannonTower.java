@@ -10,7 +10,7 @@ import cs195n.Vec2f;
 public class CannonTower extends AbstractTower {
 
 	public CannonTower(Vec2f vec, Referee ref) {
-		super(30, 30, 5, vec, ref);
+		super(30, 30, 5000000000l, vec, ref);
 		
 	}
 	

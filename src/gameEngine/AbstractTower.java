@@ -9,13 +9,14 @@ import cs195n.Vec2f;
 
 public abstract class AbstractTower {
 	
+	private long _nanosSinceAction;
 	protected int _damage;
 	protected double _radius;
-	protected double _delay;
+	protected long _delay;
 	protected Vec2f _vec;
 	protected Referee _ref;
 	
-	public AbstractTower(int damage, double radius, double delay, Vec2f vec, Referee ref) {
+	public AbstractTower(int damage, double radius, long delay, Vec2f vec, Referee ref) {
 		_damage = damage;
 		_radius = radius;
 		_delay = delay;
@@ -23,6 +24,13 @@ public abstract class AbstractTower {
 		_ref = ref;
 	}
 	
+	public void doAction(long nanosSincePrevTick) {
+		_nanosSinceAction+=nanosSincePrevTick;
+		if(_nanosSinceAction > _delay) {
+			_nanosSinceAction = 0;
+			action();
+		}
+	}
 	
 	public abstract void action();
 	
@@ -35,7 +43,7 @@ public abstract class AbstractTower {
 	}
 	
 	public void halfDelay() {
-		_delay = .5*_delay;
+		_delay = _delay/2;
 	}
 	
 
