@@ -1,6 +1,7 @@
 package ztdpac;
 
 import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 
 import cs195n.Vec2f;
 
@@ -37,13 +38,21 @@ public abstract class AbstractTower {
 	}
 	
 
+//	//Definitely move to Map
+//	public boolean canBuild(int x, int y) {
+//		boolean canbuild = true;
+//		Rectangle2D r = new Rectangle2D.Float(x+5, y+5, 10, 10);
+//		for (Line2D h: _highlines) {
+//			if (h.intersects(r)) {
+//				canbuild = false;
+//			}
+//		}
+//		return canbuild;
+//	}
+	
+	
+	
+	
 }
 
 
-
-//Abstract Tower
-//Tower(damage, radius, coordinates)
-//action(): Search for zombies within radius and deal damage on them, working with the referee. Different towers may not perform the action on every call. For example, a bomb tower might wait 3 seconds before it deals damage.
-//halfDelay(): Halves the delay time for the tower
-//doubleDamage(): Doubles the damage a tower delivers
-//Towers can call getNeighbors in Engine to find zombies within their radius
