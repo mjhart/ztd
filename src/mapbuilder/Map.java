@@ -146,6 +146,12 @@ public class Map {
 	}
 	
 	private int lonToX(double lon) {
+		System.out.println("+++++++");
+		System.out.println(lon);
+		System.out.println(wMin[0]);
+		System.out.println(wMax[0]);
+		System.out.println(_size.x);
+		System.out.println("+++++++++");
 		return (int) ((lon - wMin[0])/(wMax[0]-wMin[0]) * _size.x);
 	}
 	

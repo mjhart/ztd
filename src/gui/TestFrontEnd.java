@@ -25,7 +25,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private List<MapNode> srcs;
 	
 	private MainMenu _mm;
-	private Console2 _console;
+	private Console2 _c;
 	private boolean _hasMain;
 	private boolean _hasConsole;
 	private List<AbstractTower> _towers;
@@ -48,23 +48,20 @@ public class TestFrontEnd extends SwingFrontEnd {
 		super.setDebugMode(true);
 		
 		_ref = new Referee(_m);
-		try {
-			_m = new Map("69 Brown Street, Providence, RI", _ref);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		_ref.setMap(_m);
-		
-		srcs = _m.getSources();
-		///*
-		_ref.startRound();
-		//*/
+		_mm = new MainMenu(size.x, size.y);
+		_hasMain = true;
+//		//_m = new Map("69 Brown Street, Providence, RI", _ref);
+//		_ref.setMap(_m);
+//		
+//		srcs = _m.getSources();
+//		///*
+//		_ref.startRound();
+//		//*/
 		super.startup();
 	}
 
 	@Override
 	protected void onTick(long nanosSincePreviousTick) {
-		// TODO Auto-generated method stub
 		_ref.tick(nanosSincePreviousTick);
 	}
 
@@ -74,12 +71,29 @@ public class TestFrontEnd extends SwingFrontEnd {
 		//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		//AffineTransform af = new AffineTransform(_size.x*(wMax[0]-wMin[0]), 0, 0, -1*_size.y*(wMax[1]-wMin[1]), -1*_size.x*wMin[0]/(wMax[0]-wMin[0]), _size.y*wMax[1]/(wMax[1]-wMin[1]));
 		//g.setTransform(af);
-		_m.draw(g);
 		
-		g.setColor(java.awt.Color.RED);
-		Console2 c = new Console2(0,0,(int) _size.x/5,_size.y,g);
-		c.draw(g);
 		
+		if (_hasMain) {
+			_mm.draw(g);
+		}
+		else if (_hasConsole) {
+			_c.draw(g);
+			_m.draw(g);
+			System.out.println("Drew Map");
+		}
+		else {
+			//_p.draw();
+		}
+		
+		
+	}
+	
+	public void makeMap(String add) {
+		_m = new Map(add, _ref);
+		System.out.println("Made Map");
+		_c = new Console2(0,0,_size.x,_size.y);
+		_hasConsole = true;
+		_hasMain = false;
 	}
 
 	@Override
@@ -89,26 +103,30 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onKeyPressed(KeyEvent e) {
-/*
 		String s = Character.toString(e.getKeyChar());
-		System.out.println("Typed char: " + e.getKeyChar());
-		System.out.println("Typed String: " + s);
-		if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-			s = "backspace";
-			System.out.println("back");
+		if (_hasMain) {
+
+			if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+				s = "backspace";
+				System.out.println("back");
+			}
+			else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				s = "enter";
+			}
+			else if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+				s = ""; //Don't print shift
+			}
+			_mm.keyTyped(s);
 		}
-		else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-			s = "enter";
-		}
-		else if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
-			s = ""; //Don't print shift
-		}
-		//_mm.keyTyped(s);
+		
+		
+		
 		if (s.equals("p")) {
-			_console.setResources(87);
-*/
+			_c.setResources(87);
+		}
+
 		// TODO Auto-generated method stub
-		_m.keyPressed(e);
+//		_m.keyPressed(e);
 		if(e.getKeyCode()==39) {
 			wMax[0]+=0.0005;
 			wMin[0]+=0.0005;
@@ -148,7 +166,16 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onMouseClicked(MouseEvent e) {
-		_console.contains(e.getX(), e.getY());
+		if (_hasMain) {
+			String add = _mm.contains(e.getX(), e.getY());
+			System.out.println("MM returned: " + add);
+			if (add != null) {
+				this.makeMap(add);
+			}
+		}
+		else if (_hasConsole) {
+			_c.contains(e.getX(), e.getY());
+		}
 
 	}
 
@@ -186,7 +213,10 @@ public class TestFrontEnd extends SwingFrontEnd {
 	protected void onResize(Vec2i newSize) {
 		// TODO Auto-generated method stub
 		_size = newSize;
-		_m.setSize(newSize);
+		if (_hasConsole) {
+			_m.setSize(newSize);
+		}
+		
 	}
 	
 	public static void main(String[] args) {

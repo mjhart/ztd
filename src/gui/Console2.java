@@ -26,12 +26,14 @@ public class Console2 {
 	private Text _basehealth;
 	private Text _resources;
 	private Graphics2D g;
+	private boolean _first;
+
 	
 	private List<ControlButton> _cbs; //A list of control buttons. Needed to check for mouse clicks
 	private List<TowerButton> _tbs; //A list of tower buttons. Needed to check for mouse clicks
 
 	
-	public Console2(float x, float y, float w, float h, Graphics2D g) {
+	public Console2(float x, float y, float w, float h) {
 		System.out.println("making new console");
 		_w = w;
 		_cw = w/4;
@@ -40,32 +42,31 @@ public class Console2 {
 		_y = y;
 		_cbs = new ArrayList<ControlButton>();
 		_tbs = new ArrayList<TowerButton>();
-
-
-		this.g = g;
-		
-		_textoffset = 30;
-		g.setColor(Color.WHITE);
-		g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-		_titleline1 = new Text("Zombie", _cw, _h/7);
-		_titleline2 = new Text("Tower Defense", _cw, _h/7+_textoffset);
-		g.setColor(Color.ORANGE);
-		_round = new Text("Round: 1", _cw, _h/7 + 2*_textoffset);
-		_basehealth = new Text("Base Health: 100", _cw, _h/7 + 3*_textoffset);
-		_resources = new Text("Resources: 500", _cw, _h/7 + 4*_textoffset);
-
-		g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-		_cbs.add(new ControlButton("Main Menu", _cw, 5*_h/7));
-		_cbs.add(new ControlButton("Restart", _cw,  5*_h/7 + _textoffset));
-		_cbs.add(new ControlButton("Quit", _cw,  5*_h/7 + 2*_textoffset));
-		
-		_tbs.add(new TowerButton("Basic Tower", _cw,  3*_h/7 + _textoffset));
-		_tbs.add(new TowerButton("Flame Tower", _cw,  3*_h/7 + 2*_textoffset));
-
+		_first = true;
+		this.g = null;
 	}
 
 	public void draw(Graphics2D g) {
 		this.g = g;
+		if (_first) {
+			_textoffset = 30;
+			g.setColor(Color.WHITE);
+			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+			_titleline1 = new Text("Zombie", _cw, _h/7);
+			_titleline2 = new Text("Tower Defense", _cw, _h/7+_textoffset);
+			g.setColor(Color.ORANGE);
+			_round = new Text("Round: 1", _cw, _h/7 + 2*_textoffset);
+			_basehealth = new Text("Base Health: 100", _cw, _h/7 + 3*_textoffset);
+			_resources = new Text("Resources: 500", _cw, _h/7 + 4*_textoffset);
+
+			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+			_cbs.add(new ControlButton("Main Menu", _cw, 5*_h/7));
+			_cbs.add(new ControlButton("Restart", _cw,  5*_h/7 + _textoffset));
+			_cbs.add(new ControlButton("Quit", _cw,  5*_h/7 + 2*_textoffset));
+			
+			_tbs.add(new TowerButton("Basic Tower", _cw,  3*_h/7 + _textoffset));
+			_tbs.add(new TowerButton("Flame Tower", _cw,  3*_h/7 + 2*_textoffset));
+		}
 		
 		java.awt.Color colorholder = g.getColor();
 		
