@@ -38,6 +38,7 @@ public abstract class Zombie {
 	public Zombie takeDamage(int damage) {
 		_health-=damage;
 		if(_health <= 0) {
+			System.out.println("Zombie killed");
 			return this;
 		}
 		return null;

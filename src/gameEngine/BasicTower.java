@@ -29,7 +29,6 @@ public class BasicTower extends AbstractTower {
 	public void action() {
 		
 		Zombie z = _ref.getFarthest(_vec, _radius);
-		System.out.println("Zombie: " + z);
 		if (z != null) {
 			_ref.dealDamage(z, _damage);
 		}

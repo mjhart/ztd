@@ -111,7 +111,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		
 		//g.drawImage(_baseSprite, lonToX(_base.lon), latToY(_base.lat), _baseSprite.getWidth()/2, _baseSprite.getHeight()/2, null);
 		g.setColor(java.awt.Color.BLUE);
-		g.drawOval(lonToX(_m.getBase().lon)-2, latToY(_m.getBase().lat)-2, 3, 3);
+		g.drawOval(lonToX(_m.getBaseNode().lon)-2, latToY(_m.getBaseNode().lat)-2, 3, 3);
 		
 		//g.setColor(java.awt.Color.ORANGE);
 		for(MapNode n : _m.getSourceList()) {

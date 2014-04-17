@@ -35,7 +35,7 @@ public class Map {
 	private double[] wMax;
 	private Vec2i _size;
 	private PathFinder _pf;
-	private Base _base;
+	private MapNode _baseNode;
 	private BufferedImage _baseSprite;
 	private List<MapNode> _srcs;
 	private Referee _ref;
@@ -70,7 +70,7 @@ public class Map {
 				double d2 = (n.lon-cent.lon)*(n.lon-cent.lon) + (n.lat-cent.lat)*(n.lat-cent.lat);
 				if(d2 < dist) {
 					dist = d2;
-					_base = new Base(n.id, n.lat, n.lon);
+					_baseNode = n;
 				}
 			}
 		}
@@ -92,8 +92,8 @@ public class Map {
 		return Collections.unmodifiableList(_srcs);
 	}
 	
-	public Base getBase() {
-		return _base;
+	public MapNode getBaseNode() {
+		return _baseNode;
 	}
 	
 	public List<MapWay> getWays() {
@@ -256,9 +256,12 @@ public class Map {
 	}
 	
 	public List<MapNode> getSources() {
+		System.out.println(_baseNode);
 		List<MapNode> srcs = potentialSrcs();
-		this._srcs = findPaths(srcs, _base);
-		return this._srcs;
+		System.out.println(srcs);
+		_srcs = findPaths(srcs, _baseNode);
+		System.out.println("Sources set " + _srcs);
+		return _srcs;
 	}
 	
 	public double[] getwMax() {

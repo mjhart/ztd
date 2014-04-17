@@ -53,7 +53,7 @@ public class Referee {
 			}
 			
 			for(Zombie z : _zombies) {
-				if(z.getCoords().dist2(new Vec2f((float)_b.lon, (float)_b.lat)) < 0.00000001) {
+				if(z.getCoords().dist2(new Vec2f((float)_b.getNode().lon, (float)_b.getNode().lat)) < 0.00000001) {
 					if(_b.dealDamage(z.atttack(nanosSincePreviousTick))) {
 						_running = false;
 						break;
@@ -128,7 +128,7 @@ public class Referee {
 	
 	public void setMap(Map m) {
 		_m = m;
-		_b  = _m.getBase();
+		_b  = new Base(_m.getBaseNode(), new Vec2f((float)_m.getBaseNode().lon, (float)_m.getBaseNode().lat), this);
 	}
 	
 	public List<AbstractTower> towers() {
