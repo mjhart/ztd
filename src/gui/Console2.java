@@ -60,12 +60,16 @@ public class Console2 {
 			_resources = new Text("Resources: 500", _cw, _h/7 + 4*_textoffset);
 
 			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-			_cbs.add(new ControlButton("Main Menu", _cw, 5*_h/7));
-			_cbs.add(new ControlButton("Restart", _cw,  5*_h/7 + _textoffset));
-			_cbs.add(new ControlButton("Quit", _cw,  5*_h/7 + 2*_textoffset));
+			_cbs.add(new ControlButton("Start Round!", _cw, 5*_h/7));
+			_cbs.add(new ControlButton("Main Menu", _cw, 5*_h/7 + _textoffset));
+			_cbs.add(new ControlButton("Restart", _cw,  5*_h/7 + 2*_textoffset));
+			_cbs.add(new ControlButton("Quit", _cw,  5*_h/7 + 3*_textoffset));
 			
 			_tbs.add(new TowerButton("Basic Tower", _cw,  3*_h/7 + _textoffset));
 			_tbs.add(new TowerButton("Flame Tower", _cw,  3*_h/7 + 2*_textoffset));
+			_tbs.add(new TowerButton("Cannon Tower", _cw,  3*_h/7 + 3*_textoffset));
+
+			_first = false;
 		}
 		
 		java.awt.Color colorholder = g.getColor();

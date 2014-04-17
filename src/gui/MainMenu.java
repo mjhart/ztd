@@ -201,7 +201,7 @@ public class MainMenu {
 			}
 		}
 		if (_go.getRect().contains(x, y)) {
-			return (_addline1 + " " + _addline2);
+			return (_addline1.getText() + " " + _addline2.getText());
 		}
 		return null;
 	}

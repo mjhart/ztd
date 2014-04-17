@@ -27,7 +27,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private MainMenu _mm;
 	private Console2 _c;
 	private boolean _hasMain;
-	private boolean _hasConsole;
+	private boolean _hasMap;
 	private List<AbstractTower> _towers;
 	
 	private MapNode base;
@@ -79,14 +79,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		if (_hasMain) {
 			_mm.draw(g);
 		}
-		else if (_hasConsole) {
-			_c.draw(g);
-
-			System.out.println("Drew Map");
-
-
-
-
+		else if (_hasMap) {
 
 			for(MapWay w : _m.getWays()) {
 				List<MapNode> nList = w.getNodes();
@@ -135,6 +128,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 			for(AbstractTower t : _ref.towers()) {
 				t.draw(g);
 			}
+			
+			_c.draw(g);
 		}
 		else {
 			//_p.draw();
@@ -144,26 +139,18 @@ public class TestFrontEnd extends SwingFrontEnd {
 	}
 	
 	public void makeMap(String add) {
-		_m = new Map(add, _ref);
-		System.out.println("Made Map");
+		try {
+			_m = new Map(add, _ref);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		_ref.setMap(_m);
+		wMax = _m.getwMax();
+		wMin = _m.getwMin();
+		srcs = _m.getSources();
 		_c = new Console2(0,0,_size.x,_size.y);
-		_hasConsole = true;
+		_hasMap = true;
 		_hasMain = false;
-		//TODO
-//		try {
-//			_m = new Map("69 Brown Street, Providence, RI", _ref);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		_ref.setMap(_m);
-//		
-//		wMax = _m.getwMax();
-//		wMin = _m.getwMin();
-//		
-//		srcs = _m.getSources();
-//		///*
-//		_ref.startRound();
-//		//*/
 	}
 
 	@Override
@@ -244,8 +231,12 @@ public class TestFrontEnd extends SwingFrontEnd {
 				this.makeMap(add);
 			}
 		}
-		else if (_hasConsole) {
-			_c.contains(e.getX(), e.getY());
+		else if (_hasMap) {
+			String command = _c.contains(e.getX(), e.getY());
+			String[] fw = command.split("\\s+");
+			if (fw[0].equals("Basic")) {
+				
+			}
 		}
 
 	}
@@ -284,7 +275,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	protected void onResize(Vec2i newSize) {
 		// TODO Auto-generated method stub
 		_size = newSize;
-		if (_hasConsole) {
+		if (_hasMap) {
 			_m.setSize(newSize);
 		}
 		
