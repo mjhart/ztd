@@ -45,4 +45,5 @@ public abstract class Zombie {
 	public Vec2f getCoords() {
 		return _coords;
 	}
+	
 }

@@ -12,6 +12,9 @@ import mapbuilder.Map;
 
 public class Referee {
 	private int _round;
+	private int _numZombies;
+	private long _nanoSinceSpawn;
+	private boolean _running;
 	private Map _m;
 	private HashSet<Zombie> _zombies;
 	
@@ -21,15 +24,37 @@ public class Referee {
 	}
 	
 	public void tick(long nanosSincePreviousTick) {
-		for(Zombie z : _zombies) {
-			z.move();
+		if(_running) {
+			
+			// add new zombies
+			if(_numZombies > 0) {
+				_nanoSinceSpawn+=nanosSincePreviousTick;
+				if(_nanoSinceSpawn > 1000000000) {
+					_nanoSinceSpawn = 0;
+					int rnd = (int) (Math.random() * _m.getSourceList().size());
+					_zombies.add(new BasicZombie(_m.getSourceList().get(rnd)));
+					_numZombies--;
+				}
+			}
+			
+			
+			// move zombies
+			for(Zombie z : _zombies) {
+				z.move();
+			}
+		}
+		
+		if(_running && _numZombies == 0 && _zombies.size() == 0) {
+			_running = false;
 		}
 	}
 	
 	public void paint(Graphics2D g) {
+		/*
 		for(Zombie z : _zombies) {
-			//g.drawOval(lonToX(z.getCoords().x), , width, height)
+			g.drawOval(lonToX(z.getCoords().x), , width, height)
 		}
+		*/
 	}
 	
 	public Collection<Zombie> getZombies() {
@@ -76,5 +101,16 @@ public class Referee {
 			}
 		}
 		_zombies.removeAll(toRemove);
+	}
+	
+	public void startRound() {
+		_round++;
+		_numZombies = _round * 5;
+		_nanoSinceSpawn = 0;
+		_running = true;
+	}
+	
+	public void setMap(Map m) {
+		_m = m;
 	}
 }

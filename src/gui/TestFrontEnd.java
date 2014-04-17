@@ -63,11 +63,11 @@ public class TestFrontEnd extends SwingFrontEnd {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		_ref.setMap(_m);
+		
 		srcs = _m.getSources();
 		///*
-		_ref.getZombies().add(new BasicZombie(srcs.get(5)));
-		_ref.getZombies().add(new BasicZombie(srcs.get(15)));
-		_ref.getZombies().add(new SprintZombie(srcs.get(1)));
+		_ref.startRound();
 		//*/
 		super.startup();
 	}

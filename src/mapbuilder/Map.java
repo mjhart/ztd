@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,7 +35,7 @@ public class Map {
 	private PathFinder _pf;
 	private MapNode _base;
 	private BufferedImage _baseSprite;
-	private List<MapNode> srcs;
+	private List<MapNode> _srcs;
 	private Referee _ref;
 	
 	public Map(String address, Referee ref) {
@@ -106,7 +107,7 @@ public class Map {
 		
 		g.setColor(java.awt.Color.BLUE);
 		//g.setStroke(new BasicStroke(3));
-		for(MapNode n : srcs) {
+		for(MapNode n : _srcs) {
 			MapNode cur = n;
 			MapNode next = cur.getNext();
 			while(next!=null) {
@@ -121,8 +122,8 @@ public class Map {
 		g.setColor(java.awt.Color.BLUE);
 		g.drawOval(lonToX(_base.lon)-2, latToY(_base.lat)-2, 3, 3);
 		
-		g.setColor(java.awt.Color.ORANGE);
-		for(MapNode n : srcs) {
+		//g.setColor(java.awt.Color.ORANGE);
+		for(MapNode n : _srcs) {
 			g.fillOval(lonToX(n.lon)-2, latToY(n.lat)-2, 5, 5);
 		}
 		
@@ -143,6 +144,10 @@ public class Map {
 	
 	public void setSize(Vec2i size) {
 		_size = size;
+	}
+	
+	public List<MapNode> getSourceList() {
+		return Collections.unmodifiableList(_srcs);
 	}
 	
 	
@@ -223,8 +228,8 @@ public class Map {
 		MapNode node;
 		while(!pq.isEmpty()) {
 			node = pq.poll();
-			System.out.println("Popped: " + node);
-			System.out.println("Popped dist: " + dist.get(node));
+			//System.out.println("Popped: " + node);
+			//System.out.println("Popped dist: " + dist.get(node));
 			Vec2f nv = new Vec2f((float)node.lon,(float) node.lat);
 			visited.add(node);
 			
@@ -238,8 +243,8 @@ public class Map {
 					
 					Vec2f nv2 = new Vec2f((float)nbor.lon,(float) nbor.lat);
 					float d = nv.dist2(nv2);
-					System.out.println(nbor.id);
-					System.out.println("distance to: " + Double.toString((dist.get(node) + d)));
+					//System.out.println(nbor.id);
+					//System.out.println("distance to: " + Double.toString((dist.get(node) + d)));
 					
 					if(dist.get(node) + d < dist.get(nbor)) {
 						dist.put(nbor, dist.get(node)+d);
@@ -277,7 +282,7 @@ public class Map {
 				}
 			}
 		}
-		System.out.println("adj: " + results);
+		//System.out.println("adj: " + results);
 		return results;
 	}
 	
@@ -298,8 +303,8 @@ public class Map {
 	
 	public List<MapNode> getSources() {
 		List<MapNode> srcs = potentialSrcs();
-		this.srcs = findPaths(srcs, _base);
-		return this.srcs;
+		this._srcs = findPaths(srcs, _base);
+		return this._srcs;
 	}
 	
 	
