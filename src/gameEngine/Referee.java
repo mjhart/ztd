@@ -22,7 +22,6 @@ public class Referee {
 	
 	public Referee(Map m) {
 		_m = m;
-		_b  = _m.getBase();
 		_zombies = new HashSet<Zombie>();
 		_towers = new LinkedList<AbstractTower>();
 		_towers.add(new BasicTower(new Vec2f(-71.4027f, 41.827f), this));
@@ -55,7 +54,10 @@ public class Referee {
 			
 			for(Zombie z : _zombies) {
 				if(z.getCoords().dist2(new Vec2f((float)_b.lon, (float)_b.lat)) < 0.00000001) {
-					_b.dealDamage(z.atttack(nanosSincePreviousTick));
+					if(_b.dealDamage(z.atttack(nanosSincePreviousTick))) {
+						_running = false;
+						break;
+					}
 				}
 			}
 		}
@@ -126,6 +128,7 @@ public class Referee {
 	
 	public void setMap(Map m) {
 		_m = m;
+		_b  = _m.getBase();
 	}
 	
 	public List<AbstractTower> towers() {
