@@ -13,6 +13,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,6 +32,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private List<MapWay> ways;
 	private List<MapWay> highs;
 	private List<MapNode> srcs;
+	private List<Line2D> _highline2D;
 	
 	private MainMenu _mm;
 	private Console2 _c;
@@ -58,7 +62,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 		_mm = new MainMenu(size.x, size.y);
 		_hasMain = true;
-
+		
+		_highline2D = new ArrayList<>();
+		
 		super.startup();
 	}
 
@@ -92,12 +98,15 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 			g.setColor(java.awt.Color.GREEN);
 			g.setStroke(new BasicStroke(3));
-			for(MapWay h : _m.getHighways()) {
-				List<MapNode> nList = h.getNodes();
-				for(int i=1; i<nList.size(); i++) {
-					g.drawLine(lonToX(nList.get(i-1).getX()), latToY(nList.get(i-1).getY()), lonToX(nList.get(i).getX()), latToY(nList.get(i).getY()));
-					//g.drawLine((int)nList.get(i-1).lon,(int) nList.get(i-1).lat,(int) nList.get(i).lon, (int)nList.get(i).lat);
-				}
+//			for(MapWay h : _m.getHighways()) {
+//				List<MapNode> nList = h.getNodes();
+//				for(int i=1; i<nList.size(); i++) {
+//					g.drawLine(lonToX(nList.get(i-1).getX()), latToY(nList.get(i-1).getY()), lonToX(nList.get(i).getX()), latToY(nList.get(i).getY()));
+//					//g.drawLine((int)nList.get(i-1).lon,(int) nList.get(i-1).lat,(int) nList.get(i).lon, (int)nList.get(i).lat);
+//				}
+//			}
+			for (Line2D l: _highline2D) {
+				g.draw(l);
 			}
 
 			g.setColor(java.awt.Color.BLUE);
@@ -151,6 +160,14 @@ public class TestFrontEnd extends SwingFrontEnd {
 		_hasMap = true;
 		_hasMain = false;
 		_mm.clear();
+		
+		for(MapWay h : _m.getHighways()) {
+			List<MapNode> nList = h.getNodes();
+			for(int i=1; i<nList.size(); i++) {
+				_highline2D.add(new Line2D.Float(lonToX(nList.get(i-1).getX()), latToY(nList.get(i-1).getY()), lonToX(nList.get(i).getX()), latToY(nList.get(i).getY())));
+				//g.drawLine((int)nList.get(i-1).lon,(int) nList.get(i-1).lat,(int) nList.get(i).lon, (int)nList.get(i).lat);
+			}
+		}
 	}
 
 
@@ -314,15 +331,23 @@ public class TestFrontEnd extends SwingFrontEnd {
 				}
 			}
 			else if ((e.getX() > _size.x/4) && (_command != null)) {
-				System.out.println(_command);
-				if (_command.equals("Basic")) {
-					_ref.addTower(new BasicTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
+				Rectangle2D r = new Rectangle2D.Double(e.getX() - 5, e.getY() - 5, 10, 10);
+				boolean dontdraw = false;
+				for (Line2D l: _highline2D) {
+					if (l.intersects(r)) {
+						dontdraw = true;
+					}
 				}
-				else if (_command.equals("Flame")) {
-					_ref.addTower(new FlameTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
-				}
-				else if (_command.equals("Cannon")) {
-					_ref.addTower(new CannonTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
+				if (!dontdraw) {
+					if (_command.equals("Basic")) {
+						_ref.addTower(new BasicTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
+					}
+					else if (_command.equals("Flame")) {
+						_ref.addTower(new FlameTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
+					}
+					else if (_command.equals("Cannon")) {
+						_ref.addTower(new CannonTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
+					}
 				}
 			}
 		}
