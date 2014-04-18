@@ -8,6 +8,7 @@ import gameEngine.Zombie;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +26,7 @@ import javax.imageio.ImageIO;
 import cs195n.Vec2f;
 import cs195n.Vec2i;
 import mapbuilder.MapWay;
-import mapbuilder.PathFinder.MyComparator;
+//import mapbuilder.PathFinder.MyComparator;
 
 public class Map {
 	private List<MapWay> _ways;
@@ -34,7 +35,7 @@ public class Map {
 	private double[] wMin;
 	private double[] wMax;
 	private Vec2i _size;
-	private PathFinder _pf;
+	//private PathFinder _pf;
 	private MapNode _baseNode;
 	private BufferedImage _baseSprite;
 	private List<MapNode> _srcs;
@@ -49,13 +50,13 @@ public class Map {
 		
 		File stadd = Retriever.getFromAddress(address);
 		//File stadd = new File("stadd.xml");
-		XmlParser x = new XmlParser();
-		MapNode cent = x.parseAddress(stadd);
-		DistConverter dc = new DistConverter(cent.lat, cent.lon);
-		wMin[0] = dc.getLeft(cent.lon);
-		wMin[1] = dc.getBott(cent.lat);
-		wMax[0] = dc.getRight(cent.lon);
-		wMax[1] = dc.getTop(cent.lat);
+		XmlParser x = new XmlParser(this);
+		Point2D.Double cent = x.parseAddress(stadd);
+		DistConverter dc = new DistConverter(cent.y, cent.x);
+		wMin[0] = dc.getLeft(cent.x);
+		wMin[1] = dc.getBott(cent.y);
+		wMax[0] = dc.getRight(cent.x);
+		wMax[1] = dc.getTop(cent.y);
 		File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
 		//File box = new File("box.xml");
 		x.parseBox(box);
@@ -67,7 +68,7 @@ public class Map {
 		double dist = Double.MAX_VALUE;
 		for(MapWay w : _highways) {
 			for(MapNode n : w.getNodes()) {
-				double d2 = (n.lon-cent.lon)*(n.lon-cent.lon) + (n.lat-cent.lat)*(n.lat-cent.lat);
+				double d2 = (n.getX()-50)*(n.getX()-50) + (n.getY()-50)*(n.getY()-50);
 				if(d2 < dist) {
 					dist = d2;
 					_baseNode = n;
@@ -112,19 +113,19 @@ public class Map {
 	private List<MapNode> potentialSrcs() {
 		List<MapNode> results = new LinkedList<MapNode>();
 		for(MapNode n : _nodes) {
-			if(n.lon <= wMax[0] && n.lon + 0.0001 > wMax[0]) {
+			if(n.getX() <= 100 && n.getX() + 5 > 100) {
 				results.add(n);
 				continue;
 			}
-			if(n.lat <= wMax[1] && n.lat + 0.0001 > wMax[1]) {
+			if(n.getY() <= 100 && n.getY() + 5 > 100) {
 				results.add(n);
 				continue;
 			}
-			if(n.lon >= wMin[0] && n.lon - 0.0001 < wMin[0]) {
+			if(n.getX() >= 0 && n.getX() - 5 < 0) {
 				results.add(n);
 				continue;
 			}
-			if(n.lat >= wMin[1] && n.lat - 0.0001 < wMin[1]) {
+			if(n.getY() >= 0 && n.getY() - 5 < 0) {
 				results.add(n);
 				continue;
 			}
@@ -185,7 +186,7 @@ public class Map {
 			node = pq.poll();
 			//System.out.println("Popped: " + node);
 			//System.out.println("Popped dist: " + dist.get(node));
-			Vec2f nv = new Vec2f((float)node.lon,(float) node.lat);
+			Vec2f nv = node._coords;
 			visited.add(node);
 			
 			if(srcList.contains(node)) {
@@ -196,7 +197,7 @@ public class Map {
 			for(MapNode nbor : getAdjacentNodes(node)) {
 				if(!visited.contains(nbor)) {
 					
-					Vec2f nv2 = new Vec2f((float)nbor.lon,(float) nbor.lat);
+					Vec2f nv2 = nbor._coords;
 					float d = nv.dist2(nv2);
 					//System.out.println(nbor.id);
 					//System.out.println("distance to: " + Double.toString((dist.get(node) + d)));
@@ -271,6 +272,14 @@ public class Map {
 	
 	public double[] getwMin() {
 		return wMin;
+	}
+	
+	public float latToY(double lat) {
+		return  (float) ((wMax[1]-lat)/(wMax[1]-wMin[1]) * 100);
+	}
+	
+	public float lonToX(double lon) {
+		return  (float) ((lon - wMin[0])/(wMax[0]-wMin[0]) * 100);
 	}
 	
 }

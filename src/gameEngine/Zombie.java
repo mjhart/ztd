@@ -23,12 +23,12 @@ public abstract class Zombie {
 	}
 
 	public void move() {
-		if(_coords.dist2(_tCoords) < 0.00000001) {
+		if(_coords.dist2(_tCoords) < 1) {
 			if(_target.getNext() == null) {
 				return;
 			}
 			_target = _target.getNext();
-			_tCoords = new Vec2f((float)_target.lon, (float) _target.lat);
+			_tCoords = _target._coords;
 		}
 		
 		Vec2f path = _tCoords.minus(_coords);

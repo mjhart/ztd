@@ -24,7 +24,8 @@ public class Referee {
 		_m = m;
 		_zombies = new HashSet<Zombie>();
 		_towers = new LinkedList<AbstractTower>();
-		_towers.add(new BasicTower(new Vec2f(-71.4027f, 41.827f), this));
+		_towers.add(new BasicTower(new Vec2f(50, 50), this));
+		_towers.add(new CannonTower(new Vec2f(45, 44), this));
 	}
 	
 	public void tick(long nanosSincePreviousTick) {
@@ -53,7 +54,7 @@ public class Referee {
 			}
 			
 			for(Zombie z : _zombies) {
-				if(z.getCoords().dist2(new Vec2f((float)_b.getNode().lon, (float)_b.getNode().lat)) < 0.00000001) {
+				if(z.getCoords().dist2(_b.getNode()._coords) < 1) {
 					if(_b.dealDamage(z.atttack(nanosSincePreviousTick))) {
 						_running = false;
 						break;
@@ -63,7 +64,10 @@ public class Referee {
 		}
 		
 		if(_running && _numZombies == 0 && _zombies.size() == 0) {
+			System.out.println("Round Over");
 			_running = false;
+			startRound();
+			System.out.println("Starting round " + _round);
 		}
 	}
 	
@@ -112,6 +116,7 @@ public class Referee {
 	}
 	
 	public Zombie getFarthest(Vec2f coords, double radius) {
+		//TODO
 		List<Zombie> z = getZombiesInR(coords, radius);
 		if(z.size() > 0) {
 			return z.get(0);
@@ -128,10 +133,21 @@ public class Referee {
 	
 	public void setMap(Map m) {
 		_m = m;
-		_b  = new Base(_m.getBaseNode(), new Vec2f((float)_m.getBaseNode().lon, (float)_m.getBaseNode().lat), this);
+		_b  = new Base(_m.getBaseNode(), _m.getBaseNode()._coords, this);
 	}
 	
 	public List<AbstractTower> towers() {
 		return _towers;
+	}
+	
+	public void addTower(AbstractTower t) {
+		_towers.add(t);
+	}
+	
+	public void restart() {
+		_round = 0;
+		_zombies.clear();
+		_towers.clear();
+		
 	}
 }

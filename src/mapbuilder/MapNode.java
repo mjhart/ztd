@@ -5,27 +5,27 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import cs195n.Vec2f;
+
 
 
 
 public class MapNode {
 	
-	public final double lat;
-	public final double lon;
-	public final double x;
-	public final double y;
+	public final Vec2f _coords;
 	public final String id;
 	private MapNode next;
 	private List<MapWay> ways;
 	
+	public MapNode(String id, float lat, float lon) {
+		this.id = id;
+		_coords = new Vec2f(lon, lat);
+		ways = new LinkedList<MapWay>();
+	}
+	
 	public MapNode(String id, double lat, double lon) {
 		this.id = id;
-		this.lat = lat;
-		this.lon = lon;
-		//TODO: fill in logic for transforming into pixels
-		//We could house this in DistConverter, and it could be done in the parser
-		this.x = (lon + 80)*(100000) - 859500;
-		this.y = (lat)*(100000) - 4182500;
+		_coords = new Vec2f((float)lon, (float)lat);
 		ways = new LinkedList<MapWay>();
 	}
 	
@@ -45,8 +45,12 @@ public class MapNode {
 		return Collections.unmodifiableList(ways);
 	}
 	
-	public Point2D getPoint() {
-		return new Point2D.Double(x,y);
+	public float getX() {
+		return _coords.x;
+	}
+	
+	public float getY() {
+		return _coords.y;
 	}
 	
 	@Override

@@ -3,7 +3,6 @@ package ztd;
 import java.util.List;
 
 import mapbuilder.MapNode;
-import mapbuilder.PathFinder;
 import mapbuilder.XmlParser;
 
 import org.junit.Test;

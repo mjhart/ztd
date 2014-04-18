@@ -5,6 +5,7 @@ import java.awt.geom.Rectangle2D;
 
 
 import cs195n.Vec2f;
+import cs195n.Vec2i;
 
 
 public abstract class AbstractTower {
@@ -34,9 +35,13 @@ public abstract class AbstractTower {
 	
 	public abstract void action();
 	
-	public abstract void draw(Graphics2D g);
+	public abstract void draw(Graphics2D g, Vec2i coords);
 	
-	public abstract void drawSimple(Graphics2D g);
+	public abstract void drawSimple(Graphics2D g, Vec2i coords);
+	
+	public Vec2f getCoords() {
+		return _vec;
+	}
 	
 	public void doubleDamage() {
 		_damage = 2*_damage;

@@ -1,5 +1,6 @@
 package mapbuilder;
 
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,13 +28,15 @@ public class XmlParser {
 	private List<MapWay> highways;
 	private HashMap<String, MapNode> mnhash;
 	private boolean doneparsebox;
+	private Map _m;
 	
-	public XmlParser() {
+	public XmlParser(Map m) {
 		mapnodes = new ArrayList<MapNode>(0);
 		mapways = new ArrayList<MapWay>(0);
 		mnhash = new HashMap<String, MapNode>();
 		highways = new ArrayList<MapWay>(0);
 		doneparsebox = false;
+		_m = m;
 	}
 	
 	/**
@@ -54,8 +57,9 @@ public class XmlParser {
 				Node node = nnodes.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
 					Element el = (Element) node;
-					MapNode mn = new MapNode(el.getAttribute("id"), Double.parseDouble(el.getAttribute("lat")),
-							Double.parseDouble(el.getAttribute("lon"))); //Pull out and save desired attributes
+					MapNode mn = new MapNode(el.getAttribute("id"), 
+							_m.latToY(Double.parseDouble(el.getAttribute("lat"))),
+							_m.lonToX(Double.parseDouble(el.getAttribute("lon")))); //Pull out and save desired attributes
 					mnhash.put(mn.id, mn);
 					mapnodes.add(mn);
 				}
@@ -175,7 +179,7 @@ public class XmlParser {
 	 * @param xmlfile An xml file from OSM containing relevant info
 	 * @return A mapnode containing the lat and lon of the location
 	 */
-	public MapNode parseAddress(File xmlfile) {
+	public Point2D.Double parseAddress(File xmlfile) {
 		try {
 			//Start up the DOM
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -192,10 +196,7 @@ public class XmlParser {
 				String place_id = XmlParser.getAddInfo("place", "place_id", el);
 				double lat = Double.parseDouble(XmlParser.getAddInfo("place", "lat", el));
 				double lon = Double.parseDouble(XmlParser.getAddInfo("place", "lon", el));
-				MapNode mn = new MapNode(place_id, lat, lon);
-				System.out.println("Node ID: " + mn.id);
-				System.out.println("Centlat: " + mn.lat);
-				System.out.println("CentLon: " + mn.lon);
+				Point2D.Double mn = new Point2D.Double(lon, lat);
 				return mn;
 			}
 			else {

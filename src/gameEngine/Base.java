@@ -3,6 +3,7 @@ package gameEngine;
 import java.awt.Graphics2D;
 
 import cs195n.Vec2f;
+import cs195n.Vec2i;
 
 import mapbuilder.MapNode;
 
@@ -18,7 +19,6 @@ public class Base extends BasicTower {
 	}
 	
 	public boolean dealDamage(int damage) {
-		System.out.println("Base took " + damage + " damage");
 		_health-=damage;
 		if(_health <= 0) {
 			System.out.println("Base Destroyed!!");
@@ -32,13 +32,13 @@ public class Base extends BasicTower {
 	}
 
 	@Override
-	public void draw(Graphics2D g) {
+	public void draw(Graphics2D g, Vec2i coords) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void drawSimple(Graphics2D g) {
+	public void drawSimple(Graphics2D g, Vec2i coords) {
 		// TODO Auto-generated method stub
 		
 	}
