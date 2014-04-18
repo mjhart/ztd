@@ -92,6 +92,7 @@ public class Map {
 		return Collections.unmodifiableList(_srcs);
 	}
 	
+
 	public MapNode getBaseNode() {
 		return _baseNode;
 	}

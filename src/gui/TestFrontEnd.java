@@ -1,6 +1,9 @@
 package gui;
 
 import gameEngine.AbstractTower;
+import gameEngine.BasicTower;
+import gameEngine.CannonTower;
+import gameEngine.FlameTower;
 import gameEngine.Referee;
 import gameEngine.Zombie;
 
@@ -15,6 +18,7 @@ import mapbuilder.Map;
 import mapbuilder.MapNode;
 import mapbuilder.MapWay;
 import cs195n.SwingFrontEnd;
+import cs195n.Vec2f;
 import cs195n.Vec2i;
 
 public class TestFrontEnd extends SwingFrontEnd {
@@ -25,9 +29,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private List<MapNode> srcs;
 	
 	private MainMenu _mm;
-	private Console2 _console;
+	private Console2 _c;
 	private boolean _hasMain;
-	private boolean _hasConsole;
+	private boolean _hasMap;
 	private List<AbstractTower> _towers;
 	
 	private MapNode base;
@@ -37,6 +41,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private double[] wMax = {0,0};
 	private Map _m;
 	private Referee _ref;
+	private String _command;
 	
 	public TestFrontEnd(String title, boolean fullscreen) {
 		super(title, fullscreen);
@@ -48,26 +53,22 @@ public class TestFrontEnd extends SwingFrontEnd {
 		super.setDebugMode(true);
 		
 		_ref = new Referee(_m);
-		try {
-			_m = new Map("69 Brown Street, Providence, RI", _ref);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		_ref.setMap(_m);
-		
-		wMax = _m.getwMax();
-		wMin = _m.getwMin();
-		
-		srcs = _m.getSources();
-		///*
-		_ref.startRound();
-		//*/
+
+		_mm = new MainMenu(size.x, size.y);
+		_hasMain = true;
+//		//_m = new Map("69 Brown Street, Providence, RI", _ref);
+//		_ref.setMap(_m);
+//		
+//		srcs = _m.getSources();
+//		///*
+//		_ref.startRound();
+//		//*/
+
 		super.startup();
 	}
 
 	@Override
 	protected void onTick(long nanosSincePreviousTick) {
-		// TODO Auto-generated method stub
 		_ref.tick(nanosSincePreviousTick);
 	}
 
@@ -77,34 +78,20 @@ public class TestFrontEnd extends SwingFrontEnd {
 		//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		//AffineTransform af = new AffineTransform(_size.x*(wMax[0]-wMin[0]), 0, 0, -1*_size.y*(wMax[1]-wMin[1]), -1*_size.x*wMin[0]/(wMax[0]-wMin[0]), _size.y*wMax[1]/(wMax[1]-wMin[1]));
 		//g.setTransform(af);
-		//_m.draw(g);
+
 		
-		for(MapWay w : _m.getWays()) {
-			List<MapNode> nList = w.getNodes();
-			for(int i=1; i<nList.size(); i++) {
-				g.drawLine(lonToX(nList.get(i-1).lon), latToY(nList.get(i-1).lat), lonToX(nList.get(i).lon), latToY(nList.get(i).lat));
-				//g.drawLine((int)nList.get(i-1).lon,(int) nList.get(i-1).lat,(int) nList.get(i).lon, (int)nList.get(i).lat);
-			}
+		
+		if (_hasMain) {
+			_mm.draw(g);
 		}
-		
-		g.setColor(java.awt.Color.GREEN);
-		for(MapWay h : _m.getHighways()) {
-			List<MapNode> nList = h.getNodes();
-			for(int i=1; i<nList.size(); i++) {
-				g.drawLine(lonToX(nList.get(i-1).lon), latToY(nList.get(i-1).lat), lonToX(nList.get(i).lon), latToY(nList.get(i).lat));
-				//g.drawLine((int)nList.get(i-1).lon,(int) nList.get(i-1).lat,(int) nList.get(i).lon, (int)nList.get(i).lat);
-			}
-		}
-		
-		g.setColor(java.awt.Color.BLUE);
-		//g.setStroke(new BasicStroke(3));
-		for(MapNode n : _m.getSourceList()) {
-			MapNode cur = n;
-			MapNode next = cur.getNext();
-			while(next!=null) {
-				g.drawLine(lonToX(cur.lon), latToY(cur.lat), lonToX(next.lon), latToY(next.lat));
-				cur = next;
-				next = next.getNext();
+		else if (_hasMap) {
+
+			for(MapWay w : _m.getWays()) {
+				List<MapNode> nList = w.getNodes();
+				for(int i=1; i<nList.size(); i++) {
+					g.drawLine(lonToX(nList.get(i-1).lon), latToY(nList.get(i-1).lat), lonToX(nList.get(i).lon), latToY(nList.get(i).lat));
+					//g.drawLine((int)nList.get(i-1).lon,(int) nList.get(i-1).lat,(int) nList.get(i).lon, (int)nList.get(i).lat);
+				}
 			}
 			//System.out.println("new path\n");
 		}
@@ -117,16 +104,23 @@ public class TestFrontEnd extends SwingFrontEnd {
 		for(MapNode n : _m.getSourceList()) {
 			g.fillOval(lonToX(n.lon)-2, latToY(n.lat)-2, 5, 5);
 		}
+
 		
-		g.setColor(java.awt.Color.RED);
-		for(Zombie z : _ref.getZombies()) {
-			g.drawOval(lonToX(z.getCoords().x), latToY(z.getCoords().y), 3, 3);
+	}
+	
+	public void makeMap(String add) {
+		try {
+			_m = new Map(add, _ref);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
-		for(AbstractTower t : _ref.towers()) {
-			t.draw(g);
-		}
-		
+		_ref.setMap(_m);
+		wMax = _m.getwMax();
+		wMin = _m.getwMin();
+		srcs = _m.getSources();
+		_c = new Console2(0,0,_size.x/4,_size.y);
+		_hasMap = true;
+		_hasMain = false;
 	}
 
 	@Override
@@ -136,24 +130,31 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onKeyPressed(KeyEvent e) {
-/*
 		String s = Character.toString(e.getKeyChar());
-		System.out.println("Typed char: " + e.getKeyChar());
-		System.out.println("Typed String: " + s);
-		if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-			s = "backspace";
-			System.out.println("back");
+		if (_hasMain) {
+
+			if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+				s = "backspace";
+				System.out.println("back");
+			}
+			else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				s = "enter";
+			}
+			else if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+				s = ""; //Don't print shift
+			}
+			_mm.keyTyped(s);
 		}
-		else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-			s = "enter";
-		}
-		else if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
-			s = ""; //Don't print shift
-		}
-		//_mm.keyTyped(s);
+		
+		
+		
 		if (s.equals("p")) {
-			_console.setResources(87);
-*/
+			_c.setResources(87);
+		}
+
+		// TODO Auto-generated method stub
+//		_m.keyPressed(e);
+
 		if(e.getKeyCode()==39) {
 			wMax[0]+=0.0005;
 			wMin[0]+=0.0005;
@@ -193,7 +194,44 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onMouseClicked(MouseEvent e) {
-		_console.contains(e.getX(), e.getY());
+		if (_hasMain) {
+			String add = _mm.contains(e.getX(), e.getY());
+			System.out.println("MM returned: " + add);
+			if (add != null) {
+				this.makeMap(add);
+			}
+		}
+		else if (_hasMap) {
+			String command = _c.contains(e.getX(), e.getY());
+			if (command != null) {
+				String[] fw = command.split("\\s+");
+				_command = fw[0];
+				if (_command.equals("Start")) {
+					_ref.startRound();
+				}
+				else if (_command.equals("Main")) {
+					_hasMain = true;
+					_hasMap = false;
+				}
+				else if (_command.equals("Restart")) {
+					_ref.restart();
+				}
+				else if (_command.equals("Quit")) {
+					System.exit(0);
+				}
+			}
+			else if (e.getX() > _size.x) {
+				if (_command.equals("Basic")) {
+					_ref.addTower(new BasicTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
+				}
+				else if (_command.equals("Flame")) {
+					_ref.addTower(new FlameTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
+				}
+				else if (_command.equals("Cannon")) {
+					_ref.addTower(new CannonTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
+				}
+			}
+		}
 
 	}
 
@@ -231,7 +269,10 @@ public class TestFrontEnd extends SwingFrontEnd {
 	protected void onResize(Vec2i newSize) {
 		// TODO Auto-generated method stub
 		_size = newSize;
-		_m.setSize(newSize);
+		if (_hasMap) {
+			_m.setSize(newSize);
+		}
+		
 	}
 	
 	public static void main(String[] args) {
@@ -245,6 +286,14 @@ public class TestFrontEnd extends SwingFrontEnd {
 	
 	private int lonToX(double lon) {
 		return (int) ((lon - wMin[0])/(wMax[0]-wMin[0]) * _size.x);
+	}
+	
+	private float yToLat(double y) {
+		return (float) (((y/_size.y)*(wMax[1]-wMin[1]) - wMax[1]) * -1);
+	}
+	
+	private float xToLon(double x) {
+		return (float) ((x/_size.x)*(wMax[0]-wMin[0]) + wMin[0]);
 	}
 	
 	public Collection<Zombie> getZombie() {

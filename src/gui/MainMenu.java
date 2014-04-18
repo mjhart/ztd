@@ -14,8 +14,8 @@ import java.util.List;
 public class MainMenu {
 
 	
-	private float _w; //Width of the whole frame
-	private float _h; //Height of the whole frame
+	private int _w; //Width of the whole frame
+	private int _h; //Height of the whole frame
 	private Graphics2D g;
 	
 	private List<ControlButton> _cbs; //A list of control buttons. Needed to check for mouse clicks
@@ -24,32 +24,32 @@ public class MainMenu {
 	private int _toggle;
 	private ControlButton _go;
 	private int _etbwidth = 25;
+	private boolean _first;
 	
-	public MainMenu(float w, float h, Graphics2D g) {
+	public MainMenu(int w, int h) {
 		System.out.println("making new mm");
 		_w = w;
 		_h = h;
 		_cbs = new ArrayList<ControlButton>();
 		_toggle = 1;
-		this.g = g;
-		
-		_go = new ControlButton("GO", _w/2, 3*_h/5);
-		
-		int c = 30;
-		
-		_addline1 = new EditableTextBox(_etbwidth, _w/2, _h/5 + c);
-		_addline2 = new EditableTextBox(_etbwidth, _w/2, _h/5 + 2*c);
-		
-		
-		_cbs.add(new ControlButton("Brown University", 3*_w/2, _h/5 + 2*c));
-		_cbs.add(new ControlButton("Wall Street", 3*_w/2, _h/5 + 3*c));
-		_cbs.add(new ControlButton("The White House", 3*_w/2, _h/5 + 4*c));
-		_cbs.add(new ControlButton("Eiffel Tower", 3*_w/2, _h/5 + 5*c));
-		_cbs.add(new ControlButton("Statue of Liberty", 3*_w/2, _h/5 + 6*c));
+		this.g = null;
+		_first = true;
 	}
 
 	public void draw(Graphics2D g) {
 		this.g = g;
+		if (_first) {
+			_go = new ControlButton("GO", _w/2, 3*_h/5);
+			int c = 30;
+			_addline1 = new EditableTextBox(_etbwidth, _w/2, _h/5 + c);
+			_addline2 = new EditableTextBox(_etbwidth, _w/2, _h/5 + 2*c);
+			_cbs.add(new ControlButton("Brown University", 3*_w/2, _h/5 + 2*c));
+			_cbs.add(new ControlButton("Wall Street", 3*_w/2, _h/5 + 3*c));
+			_cbs.add(new ControlButton("The White House", 3*_w/2, _h/5 + 4*c));
+			_cbs.add(new ControlButton("Eiffel Tower", 3*_w/2, _h/5 + 5*c));
+			_cbs.add(new ControlButton("Statue of Liberty", 3*_w/2, _h/5 + 6*c));
+			_first = false;
+		}
 		
 		java.awt.Color colorholder = g.getColor();
 		g.setColor(Color.GRAY);
@@ -69,6 +69,8 @@ public class MainMenu {
 		new Text("of our locations", centerX("of our locations", 3*_w/2), _h/5 + c - 10);
 		
 		g.drawLine((int) (_w/2), (int) (_h/5), (int) (_w/2), (int) (4*_h/5));
+
+
 		
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
@@ -79,16 +81,16 @@ public class MainMenu {
 		for (ControlButton cb: _cbs) {
 			cb.draw();
 		}
-
-
 		
 		g.setColor(colorholder);
 	}
 	
 	private float centerX(String name, float rightline) {
+		//System.out.println("name " + name);
+		//System.out.println("Rightline " + rightline);
 		FontMetrics fm = g.getFontMetrics();
 		int c = fm.stringWidth(name);
-		float x = (float) (.5*rightline - .5*c);
+		int x = (int) (.5*rightline - .5*c);
 		return x;
 	}
 	
@@ -100,18 +102,17 @@ public class MainMenu {
 		private float y;
 		public ControlButton(String name, float rightline, float y) {
 			_name = name;
+			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
 			float x = centerX(name, rightline);
 			this.x = x;
 			this.y = y;
-			g.setColor(Color.BLACK);
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-			FontMetrics fm = g.getFontMetrics();
-			_bb = fm.getStringBounds(name, g);
-			_r = new Rectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5));
 		}
 		public void draw() {
 			g.setColor(Color.BLACK);
 			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+			FontMetrics fm = g.getFontMetrics();
+			_bb = fm.getStringBounds(_name, g);
+			_r = new Rectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5));
 			g.draw(_r);
 			g.drawString(_name, x+5,(int) (y+_bb.getHeight()+1));
 		}
@@ -127,30 +128,31 @@ public class MainMenu {
 	
 	private class EditableTextBox {
 		private String _text;
+		private String _widthholder;
 		private Rectangle2D _r;
 		private Rectangle2D _bb;
 		private float x;
 		private float y;
 		public EditableTextBox(float textwidth, float rightline, float y) {
-			String name = "";
+			_widthholder = "";
 			for (int i = 0; i < textwidth; i++) {
-				name = name + "d";
+				_widthholder = _widthholder + "d";
 			}
-			float x = centerX(name, rightline);
-			this.x = x;
-			this.y = y;
-			g.setColor(Color.BLACK);
 			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-
-			FontMetrics fm = g.getFontMetrics();
-			_bb = fm.getStringBounds(name, g);
-			_r = new Rectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5));
-			g.draw(_r);
+			float x = centerX(_widthholder, rightline);
+			this.x = x;
+			System.out.println(x);
+			System.out.println(_w);
+			this.y = y;
 			_text = "";
-			System.out.println("MADE NEW ETB");
-			g.drawString(_text, x+5,(int) (y+_bb.getHeight()+1));
+			_bb = null;
+			_r = null;
 		}
 		public void draw() {
+			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+			FontMetrics fm = g.getFontMetrics();
+			_bb = fm.getStringBounds(_widthholder, g);
+			_r = new Rectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5));
 			g.setColor(Color.BLACK);
 			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
 			g.draw(_r);
@@ -199,7 +201,7 @@ public class MainMenu {
 			}
 		}
 		if (_go.getRect().contains(x, y)) {
-			return (_addline1 + " " + _addline2);
+			return (_addline1.getText() + " " + _addline2.getText());
 		}
 		return null;
 	}
