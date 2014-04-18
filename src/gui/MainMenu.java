@@ -171,6 +171,9 @@ public class MainMenu {
 				_text = _text.substring(0, len-1);
 			}
 		}
+		public void clear() {
+			_text = "";
+		}
 		public String getText() {
 			return _text;
 		}
@@ -260,5 +263,10 @@ public class MainMenu {
 		}
 	}
 	
+	
+	public void clear() {
+		_addline1.clear();
+		_addline2.clear();
+	}
 	
 }

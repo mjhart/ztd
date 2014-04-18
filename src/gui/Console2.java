@@ -1,6 +1,7 @@
 
 package gui;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -146,6 +147,7 @@ public class Console2 {
 		private Rectangle2D _bb;
 		private float x;
 		private float y;
+		private boolean _highlight;
 		public TowerButton(String name, float rightline, float y) {
 			_name = name;
 			float x = centerX(name, rightline);
@@ -162,12 +164,24 @@ public class Console2 {
 			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
 			g.draw(_r);
 			g.drawString(_name, x+5,(int) (y+_bb.getHeight()+1));
+			if (_highlight) {
+				g.setStroke(new BasicStroke(3));
+				g.setColor(Color.MAGENTA);
+				g.draw(_r);
+				g.setStroke(new BasicStroke(1));
+			}
 		}
 		public Rectangle2D getRect() {
 			return _r;
 		}
 		public String getName() {
 			return _name;
+		}
+		public void highlight() {
+			_highlight = true;
+		}
+		public void unhighlight() {
+			_highlight = false;
 		}
 	}
 	
@@ -205,12 +219,19 @@ public class Console2 {
 		for (TowerButton tb: _tbs) {
 			if (tb.getRect().contains(x, y)) {
 				System.out.println(tb.getName());
+				this.unhighlight();
+				tb.highlight();
 				return tb.getName();
 			}
 		}
 		return null;
 	}
 	
+	public void unhighlight() {
+		for (TowerButton tb: _tbs) {
+			tb.unhighlight();
+		}
+	}
 	
 	public void setRound(int i) {
 		_round = new Text("Round: " + Integer.toString(i), _cw, _h/7 + 2*_textoffset);

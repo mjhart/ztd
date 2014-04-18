@@ -10,9 +10,10 @@ import cs195n.Vec2i;
 
 public class FlameTower extends AbstractTower {
 	
+	private boolean _animate = false;
 	
 	public FlameTower(Vec2f vec, Referee ref) {
-		super(5, 5, 500000000, vec, ref);
+		super(5, 50, 500000000, vec, ref);
 	}
 
 	@Override
@@ -21,12 +22,18 @@ public class FlameTower extends AbstractTower {
 		g.fill(new Rectangle2D.Float(coords.x, coords.y, 10, 10));
 	}
 	
-	
 	@Override
 	public void drawSimple(Graphics2D g, Vec2i coords) {
-		g.setColor(java.awt.Color.ORANGE);
-		g.fill(new Rectangle2D.Float(coords.x, coords.y, 10, 10));
+		super.drawSimple(g, coords, java.awt.Color.ORANGE);
+		
+		//This is just for fun, the drawn oval is not accurate at allgh
+		if (_animate) {
+			g.setColor(java.awt.Color.ORANGE);
+			g.fillOval((int) coords.x - 50, (int) coords.y - 50, 100, 100);
+			_animate = false;
+		}
 	}
+	
 	
 	
 	@Override
@@ -34,10 +41,12 @@ public class FlameTower extends AbstractTower {
 		List<Zombie> zombies = _ref.getZombiesInR(_vec, _radius);
 		if (!zombies.isEmpty()) {
 			for (Zombie z: zombies) {
-			_ref.dealDamage(z, _damage);
+				_ref.dealDamage(z, _damage);
+				_animate = true;
+				System.out.println("Flame Tower Firing");
 			}
 		}
-		
+
 	}
 
 

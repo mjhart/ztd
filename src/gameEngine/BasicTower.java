@@ -22,8 +22,7 @@ public class BasicTower extends AbstractTower {
 
 	@Override
 	public void drawSimple(Graphics2D g, Vec2i coords) {
-		g.setColor(java.awt.Color.BLUE);
-		g.fill(new Rectangle2D.Float(coords.x, coords.y, 10, 10));
+		super.drawSimple(g, coords, java.awt.Color.BLUE);
 	}
 
 	@Override

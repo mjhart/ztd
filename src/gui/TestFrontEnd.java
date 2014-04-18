@@ -58,13 +58,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 		_mm = new MainMenu(size.x, size.y);
 		_hasMain = true;
-//		//_m = new Map("69 Brown Street, Providence, RI", _ref);
-//		_ref.setMap(_m);
-//		
-//		srcs = _m.getSources();
-//		///*
-//		_ref.startRound();
-//		//*/
 
 		super.startup();
 	}
@@ -98,6 +91,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 			}
 
 			g.setColor(java.awt.Color.GREEN);
+			g.setStroke(new BasicStroke(3));
 			for(MapWay h : _m.getHighways()) {
 				List<MapNode> nList = h.getNodes();
 				for(int i=1; i<nList.size(); i++) {
@@ -107,7 +101,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 			}
 
 			g.setColor(java.awt.Color.BLUE);
-			//g.setStroke(new BasicStroke(3));
 			for(MapNode n : _m.getSourceList()) {
 				MapNode cur = n;
 				MapNode next = cur.getNext();
@@ -118,6 +111,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 				}
 				//System.out.println("new path\n");
 			}
+
+			g.setStroke(new BasicStroke(1));
 
 			//g.drawImage(_baseSprite, lonToX(_base.lon), latToY(_base.lat), _baseSprite.getWidth()/2, _baseSprite.getHeight()/2, null);
 			g.setColor(java.awt.Color.BLUE);
@@ -155,8 +150,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 		_c = new Console2(0,0,_size.x/4,_size.y);
 		_hasMap = true;
 		_hasMain = false;
+		_mm.clear();
 	}
-	//*/
+
 
 	@Override
 	protected void onKeyTyped(KeyEvent e) {
@@ -243,10 +239,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		}
 		
 		
-		
-		if (s.equals("p")) {
-			_c.setResources(87);
-		}
+
 
 		// TODO Auto-generated method stub
 //		_m.keyPressed(e);
@@ -304,24 +297,25 @@ public class TestFrontEnd extends SwingFrontEnd {
 				_command = fw[0];
 				if (_command.equals("Start")) {
 					_ref.startRound();
+					_c.unhighlight();
 				}
 				else if (_command.equals("Main")) {
 					_hasMain = true;
 					_hasMap = false;
+					_c = null;
+					_m = null; //TODO reset map (ie zombies)
 				}
 				else if (_command.equals("Restart")) {
 					_ref.restart();
+					_c.unhighlight();
 				}
 				else if (_command.equals("Quit")) {
 					System.exit(0);
 				}
 			}
-			else if (e.getX() > _size.x/4) {
+			else if ((e.getX() > _size.x/4) && (_command != null)) {
 				System.out.println(_command);
 				if (_command.equals("Basic")) {
-					System.out.println(xToLon(e.getX()));
-					System.out.println(yToLat(e.getY()));
-
 					_ref.addTower(new BasicTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
 				}
 				else if (_command.equals("Flame")) {
@@ -389,11 +383,11 @@ public class TestFrontEnd extends SwingFrontEnd {
 	}
 	
 	private float yToLat(double y) {
-		return (float) (((y/_size.y)*(wMax[1]-wMin[1]) - wMax[1]) * -1);
+		return (float) y / _size.y * 100;
 	}
 	
 	private float xToLon(double x) {
-		return (float) ((x/_size.x)*(wMax[0]-wMin[0]) + wMin[0]);
+		return (float) x / _size.x * 100;
 	}
 	
 	public Collection<Zombie> getZombie() {
@@ -402,7 +396,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	
 	private void drawTower(AbstractTower t, Graphics2D g) {
 		Vec2i pCoords = new Vec2i(lonToX(t.getCoords().x), latToY(t.getCoords().y));
-		t.draw(g, pCoords);
+		t.drawSimple(g, pCoords);
 	}
 	
 

@@ -37,7 +37,13 @@ public abstract class AbstractTower {
 	
 	public abstract void draw(Graphics2D g, Vec2i coords);
 	
+	public void drawSimple(Graphics2D g, Vec2i coords, java.awt.Color c) {
+		g.setColor(c);
+		g.fill(new Rectangle2D.Float(coords.x - 5, coords.y - 5, 10, 10));
+	}
+	
 	public abstract void drawSimple(Graphics2D g, Vec2i coords);
+
 	
 	public Vec2f getCoords() {
 		return _vec;
