@@ -1,6 +1,9 @@
 package gui;
 
 import gameEngine.AbstractTower;
+import gameEngine.BasicTower;
+import gameEngine.CannonTower;
+import gameEngine.FlameTower;
 import gameEngine.Referee;
 import gameEngine.Zombie;
 
@@ -15,6 +18,7 @@ import mapbuilder.Map;
 import mapbuilder.MapNode;
 import mapbuilder.MapWay;
 import cs195n.SwingFrontEnd;
+import cs195n.Vec2f;
 import cs195n.Vec2i;
 
 public class TestFrontEnd extends SwingFrontEnd {
@@ -37,6 +41,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private double[] wMax = {0,0};
 	private Map _m;
 	private Referee _ref;
+	private String _command;
 	
 	public TestFrontEnd(String title, boolean fullscreen) {
 		super(title, fullscreen);
@@ -148,7 +153,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		wMax = _m.getwMax();
 		wMin = _m.getwMin();
 		srcs = _m.getSources();
-		_c = new Console2(0,0,_size.x,_size.y);
+		_c = new Console2(0,0,_size.x/4,_size.y);
 		_hasMap = true;
 		_hasMain = false;
 	}
@@ -233,9 +238,33 @@ public class TestFrontEnd extends SwingFrontEnd {
 		}
 		else if (_hasMap) {
 			String command = _c.contains(e.getX(), e.getY());
-			String[] fw = command.split("\\s+");
-			if (fw[0].equals("Basic")) {
-				
+			if (command != null) {
+				String[] fw = command.split("\\s+");
+				_command = fw[0];
+				if (_command.equals("Start")) {
+					_ref.startRound();
+				}
+				else if (_command.equals("Main")) {
+					_hasMain = true;
+					_hasMap = false;
+				}
+				else if (_command.equals("Restart")) {
+					_ref.restart();
+				}
+				else if (_command.equals("Quit")) {
+					System.exit(0);
+				}
+			}
+			else if (e.getX() > _size.x) {
+				if (_command.equals("Basic")) {
+					_ref.addTower(new BasicTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
+				}
+				else if (_command.equals("Flame")) {
+					_ref.addTower(new FlameTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
+				}
+				else if (_command.equals("Cannon")) {
+					_ref.addTower(new CannonTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
+				}
 			}
 		}
 
@@ -292,6 +321,14 @@ public class TestFrontEnd extends SwingFrontEnd {
 	
 	private int lonToX(double lon) {
 		return (int) ((lon - wMin[0])/(wMax[0]-wMin[0]) * _size.x);
+	}
+	
+	private float yToLat(double y) {
+		return (float) (((y/_size.y)*(wMax[1]-wMin[1]) - wMax[1]) * -1);
+	}
+	
+	private float xToLon(double x) {
+		return (float) ((x/_size.x)*(wMax[0]-wMin[0]) + wMin[0]);
 	}
 	
 	public Collection<Zombie> getZombie() {

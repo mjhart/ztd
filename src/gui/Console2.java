@@ -35,8 +35,7 @@ public class Console2 {
 	
 	public Console2(float x, float y, float w, float h) {
 		System.out.println("making new console");
-		_w = w;
-		_cw = w/4;
+		_cw = w;
 		_h = h;
 		_x = x;
 		_y = y;
