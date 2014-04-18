@@ -5,6 +5,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.List;
 
 import cs195n.Vec2f;
+import cs195n.Vec2i;
 
 
 public class FlameTower extends AbstractTower {
@@ -15,16 +16,16 @@ public class FlameTower extends AbstractTower {
 	}
 
 	@Override
-	public void draw(Graphics2D g) {
+	public void draw(Graphics2D g, Vec2i coords) {
 		g.setColor(java.awt.Color.ORANGE);
-		g.fill(new Rectangle2D.Float(_vec.x, _vec.y, 10, 10));
+		g.fill(new Rectangle2D.Float(coords.x, coords.y, 10, 10));
 	}
 	
 	
 	@Override
-	public void drawSimple(Graphics2D g) {
+	public void drawSimple(Graphics2D g, Vec2i coords) {
 		g.setColor(java.awt.Color.ORANGE);
-		g.fill(new Rectangle2D.Float(_vec.x, _vec.y, 10, 10));
+		g.fill(new Rectangle2D.Float(coords.x, coords.y, 10, 10));
 	}
 	
 	

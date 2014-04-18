@@ -5,25 +5,26 @@ import java.awt.geom.Rectangle2D;
 import java.util.List;
 
 import cs195n.Vec2f;
+import cs195n.Vec2i;
 
 
 public class CannonTower extends AbstractTower {
 
 	public CannonTower(Vec2f vec, Referee ref) {
-		super(30, 30, 5000000000l, vec, ref);
+		super(30, 100, 5000000000l, vec, ref);
 		
 	}
 	
 	@Override
-	public void draw(Graphics2D g) {
+	public void draw(Graphics2D g, Vec2i coords) {
 		g.setColor(java.awt.Color.BLACK);
-		g.fill(new Rectangle2D.Float(_vec.x, _vec.y, 10, 10));
+		g.fill(new Rectangle2D.Float(coords.x, coords.y, 10, 10));
 	}
 
 	@Override
-	public void drawSimple(Graphics2D g) {
+	public void drawSimple(Graphics2D g, Vec2i coords) {
 		g.setColor(java.awt.Color.BLACK);
-		g.fill(new Rectangle2D.Float(_vec.x, _vec.y, 10, 10));
+		g.fill(new Rectangle2D.Float(coords.x, coords.y, 10, 10));
 	}
 
 	@Override
@@ -35,6 +36,7 @@ public class CannonTower extends AbstractTower {
 				_ref.dealDamage(nb, _damage/2);
 			}
 			_ref.dealDamage(z, _damage);
+			System.out.println("Cannon Tower Firing");
 		}
 	}
 	
