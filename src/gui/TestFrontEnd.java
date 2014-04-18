@@ -134,7 +134,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 			g.setColor(java.awt.Color.RED);
 			for(Zombie z : _ref.getZombies()) {
-				g.drawOval(lonToX(z.getCoords().x), latToY(z.getCoords().y), 3, 3);
+				//g.drawOval(lonToX(z.getCoords().x), latToY(z.getCoords().y), 3, 3);
+				z.draw(g, new Vec2i(lonToX(z.getCoords().x), latToY(z.getCoords().y)));
 			}
 
 			for(AbstractTower t : _ref.towers()) {

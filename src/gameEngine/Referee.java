@@ -53,6 +53,7 @@ public class Referee {
 				z.move();
 			}
 			
+			// attack base
 			for(Zombie z : _zombies) {
 				if(z.getCoords().dist2(_b.getNode()._coords) < 1) {
 					if(_b.dealDamage(z.atttack(nanosSincePreviousTick))) {
@@ -60,6 +61,11 @@ public class Referee {
 						break;
 					}
 				}
+			}
+			
+			// update zombie animation
+			for(Zombie z : _zombies) {
+				z.updateImage(nanosSincePreviousTick);
 			}
 		}
 		

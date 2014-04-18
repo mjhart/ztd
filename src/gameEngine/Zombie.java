@@ -1,7 +1,10 @@
 package gameEngine;
 
+import java.awt.Graphics2D;
+
 import mapbuilder.MapNode;
 import cs195n.Vec2f;
+import cs195n.Vec2i;
 
 public abstract class Zombie {
 	private Vec2f _coords;
@@ -56,5 +59,8 @@ public abstract class Zombie {
 		}
 		return 0;
 	}
+	
+	public abstract void updateImage(long nanosSincePrevTick);
+	public abstract void draw(Graphics2D g, Vec2i coords);
 	
 }
