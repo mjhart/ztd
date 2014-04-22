@@ -9,10 +9,12 @@ import gameEngine.Zombie;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -33,12 +35,15 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private List<MapWay> highs;
 	private List<MapNode> srcs;
 	private List<Line2D> _highline2D;
+	private AffineTransform _at;
 	
 	private MainMenu _mm;
 	private Console2 _c;
 	private boolean _hasMain;
 	private boolean _hasMap;
 	private List<AbstractTower> _towers;
+	private AbstractTower _candidate;
+	private boolean _validPlace;
 	
 	private MapNode base;
 	
@@ -62,8 +67,12 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 		_mm = new MainMenu(size.x, size.y);
 		_hasMain = true;
+		_hasMap = false;
 		
 		_highline2D = new ArrayList<>();
+		_validPlace = false;
+		_candidate = null;
+		_at = new AffineTransform(1, 0, 0, 1, 0, 0);
 		
 		super.startup();
 	}
@@ -79,7 +88,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 		//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		//AffineTransform af = new AffineTransform(_size.x*(wMax[0]-wMin[0]), 0, 0, -1*_size.y*(wMax[1]-wMin[1]), -1*_size.x*wMin[0]/(wMax[0]-wMin[0]), _size.y*wMax[1]/(wMax[1]-wMin[1]));
-		//g.setTransform(af);
+		//g.setTransform(_at);
 
 
 
@@ -143,6 +152,17 @@ public class TestFrontEnd extends SwingFrontEnd {
 			}
 			
 			_c.draw(g);
+			
+			if (_candidate != null) {
+				drawTower(_candidate, g);
+				//TODO This radius is not accurate. Also need to translate to correct coord system
+				if (_validPlace) {
+					Ellipse2D e = new Ellipse2D.Float(_candidate.getCoords().x, _candidate.getCoords().y, 30, 30);
+				}
+				else {
+					//TODO draw a different color ellipse or don't draw
+				}
+			}
 		}
 
 	}
@@ -177,66 +197,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	}
 	
-	/*
-	@Override
-	protected void onDraw(Graphics2D g) {
-		
-		//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		AffineTransform af = new AffineTransform(_size.x / 100, 0, 0, _size.y / 100, 0, 0);
-		g.setTransform(af);
-		g.setStroke(new BasicStroke((float) 0.2));
-		//_m.draw(g);
-		
-		for(MapWay w : _m.getWays()) {
-			List<MapNode> nList = w.getNodes();
-			for(int i=1; i<nList.size(); i++) {
-				//g.drawLine(lonToX(nList.get(i-1).getX()), latToY(nList.get(i-1).getY()), lonToX(nList.get(i).getX()), latToY(nList.get(i).getY()));
-				g.drawLine((int)nList.get(i-1).getX(),(int) nList.get(i-1).getY(),(int) nList.get(i).getX(), (int)nList.get(i).getY());
-			}
-		}
-		
-		g.setColor(java.awt.Color.GREEN);
-		for(MapWay h : _m.getHighways()) {
-			List<MapNode> nList = h.getNodes();
-			for(int i=1; i<nList.size(); i++) {
-				//g.drawLine(lonToX(nList.get(i-1).getX()), latToY(nList.get(i-1).getY()), lonToX(nList.get(i).getX()), latToY(nList.get(i).getY()));
-				g.drawLine((int)nList.get(i-1).getX(),(int) nList.get(i-1).getY(),(int) nList.get(i).getX(), (int)nList.get(i).getY());
-			}
-		}
-		
-		g.setColor(java.awt.Color.BLUE);
-		//g.setStroke(new BasicStroke(3));
-		for(MapNode n : _m.getSourceList()) {
-			MapNode cur = n;
-			MapNode next = cur.getNext();
-			while(next!=null) {
-				//g.drawLine(lonToX(cur.getX()), latToY(cur.getY()), lonToX(next.getX()), latToY(next.getY()));
-				cur = next;
-				next = next.getNext();
-			}
-			//System.out.println("new path\n");
-		}
-		
-		//g.drawImage(_baseSprite, lonToX(_base.lon), latToY(_base.lat), _baseSprite.getWidth()/2, _baseSprite.getHeight()/2, null);
-		g.setColor(java.awt.Color.BLUE);
-		//g.drawOval(lonToX(_m.getBaseNode().getX())-2, latToY(_m.getBaseNode().getY())-2, 3, 3);
-		
-		//g.setColor(java.awt.Color.ORANGE);
-		for(MapNode n : _m.getSourceList()) {
-			//g.fillOval(lonToX(n.getX())-2, latToY(n.getY())-2, 5, 5);
-		}
-		
-		g.setColor(java.awt.Color.RED);
-		for(Zombie z : _ref.getZombies()) {
-			//g.drawOval(lonToX(z.getCoords().x), latToY(z.getCoords().y), 3, 3);
-		}
-		
-		for(AbstractTower t : _ref.towers()) {
-			//t.draw(g);
-		}
-		
-	}
-	*/
+	
 
 	@Override
 	protected void onKeyPressed(KeyEvent e) {
@@ -256,11 +217,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 			_mm.keyTyped(s);
 		}
 		
-		
 
-
-		// TODO Auto-generated method stub
-//		_m.keyPressed(e);
 
 		if(e.getKeyCode()==39) {
 			wMax[0]+=0.0005;
@@ -295,7 +252,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 	@Override
 	protected void onKeyReleased(KeyEvent e) {
 
-		// TODO Auto-generated method stub
 
 	}
 
@@ -332,6 +288,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 				}
 			}
 			else if ((e.getX() > _size.x/4) && (_command != null)) {
+				//TODO if intersects with a tower, select and have upgrade option
 				Rectangle2D r = new Rectangle2D.Double(e.getX() - 5, e.getY() - 5, 10, 10);
 				boolean dontdraw = false;
 				for (Line2D l: _highline2D) {
@@ -356,38 +313,51 @@ public class TestFrontEnd extends SwingFrontEnd {
 	}
 
 	@Override
-	protected void onMousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
+	protected void onMousePressed(MouseEvent e) {}
 
 	@Override
-	protected void onMouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
+	protected void onMouseReleased(MouseEvent e) {}
 
 	@Override
-	protected void onMouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
+	protected void onMouseDragged(MouseEvent e) {}
 
 	@Override
 	protected void onMouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
+		if (_hasMap) {
+			if ((e.getX() > _size.x/4) && (_command != null)) {
+				Rectangle2D r = new Rectangle2D.Double(e.getX() - 5, e.getY() - 5, 10, 10);
+				for (Line2D l: _highline2D) {
+					if (l.intersects(r)) {
+						_validPlace = false;
+					}
+					else {
+						_validPlace = true;
+					}
+				}
+				if (_command.equals("Basic")) {
+					_candidate = new BasicTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+				}
+				else if (_command.equals("Flame")) {
+					_candidate = new FlameTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+				}
+				else if (_command.equals("Cannon")) {
+					_candidate = new CannonTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+				}
+			}
+		}
 
 	}
 
 	@Override
-	protected void onMouseWheelMoved(MouseWheelEvent e) {
-		// TODO Auto-generated method stub
-
-	}
+	protected void onMouseWheelMoved(MouseWheelEvent e) {}
 
 	@Override
 	protected void onResize(Vec2i newSize) {
-		// TODO Auto-generated method stub
+		// TODO we should mess with this
+
+		if (_size != null) {
+			_at.scale(newSize.x - _size.x + 1, newSize.y - _size.y + 1);
+		}
 		_size = newSize;
 		if (_hasMap) {
 			_m.setSize(newSize);
