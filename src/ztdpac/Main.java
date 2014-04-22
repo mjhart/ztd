@@ -1,3 +1,62 @@
+package ztdpac;
+
+import gui.SpriteImp;
+
+import java.io.File;
+
+import javax.swing.JFrame;
+
+import mapbuilder.DistConverter;
+import mapbuilder.MapNode;
+import mapbuilder.Retriever;
+import mapbuilder.XmlParser;
+
+
+public class Main {
+	public static void main(String[] argv) {
+		new GuiFrame();
+	}
+	
+	
+}
+
+
+
+
+class GuiFrame extends JFrame {
+	public GuiFrame() {
+		super("Test");
+
+		setSize(600, 600);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(true);
+		ImageRet ir = new ImageRet();
+		ir.getImage(-71.40404, 41.82657, -71.40154, 41.82832);
+		SpriteImp s = new SpriteImp("map.png");
+		this.add(s);
+		setVisible(true);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //package ztdpac;
 //
 //import java.awt.BorderLayout;

@@ -7,6 +7,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,6 @@ public class MainMenu {
 	private boolean _first;
 	
 	public MainMenu(int w, int h) {
-		System.out.println("making new mm");
 		_w = w;
 		_h = h;
 		_cbs = new ArrayList<ControlButton>();
@@ -69,8 +69,6 @@ public class MainMenu {
 		new Text("of our locations", centerX("of our locations", 3*_w/2), _h/5 + c - 10);
 		
 		g.drawLine((int) (_w/2), (int) (_h/5), (int) (_w/2), (int) (4*_h/5));
-
-
 		
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
@@ -86,8 +84,6 @@ public class MainMenu {
 	}
 	
 	private float centerX(String name, float rightline) {
-		//System.out.println("name " + name);
-		//System.out.println("Rightline " + rightline);
 		FontMetrics fm = g.getFontMetrics();
 		int c = fm.stringWidth(name);
 		int x = (int) (.5*rightline - .5*c);
@@ -96,7 +92,7 @@ public class MainMenu {
 	
 	private class ControlButton {
 		private String _name;
-		private Rectangle2D _r;
+		private RoundRectangle2D _r;
 		private Rectangle2D _bb;
 		private float x;
 		private float y;
@@ -112,11 +108,11 @@ public class MainMenu {
 			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
 			FontMetrics fm = g.getFontMetrics();
 			_bb = fm.getStringBounds(_name, g);
-			_r = new Rectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5));
+			_r = new RoundRectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5), 5, 5);
 			g.draw(_r);
 			g.drawString(_name, x+5,(int) (y+_bb.getHeight()+1));
 		}
-		public Rectangle2D getRect() {
+		public RoundRectangle2D getRoundRect() {
 			return _r;
 		}
 		public String getName() {
@@ -129,7 +125,7 @@ public class MainMenu {
 	private class EditableTextBox {
 		private String _text;
 		private String _widthholder;
-		private Rectangle2D _r;
+		private RoundRectangle2D _r;
 		private Rectangle2D _bb;
 		private float x;
 		private float y;
@@ -152,18 +148,16 @@ public class MainMenu {
 			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
 			FontMetrics fm = g.getFontMetrics();
 			_bb = fm.getStringBounds(_widthholder, g);
-			_r = new Rectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5));
+			_r = new RoundRectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5), 5 , 5);
 			g.setColor(Color.BLACK);
 			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
 			g.draw(_r);
 			g.drawString(_text, x+5,(int) (y+_bb.getHeight()+1));
 		}
 		public void addLetter(String letter) {
-			System.out.println("Text before: " + _text);
 			if (_text.length() < _etbwidth) {
 				_text = _text + letter;
 			}
-			System.out.println("Text after: " + _text);
 		}
 		public void backspace() {
 			int len = _text.length();
@@ -199,13 +193,14 @@ public class MainMenu {
 	//Work in terms of vectors or x y?
 	public String contains(int x, int y) {
 		for (ControlButton cb: _cbs) {
-			if (cb.getRect().contains(x, y)) {
+			if (cb.getRoundRect().contains(x, y)) {
 				return cb.getName();
 			}
 		}
-		if (_go.getRect().contains(x, y)) {
+		if (_go.getRoundRect().contains(x, y)) {
 			return (_addline1.getText() + " " + _addline2.getText());
 		}
+		this.chooseAddline(x,y);
 		return null;
 	}
 	
@@ -223,8 +218,6 @@ public class MainMenu {
 	
 	
 	public void keyTyped(String letter) {
-		System.out.println("Toggle: " + _toggle);
-		System.out.println("Letter gotten: " + letter);
 		EditableTextBox holder = null;
 		EditableTextBox notholder = null;
 		if ((_toggle == 1) && (_addline1.getText().length() < _etbwidth)) {
@@ -258,7 +251,6 @@ public class MainMenu {
 			}
 		}
 		else {
-			System.out.println("Add letter called");
 			holder.addLetter(letter);
 		}
 	}
