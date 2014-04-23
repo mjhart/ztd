@@ -1,11 +1,11 @@
 package gui;
 
-import gameEngine.AbstractTower;
-import gameEngine.BasicTower;
-import gameEngine.CannonTower;
-import gameEngine.FlameTower;
 import gameEngine.Referee;
-import gameEngine.Zombie;
+import gameEngine.towers.AbstractTower;
+import gameEngine.towers.BasicTower;
+import gameEngine.towers.CannonTower;
+import gameEngine.towers.FlameTower;
+import gameEngine.zombie.Zombie;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
@@ -132,6 +132,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 				g.fillOval(lonToX(n.getX())-2, latToY(n.getY())-2, 5, 5);
 			}
 
+			_c.draw(g);
+			
 			g.setColor(java.awt.Color.RED);
 			for(Zombie z : _ref.getZombies()) {
 				//g.drawOval(lonToX(z.getCoords().x), latToY(z.getCoords().y), 3, 3);
@@ -142,7 +144,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 				drawTower(t, g);
 			}
 			
-			_c.draw(g);
+			
 		}
 
 	}

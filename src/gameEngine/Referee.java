@@ -1,5 +1,9 @@
 package gameEngine;
 
+import gameEngine.towers.AbstractTower;
+import gameEngine.zombie.Zombie;
+import gameEngine.zombie.ZombieFactory;
+
 import java.awt.Graphics2D;
 import java.util.Collection;
 import java.util.HashSet;
@@ -19,13 +23,13 @@ public class Referee {
 	private Map _m;
 	private HashSet<Zombie> _zombies;
 	private List<AbstractTower> _towers;
+	private ZombieFactory _zFactory;
 	
 	public Referee(Map m) {
 		_m = m;
 		_zombies = new HashSet<Zombie>();
 		_towers = new LinkedList<AbstractTower>();
-		_towers.add(new BasicTower(new Vec2f(50, 50), this));
-		_towers.add(new CannonTower(new Vec2f(45, 44), this));
+		_zFactory = new ZombieFactory();
 	}
 	
 	public void tick(long nanosSincePreviousTick) {
@@ -37,7 +41,7 @@ public class Referee {
 				if(_nanoSinceSpawn > 1000000000) {
 					_nanoSinceSpawn = 0;
 					int rnd = (int) (Math.random() * _m.getSourceList().size());
-					_zombies.add(new BasicZombie(_m.getSourceList().get(rnd)));
+					_zombies.add(_zFactory.makeBasicZombie(_m.getSourceList().get(rnd)));
 					_numZombies--;
 				}
 			}

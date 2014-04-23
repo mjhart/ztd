@@ -1,4 +1,7 @@
-package gameEngine;
+package gameEngine.towers;
+
+import gameEngine.Referee;
+import gameEngine.zombie.Zombie;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
