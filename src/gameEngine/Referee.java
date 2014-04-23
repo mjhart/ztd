@@ -158,6 +158,6 @@ public class Referee {
 		_round = 0;
 		_zombies.clear();
 		_towers.clear();
-		
+		_running = false;
 	}
 }

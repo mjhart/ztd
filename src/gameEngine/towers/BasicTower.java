@@ -1,5 +1,6 @@
 package gameEngine.towers;
 
+import gameEngine.BasicProjectile;
 import gameEngine.Referee;
 import gameEngine.zombie.Zombie;
 
@@ -32,6 +33,7 @@ public class BasicTower extends AbstractTower {
 	public void action() {
 		Zombie z = _ref.getFarthest(_vec, _radius);
 		if (z != null) {
+			super.addProjectile(new BasicProjectile(super._vec, z.getCoords(), this));
 			_ref.dealDamage(z, _damage);
 			System.out.println("Basic Tower Firing");
 		}

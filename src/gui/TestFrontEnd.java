@@ -424,7 +424,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	
 	private void drawTower(AbstractTower t, Graphics2D g) {
 		Vec2i pCoords = new Vec2i(lonToX(t.getCoords().x), latToY(t.getCoords().y));
-		t.drawSimple(g, pCoords);
+		t.doDraw(g, pCoords);
 	}
 	
 
