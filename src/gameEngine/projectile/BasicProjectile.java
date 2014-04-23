@@ -1,4 +1,4 @@
-package gameEngine;
+package gameEngine.projectile;
 
 import gameEngine.towers.BasicTower;
 
@@ -22,7 +22,7 @@ public class BasicProjectile implements Projectile {
 	}
 	
 	@Override
-	public void action() {
+	public void action(long nanosSincePrevTick) {
 		System.out.println("Projectile moving");
 		if(_coords.dist2(_target) < 1) {
 			_t.removeProjectile(this);

@@ -1,7 +1,7 @@
 package gameEngine.towers;
 
-import gameEngine.Projectile;
 import gameEngine.Referee;
+import gameEngine.projectile.Projectile;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
@@ -33,7 +33,7 @@ public abstract class AbstractTower {
 	
 	public void doAction(long nanosSincePrevTick) {
 		for(Projectile p : _projectiles) {
-			p.action();
+			p.action(nanosSincePrevTick);
 		}
 		_nanosSinceAction+=nanosSincePrevTick;
 		if(_nanosSinceAction > _delay) {

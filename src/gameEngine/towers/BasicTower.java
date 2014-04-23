@@ -1,7 +1,7 @@
 package gameEngine.towers;
 
-import gameEngine.BasicProjectile;
 import gameEngine.Referee;
+import gameEngine.projectile.BasicProjectile;
 import gameEngine.zombie.Zombie;
 
 import java.awt.Graphics2D;

@@ -1,6 +1,7 @@
 package gameEngine.towers;
 
 import gameEngine.Referee;
+import gameEngine.projectile.CannonProjectile;
 import gameEngine.zombie.Zombie;
 
 import java.awt.Graphics2D;
@@ -33,6 +34,7 @@ public class CannonTower extends AbstractTower {
 	public void action() {
 		Zombie z = _ref.getFarthest(_vec, _radius);
 		if (z != null) {
+			super.addProjectile(new CannonProjectile(super._vec, z.getCoords(), this));
 			List<Zombie> splash = _ref.getZombiesInR(z.getCoords(), 10);
 			for (Zombie nb: splash) {
 				_ref.dealDamage(nb, _damage/2);
