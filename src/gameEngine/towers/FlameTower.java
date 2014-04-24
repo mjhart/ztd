@@ -1,4 +1,7 @@
-package gameEngine;
+package gameEngine.towers;
+
+import gameEngine.Referee;
+import gameEngine.zombie.Zombie;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
@@ -37,7 +40,7 @@ public class FlameTower extends AbstractTower {
 	
 	
 	@Override
-	public void action() {
+	public boolean action() {
 		List<Zombie> zombies = _ref.getZombiesInR(_vec, _radius);
 		if (!zombies.isEmpty()) {
 			for (Zombie z: zombies) {
@@ -45,7 +48,9 @@ public class FlameTower extends AbstractTower {
 				_animate = true;
 				System.out.println("Flame Tower Firing");
 			}
+			return true;
 		}
+		return false;
 
 	}
 

@@ -1,9 +1,9 @@
 package mapbuilder;
 
-import gameEngine.AbstractTower;
 import gameEngine.Base;
 import gameEngine.Referee;
-import gameEngine.Zombie;
+import gameEngine.towers.AbstractTower;
+import gameEngine.zombie.Zombie;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
@@ -48,8 +48,8 @@ public class Map {
 		wMin = new double[2];
 		wMax = new double[2];
 		
-		File stadd = Retriever.getFromAddress(address);
-		//File stadd = new File("stadd.xml");
+		//File stadd = Retriever.getFromAddress(address);
+		File stadd = new File("stadd.xml");
 		XmlParser x = new XmlParser(this);
 		Point2D.Double cent = x.parseAddress(stadd);
 		DistConverter dc = new DistConverter(cent.y, cent.x);
@@ -57,8 +57,8 @@ public class Map {
 		wMin[1] = dc.getBott(cent.y);
 		wMax[0] = dc.getRight(cent.x);
 		wMax[1] = dc.getTop(cent.y);
-		File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
-		//File box = new File("box.xml");
+		//File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
+		File box = new File("box.xml");
 		x.parseBox(box);
 		_ways = x.getWays();
 		_nodes = x.getNodes();
@@ -139,14 +139,18 @@ public class Map {
 		HashSet<MapNode> visited = new HashSet<MapNode>();
 		HashMap<MapNode, Double> dist = new HashMap<MapNode, Double>();
 		
+		///*
 		for(MapNode n : _nodes) {
 			dist.put(n, Double.MAX_VALUE);
 		}
+		//*/
 		
 		visited.add(base);
 		dist.put(base, 0d);
+		//base.setDist(0);
 		
 		PriorityQueue<MapNode> pq = new PriorityQueue<MapNode>(10, new MyComparator(dist));
+		//PriorityQueue<MapNode> pq = new PriorityQueue<MapNode>();
 		
 		pq.add(base);
 		
@@ -201,13 +205,25 @@ public class Map {
 					float d = nv.dist2(nv2);
 					//System.out.println(nbor.id);
 					//System.out.println("distance to: " + Double.toString((dist.get(node) + d)));
-					
+					///*
 					if(dist.get(node) + d < dist.get(nbor)) {
 						dist.put(nbor, dist.get(node)+d);
 						pq.remove(nbor);
 						pq.add(nbor);
 						nbor.setNext(node);
+						nbor.setDist(dist.get(nbor));
 					}
+					//*/
+					/*
+					System.out.println("Node + d: " + node.getDist() + d);
+					System.out.println("nbor: " + nbor.getDist());
+					if(node.getDist() + d < nbor.getDist()) {
+						nbor.setDist(node.getDist()+d);
+						pq.remove(nbor);
+						pq.add(nbor);
+						nbor.setNext(node);
+					}
+					*/
 				}
 			}
 			//run = false;

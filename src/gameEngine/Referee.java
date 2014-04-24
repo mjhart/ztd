@@ -1,5 +1,9 @@
 package gameEngine;
 
+import gameEngine.towers.AbstractTower;
+import gameEngine.zombie.Zombie;
+import gameEngine.zombie.ZombieFactory;
+
 import java.awt.Graphics2D;
 import java.util.Collection;
 import java.util.HashSet;
@@ -19,26 +23,37 @@ public class Referee {
 	private Map _m;
 	private HashSet<Zombie> _zombies;
 	private List<AbstractTower> _towers;
+	private ZombieFactory _zFactory;
+	private int _money;
+	
+	// for debugging
+	Zombie _test;
 	
 	public Referee(Map m) {
 		_m = m;
 		_zombies = new HashSet<Zombie>();
 		_towers = new LinkedList<AbstractTower>();
-		_towers.add(new BasicTower(new Vec2f(50, 50), this));
-		_towers.add(new CannonTower(new Vec2f(45, 44), this));
+		_zFactory = new ZombieFactory();
 	}
 	
 	public void tick(long nanosSincePreviousTick) {
 		if(_running) {
+			
+			
+			// for debugging 
+			if(_test == null) {
+				_test = _zombies.toArray(new Zombie[1])[0];
+			}
+			else {
+				//System.out.println(_test.getDist());
+			}
 			
 			// add new zombies
 			if(_numZombies > 0) {
 				_nanoSinceSpawn+=nanosSincePreviousTick;
 				if(_nanoSinceSpawn > 1000000000) {
 					_nanoSinceSpawn = 0;
-					int rnd = (int) (Math.random() * _m.getSourceList().size());
-					_zombies.add(new BasicZombie(_m.getSourceList().get(rnd)));
-					_numZombies--;
+					createZombie();
 				}
 			}
 			
@@ -75,6 +90,45 @@ public class Referee {
 			startRound();
 			System.out.println("Starting round " + _round);
 		}
+	}
+	
+	public void createZombie() {
+		int rnd = (int) (Math.random() * _m.getSourceList().size());
+		
+		int type = 0;
+		double max = Math.random()*10;
+		
+		// sprint zombie
+		if(_round > 1) {
+			double sprint = Math.random() * 7;
+			if(sprint > max) {
+				type = 1;
+				max = sprint;
+			}
+		}
+		
+		// bruiser
+		if(_round > 3) {
+			double bruise = Math.random() * 5;
+			if(bruise > max) {
+				type = 2;
+				max = bruise;
+			}
+		}
+		
+		
+		switch(type) {
+			case 1: 
+				_zombies.add(_zFactory.makeSprintZombie(_m.getSourceList().get(rnd)));
+				break;
+				
+			case 2:
+				_zombies.add(_zFactory.makeBruiserZombie(_m.getSourceList().get(rnd)));
+	
+			default:
+				_zombies.add(_zFactory.makeBasicZombie(_m.getSourceList().get(rnd)));
+		}
+		_numZombies--;
 	}
 	
 	public void paint(Graphics2D g) {
@@ -117,17 +171,21 @@ public class Referee {
 	 */
 	public void dealDamage(Zombie z, Integer d) {
 		if(z.takeDamage(d) != null) {
+			_money+=_round;
 			_zombies.remove(z);
 		}
 	}
 	
 	public Zombie getFarthest(Vec2f coords, double radius) {
-		//TODO
-		List<Zombie> z = getZombiesInR(coords, radius);
-		if(z.size() > 0) {
-			return z.get(0);
+		Zombie result = null;
+		double min = Double.MAX_VALUE;
+		for(Zombie z : _zombies) {
+			if(z.getCoords().dist2(coords) <= radius && z.getDist() < min) {
+				min = z.getDist();
+				result = z;
+			}
 		}
-		return null;
+		return result;
 	}
 	
 	public void startRound() {
@@ -135,6 +193,7 @@ public class Referee {
 		_numZombies = _round * 5;
 		_nanoSinceSpawn = 0;
 		_running = true;
+		_money += _money/10;
 	}
 	
 	public void setMap(Map m) {
@@ -151,9 +210,10 @@ public class Referee {
 	}
 	
 	public void restart() {
+		_running = false;
 		_round = 0;
 		_zombies.clear();
 		_towers.clear();
-		
+		_money = 0;
 	}
 }

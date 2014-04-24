@@ -1,10 +1,11 @@
 package gameEngine;
 
+import gameEngine.towers.BasicTower;
+
 import java.awt.Graphics2D;
 
 import cs195n.Vec2f;
 import cs195n.Vec2i;
-
 import mapbuilder.MapNode;
 
 public class Base extends BasicTower {
