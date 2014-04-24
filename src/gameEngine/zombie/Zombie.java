@@ -20,6 +20,7 @@ public abstract class Zombie {
 	private int  _frame;
 	private long _nanoSincePrevAnimation;
 	private float _angle;
+	private double _dist;
 	
 	public Zombie(Vec2f coords, int health, int strength, MapNode target, Vec2f tCoords, float speed, BufferedImage[] sprites) {
 		_coords = coords;
@@ -29,6 +30,7 @@ public abstract class Zombie {
 		_tCoords = tCoords;
 		_speed = speed;
 		_sprites = sprites;
+		_dist = target.getDist();
 	}
 
 	public void move() {
@@ -43,6 +45,7 @@ public abstract class Zombie {
 		Vec2f path = _tCoords.minus(_coords);
 		_angle = path.angle();
 		_coords = _coords.plus(path.normalized().smult(_speed));
+		_dist-=(_speed);
 	}
 	
 	public Zombie takeDamage(int damage) {
@@ -69,7 +72,7 @@ public abstract class Zombie {
 	
 	public void updateImage(long nanosSincePrevTick) {
 		_nanoSincePrevAnimation+=nanosSincePrevTick;
-		if(_nanoSincePrevAnimation > 90000000) {
+		if(_nanoSincePrevAnimation > 10000000 / _speed) {
 			_nanoSincePrevAnimation = 0;
 			_frame = (_frame+1)%_sprites.length;
 			return;
@@ -93,6 +96,10 @@ public abstract class Zombie {
 		//g.drawImage
 		g.setTransform(af);
 	} 
+	
+	public double getDist() {
+		return _dist;
+	}
 	
 	
 }

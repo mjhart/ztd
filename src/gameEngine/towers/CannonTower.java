@@ -31,7 +31,7 @@ public class CannonTower extends AbstractTower {
 	}
 
 	@Override
-	public void action() {
+	public boolean action() {
 		Zombie z = _ref.getFarthest(_vec, _radius);
 		if (z != null) {
 			super.addProjectile(new CannonProjectile(super._vec, z.getCoords(), this));
@@ -41,7 +41,9 @@ public class CannonTower extends AbstractTower {
 			}
 			_ref.dealDamage(z, _damage);
 			System.out.println("Cannon Tower Firing");
+			return true;
 		}
+		return false;
 	}
 	
 }

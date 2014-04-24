@@ -139,14 +139,18 @@ public class Map {
 		HashSet<MapNode> visited = new HashSet<MapNode>();
 		HashMap<MapNode, Double> dist = new HashMap<MapNode, Double>();
 		
+		///*
 		for(MapNode n : _nodes) {
 			dist.put(n, Double.MAX_VALUE);
 		}
+		//*/
 		
 		visited.add(base);
 		dist.put(base, 0d);
+		//base.setDist(0);
 		
 		PriorityQueue<MapNode> pq = new PriorityQueue<MapNode>(10, new MyComparator(dist));
+		//PriorityQueue<MapNode> pq = new PriorityQueue<MapNode>();
 		
 		pq.add(base);
 		
@@ -201,13 +205,25 @@ public class Map {
 					float d = nv.dist2(nv2);
 					//System.out.println(nbor.id);
 					//System.out.println("distance to: " + Double.toString((dist.get(node) + d)));
-					
+					///*
 					if(dist.get(node) + d < dist.get(nbor)) {
 						dist.put(nbor, dist.get(node)+d);
 						pq.remove(nbor);
 						pq.add(nbor);
 						nbor.setNext(node);
+						nbor.setDist(dist.get(nbor));
 					}
+					//*/
+					/*
+					System.out.println("Node + d: " + node.getDist() + d);
+					System.out.println("nbor: " + nbor.getDist());
+					if(node.getDist() + d < nbor.getDist()) {
+						nbor.setDist(node.getDist()+d);
+						pq.remove(nbor);
+						pq.add(nbor);
+						nbor.setNext(node);
+					}
+					*/
 				}
 			}
 			//run = false;

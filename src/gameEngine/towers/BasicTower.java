@@ -30,13 +30,15 @@ public class BasicTower extends AbstractTower {
 	}
 
 	@Override
-	public void action() {
+	public boolean action() {
 		Zombie z = _ref.getFarthest(_vec, _radius);
 		if (z != null) {
 			super.addProjectile(new BasicProjectile(super._vec, z.getCoords(), this));
 			_ref.dealDamage(z, _damage);
 			System.out.println("Basic Tower Firing");
+			return true;
 		}
+		return false;
 	}
 	
 }

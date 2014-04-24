@@ -28,4 +28,12 @@ public class ZombieFactory {
 	public BasicZombie makeBasicZombie(MapNode src) {
 		return new BasicZombie(src, _basicSprites);
 	}
+	
+	public SprintZombie makeSprintZombie(MapNode src) {
+		return new SprintZombie(src, _basicSprites);
+	}
+	
+	public BruiserZombie makeBruiserZombie(MapNode src) {
+		return new BruiserZombie(src, _basicSprites);
+	}
 }

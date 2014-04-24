@@ -29,6 +29,7 @@ public abstract class AbstractTower {
 		_vec = vec;
 		_ref = ref;
 		_projectiles = new HashSet<Projectile>();
+		_nanosSinceAction = _delay + 1;
 	}
 	
 	public void doAction(long nanosSincePrevTick) {
@@ -37,12 +38,13 @@ public abstract class AbstractTower {
 		}
 		_nanosSinceAction+=nanosSincePrevTick;
 		if(_nanosSinceAction > _delay) {
-			_nanosSinceAction = 0;
-			action();
+			if(action()) {
+				_nanosSinceAction = 0;
+			}
 		}
 	}
 	
-	public abstract void action();
+	public abstract boolean action();
 	
 	public abstract void draw(Graphics2D g, Vec2i coords);
 	
