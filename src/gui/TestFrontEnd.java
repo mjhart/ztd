@@ -8,6 +8,7 @@ import gameEngine.towers.FlameTower;
 import gameEngine.zombie.Zombie;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
@@ -159,12 +160,18 @@ public class TestFrontEnd extends SwingFrontEnd {
 			if (_candidate != null) {
 				drawTower(_candidate, g);
 				//TODO This radius is not accurate. Also need to translate to correct coord system
+				Color holder = g.getColor();
 				if (_validPlace) {
-					Ellipse2D e = new Ellipse2D.Float(_candidate.getCoords().x, _candidate.getCoords().y, 30, 30);
+					g.setColor(new Color(0f, 1f, 0f, .5f));
+
 				}
 				else {
-					//TODO draw a different color ellipse or don't draw
+					g.setColor(new Color(1f, 0f, 0f, .5f));
+					System.out.println("HAHA");
 				}
+				Ellipse2D e = new Ellipse2D.Float(lonToX(_candidate.getCoords().x) - 15, latToY(_candidate.getCoords().y) - 15, 30, 30);
+				g.fill(e);
+				g.setColor(holder);
 			}
 
 		}
@@ -286,6 +293,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 				else if (_command.equals("Restart")) {
 					_ref.restart();
 					_c.unhighlight();
+					_command = null;
 				}
 				else if (_command.equals("Quit")) {
 					System.exit(0);
@@ -294,13 +302,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 			else if ((e.getX() > _size.x/4) && (_command != null)) {
 				//TODO if intersects with a tower, select and have upgrade option
 				Rectangle2D r = new Rectangle2D.Double(e.getX() - 5, e.getY() - 5, 10, 10);
-				boolean dontdraw = false;
-				for (Line2D l: _highline2D) {
-					if (l.intersects(r)) {
-						dontdraw = true;
-					}
-				}
-				if (!dontdraw) {
+				if (_validPlace) {
 					if (_command.equals("Basic")) {
 						_ref.addTower(new BasicTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
 					}
@@ -310,6 +312,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 					else if (_command.equals("Cannon")) {
 						_ref.addTower(new CannonTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
 					}
+					_c.unhighlight();
+					_command = null;
+					_candidate = null;
 				}
 			}
 		}
@@ -333,6 +338,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 				for (Line2D l: _highline2D) {
 					if (l.intersects(r)) {
 						_validPlace = false;
+						break;
 					}
 					else {
 						_validPlace = true;
@@ -347,6 +353,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 				else if (_command.equals("Cannon")) {
 					_candidate = new CannonTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
 				}
+			}
+			else {
+				_candidate = null;
 			}
 		}
 

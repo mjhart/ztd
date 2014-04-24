@@ -21,7 +21,7 @@ public class ImageRet {
 			address = address + left + ",";
 			address = address + bottom + ",";
 			address = address + right + ",";
-			address = address + "&size=400,400&type=map&imagetype=png";
+			address = address + "&size=600,600&type=map&imagetype=png";
 			
 			try {
 				URL mq = new URL(address);

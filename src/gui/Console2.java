@@ -8,6 +8,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class Console2 {
 		if (_first) {
 			_textoffset = 30;
 			g.setColor(Color.WHITE);
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			_titleline1 = new Text("Zombie", _cw, _h/7);
 			_titleline2 = new Text("Tower Defense", _cw, _h/7+_textoffset);
 			g.setColor(Color.ORANGE);
@@ -59,7 +60,7 @@ public class Console2 {
 			_basehealth = new Text("Base Health: 100", _cw, _h/7 + 3*_textoffset);
 			_resources = new Text("Resources: 500", _cw, _h/7 + 4*_textoffset);
 
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			_cbs.add(new ControlButton("Start Round!", _cw, 5*_h/7));
 			_cbs.add(new ControlButton("Main Menu", _cw, 5*_h/7 + _textoffset));
 			_cbs.add(new ControlButton("Restart", _cw,  5*_h/7 + 2*_textoffset));
@@ -78,7 +79,7 @@ public class Console2 {
 		g.fill(new Rectangle2D.Float(_x,_y,_cw,_h));
 		
 		g.setColor(Color.WHITE);
-		g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+		g.setFont(new Font("Helvetica", Font.BOLD, 15));
 		_titleline1.draw();
 		_titleline2.draw();
 		g.setColor(java.awt.Color.ORANGE);
@@ -89,13 +90,13 @@ public class Console2 {
 
 		
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+		g.setFont(new Font("Helvetica", Font.BOLD, 15));
 		for (ControlButton cb: _cbs) {
 			cb.draw();
 		}
 		
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+		g.setFont(new Font("Helvetica", Font.BOLD, 15));
 		for (TowerButton tb: _tbs) {
 			tb.draw();
 		}
@@ -112,7 +113,7 @@ public class Console2 {
 	
 	private class ControlButton {
 		private String _name;
-		private Rectangle2D _r;
+		private RoundRectangle2D _r;
 		private Rectangle2D _bb;
 		private float x;
 		private float y;
@@ -122,18 +123,18 @@ public class Console2 {
 			this.x = x;
 			this.y = y;
 			g.setColor(Color.BLACK);
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			FontMetrics fm = g.getFontMetrics();
 			_bb = fm.getStringBounds(name, g);
-			_r = new Rectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5));
+			_r = new RoundRectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5), 5, 5);
 		}
 		public void draw() {
 			g.setColor(Color.BLACK);
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			g.draw(_r);
 			g.drawString(_name, x+5,(int) (y+_bb.getHeight()+1));
 		}
-		public Rectangle2D getRect() {
+		public RoundRectangle2D getRect() {
 			return _r;
 		}
 		public String getName() {
@@ -143,7 +144,7 @@ public class Console2 {
 	
 	private class TowerButton {
 		private String _name;
-		private Rectangle2D _r;
+		private RoundRectangle2D _r;
 		private Rectangle2D _bb;
 		private float x;
 		private float y;
@@ -154,14 +155,14 @@ public class Console2 {
 			this.x = x;
 			this.y = y;
 			g.setColor(Color.BLACK);
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			FontMetrics fm = g.getFontMetrics();
 			_bb = fm.getStringBounds(name, g);
-			_r = new Rectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5));
+			_r = new RoundRectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5), 5, 5);
 		}
 		public void draw() {
 			g.setColor(Color.BLACK);
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			g.draw(_r);
 			g.drawString(_name, x+5,(int) (y+_bb.getHeight()+1));
 			if (_highlight) {
@@ -171,7 +172,7 @@ public class Console2 {
 				g.setStroke(new BasicStroke(1));
 			}
 		}
-		public Rectangle2D getRect() {
+		public RoundRectangle2D getRect() {
 			return _r;
 		}
 		public String getName() {

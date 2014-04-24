@@ -56,11 +56,11 @@ public class MainMenu {
 		g.fill(new Rectangle2D.Float(0,0,_w,_h));
 		
 		g.setColor(Color.WHITE);
-		g.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+		g.setFont(new Font("Helvetica", Font.BOLD, 30));
 		new Text("Zombie Tower Defense", centerX("Zombie Tower Defense", _w), _h/10);
 
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+		g.setFont(new Font("Helvetica", Font.BOLD, 15));
 		new Text("Enter an address", centerX("Enter an address", _w/2), _h/5);
 		
 		FontMetrics fm = g.getFontMetrics();
@@ -71,7 +71,7 @@ public class MainMenu {
 		g.drawLine((int) (_w/2), (int) (_h/5), (int) (_w/2), (int) (4*_h/5));
 		
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+		g.setFont(new Font("Helvetica", Font.BOLD, 15));
 		_addline1.draw();
 		_addline2.draw();
 		_go.draw();
@@ -98,17 +98,17 @@ public class MainMenu {
 		private float y;
 		public ControlButton(String name, float rightline, float y) {
 			_name = name;
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			float x = centerX(name, rightline);
 			this.x = x;
 			this.y = y;
 		}
 		public void draw() {
 			g.setColor(Color.BLACK);
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			FontMetrics fm = g.getFontMetrics();
 			_bb = fm.getStringBounds(_name, g);
-			_r = new RoundRectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5), 5, 5);
+			_r = new RoundRectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5), 10, 10);
 			g.draw(_r);
 			g.drawString(_name, x+5,(int) (y+_bb.getHeight()+1));
 		}
@@ -134,7 +134,7 @@ public class MainMenu {
 			for (int i = 0; i < textwidth; i++) {
 				_widthholder = _widthholder + "d";
 			}
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			float x = centerX(_widthholder, rightline);
 			this.x = x;
 			System.out.println(x);
@@ -145,12 +145,12 @@ public class MainMenu {
 			_r = null;
 		}
 		public void draw() {
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			FontMetrics fm = g.getFontMetrics();
 			_bb = fm.getStringBounds(_widthholder, g);
-			_r = new RoundRectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5), 5 , 5);
+			_r = new RoundRectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5), 10, 10);
 			g.setColor(Color.BLACK);
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			g.draw(_r);
 			g.drawString(_text, x+5,(int) (y+_bb.getHeight()+1));
 		}
