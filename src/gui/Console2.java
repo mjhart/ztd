@@ -22,6 +22,8 @@ public class Console2 {
 	private float _x;
 	private float _y;
 	private int _textoffset;
+	private int _cboffset;
+	private int _tboffset;
 	private Text _titleline1;
 	private Text _titleline2;
 	private Text _round;
@@ -50,25 +52,28 @@ public class Console2 {
 	public void draw(Graphics2D g) {
 		this.g = g;
 		if (_first) {
-			_textoffset = 30;
+			_textoffset = 20;
+			_cboffset = 30;
+			_tboffset = 30;
 			g.setColor(Color.WHITE);
-			g.setFont(new Font("Helvetica", Font.BOLD, 15));
-			_titleline1 = new Text("Zombie", _cw, _h/7);
-			_titleline2 = new Text("Tower Defense", _cw, _h/7+_textoffset);
+			g.setFont(new Font("Helvetica", Font.BOLD, 16));
+			_titleline1 = new Text("Zombie", _cw, _h/8);
+			_titleline2 = new Text("Tower Defense", _cw, _h/8+_textoffset);
 			g.setColor(Color.ORANGE);
 			_round = new Text("Round: 1", _cw, _h/7 + 2*_textoffset);
 			_basehealth = new Text("Base Health: 100", _cw, _h/7 + 3*_textoffset);
 			_resources = new Text("Resources: 500", _cw, _h/7 + 4*_textoffset);
 
+			
 			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			_cbs.add(new ControlButton("Start Round!", _cw, 5*_h/7));
-			_cbs.add(new ControlButton("Main Menu", _cw, 5*_h/7 + _textoffset));
-			_cbs.add(new ControlButton("Restart", _cw,  5*_h/7 + 2*_textoffset));
-			_cbs.add(new ControlButton("Quit", _cw,  5*_h/7 + 3*_textoffset));
+			_cbs.add(new ControlButton("Main Menu", _cw, 5*_h/7 + _cboffset));
+			_cbs.add(new ControlButton("Restart", _cw,  5*_h/7 + 2*_cboffset));
+			_cbs.add(new ControlButton("Quit", _cw,  5*_h/7 + 3*_cboffset));
 			
-			_tbs.add(new TowerButton("Basic Tower", _cw,  3*_h/7 + _textoffset));
-			_tbs.add(new TowerButton("Flame Tower", _cw,  3*_h/7 + 2*_textoffset));
-			_tbs.add(new TowerButton("Cannon Tower", _cw,  3*_h/7 + 3*_textoffset));
+			_tbs.add(new TowerButton("Basic Tower", _cw,  3*_h/7 + _tboffset));
+			_tbs.add(new TowerButton("Flame Tower", _cw,  3*_h/7 + 2*_tboffset));
+			_tbs.add(new TowerButton("Cannon Tower", _cw,  3*_h/7 + 3*_tboffset));
 
 			_first = false;
 		}
