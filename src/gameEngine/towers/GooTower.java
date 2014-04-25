@@ -6,6 +6,7 @@ import gameEngine.zombie.Zombie;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 
 import cs195n.Vec2f;
 import cs195n.Vec2i;
@@ -14,6 +15,10 @@ import cs195n.Vec2i;
 public class GooTower extends AbstractTower {
 
 	public GooTower(Vec2f vec, Referee ref) {
+		
+		
+		
+		
 		super(10, 100, 1000000000, vec, ref);
 		
 	}
@@ -41,5 +46,6 @@ public class GooTower extends AbstractTower {
 		}
 		return false;
 	}
+
 	
 }

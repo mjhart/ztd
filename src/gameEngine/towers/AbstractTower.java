@@ -5,6 +5,7 @@ import gameEngine.projectile.Projectile;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -62,6 +63,8 @@ public abstract class AbstractTower {
 	}
 	
 	public abstract void drawSimple(Graphics2D g, Vec2i coords);
+	
+	public abstract BufferedImage getSprite();
 
 	
 	public Vec2f getCoords() {

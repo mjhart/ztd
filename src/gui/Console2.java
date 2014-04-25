@@ -1,6 +1,8 @@
 
 package gui;
 
+import gameEngine.towers.BasicTower;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -9,6 +11,7 @@ import java.awt.Graphics2D;
 
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +59,7 @@ public class Console2 {
 			_cboffset = 30;
 			_tboffset = 30;
 			g.setColor(Color.WHITE);
-			g.setFont(new Font("Helvetica", Font.BOLD, 16));
+			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			_titleline1 = new Text("Zombie", _cw, _h/8);
 			_titleline2 = new Text("Tower Defense", _cw, _h/8+_textoffset);
 			g.setColor(Color.ORANGE);
@@ -67,13 +70,14 @@ public class Console2 {
 			
 			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			_cbs.add(new ControlButton("Start Round!", _cw, 5*_h/7));
-			_cbs.add(new ControlButton("Main Menu", _cw, 5*_h/7 + _cboffset));
-			_cbs.add(new ControlButton("Restart", _cw,  5*_h/7 + 2*_cboffset));
-			_cbs.add(new ControlButton("Quit", _cw,  5*_h/7 + 3*_cboffset));
+			_cbs.add(new ControlButton("Pause", _cw, 5*_h/7 + _cboffset));
+			_cbs.add(new ControlButton("Main Menu", _cw, 5*_h/7 + 2*_cboffset));
+			_cbs.add(new ControlButton("Restart", _cw,  5*_h/7 + 3*_cboffset));
+			_cbs.add(new ControlButton("Quit", _cw,  5*_h/7 + 4*_cboffset));
 			
-			_tbs.add(new TowerButton("Basic Tower", _cw,  3*_h/7 + _tboffset));
-			_tbs.add(new TowerButton("Flame Tower", _cw,  3*_h/7 + 2*_tboffset));
-			_tbs.add(new TowerButton("Cannon Tower", _cw,  3*_h/7 + 3*_tboffset));
+			_tbs.add(new TowerButton("Basic Tower", _cw/2,  3*_h/7, BasicTower.getSprite())));
+			_tbs.add(new TowerButton("Flame Tower", _cw,  3*_h/7));
+			_tbs.add(new TowerButton("Cannon Tower", _cw*3/2,  3*_h/7));
 
 			_first = false;
 		}
@@ -116,6 +120,11 @@ public class Console2 {
 		return x;
 	}
 	
+	private float centerRect(float width, float rightline) {
+		float x = (float) (.5*rightline - .5*width);
+		return x;
+	}
+	
 	private class ControlButton {
 		private String _name;
 		private RoundRectangle2D _r;
@@ -150,26 +159,23 @@ public class Console2 {
 	private class TowerButton {
 		private String _name;
 		private RoundRectangle2D _r;
-		private Rectangle2D _bb;
+		private final float _width = _cw/5;
 		private float x;
 		private float y;
 		private boolean _highlight;
-		public TowerButton(String name, float rightline, float y) {
+		private BufferedImage _sprite;
+		public TowerButton(String name, float rightline, float y, BufferedImage sprite) {
+			_sprite = sprite;
 			_name = name;
-			float x = centerX(name, rightline);
-			this.x = x;
+			this.x = centerRect(_width, rightline);
 			this.y = y;
-			g.setColor(Color.BLACK);
-			g.setFont(new Font("Helvetica", Font.BOLD, 15));
-			FontMetrics fm = g.getFontMetrics();
-			_bb = fm.getStringBounds(name, g);
-			_r = new RoundRectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5), 5, 5);
+			_r = new RoundRectangle2D.Float(x,y,_width,_width, 5, 5);
 		}
 		public void draw() {
 			g.setColor(Color.BLACK);
-			g.setFont(new Font("Helvetica", Font.BOLD, 15));
+			//TODO this won't work right now
+			g.drawImage(_sprite, g.getTransform(), null);
 			g.draw(_r);
-			g.drawString(_name, x+5,(int) (y+_bb.getHeight()+1));
 			if (_highlight) {
 				g.setStroke(new BasicStroke(3));
 				g.setColor(Color.MAGENTA);
@@ -190,6 +196,50 @@ public class Console2 {
 			_highlight = false;
 		}
 	}
+	
+//	private class TowerButton {
+//		private String _name;
+//		private RoundRectangle2D _r;
+//		private Rectangle2D _bb;
+//		private float x;
+//		private float y;
+//		private boolean _highlight;
+//		public TowerButton(String name, float rightline, float y) {
+//			_name = name;
+//			float x = centerX(name, rightline);
+//			this.x = x;
+//			this.y = y;
+//			g.setColor(Color.BLACK);
+//			g.setFont(new Font("Helvetica", Font.BOLD, 15));
+//			FontMetrics fm = g.getFontMetrics();
+//			_bb = fm.getStringBounds(name, g);
+//			_r = new RoundRectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5), 5, 5);
+//		}
+//		public void draw() {
+//			g.setColor(Color.BLACK);
+//			g.setFont(new Font("Helvetica", Font.BOLD, 15));
+//			g.draw(_r);
+//			g.drawString(_name, x+5,(int) (y+_bb.getHeight()+1));
+//			if (_highlight) {
+//				g.setStroke(new BasicStroke(3));
+//				g.setColor(Color.MAGENTA);
+//				g.draw(_r);
+//				g.setStroke(new BasicStroke(1));
+//			}
+//		}
+//		public RoundRectangle2D getRect() {
+//			return _r;
+//		}
+//		public String getName() {
+//			return _name;
+//		}
+//		public void highlight() {
+//			_highlight = true;
+//		}
+//		public void unhighlight() {
+//			_highlight = false;
+//		}
+//	}
 	
 	
 	

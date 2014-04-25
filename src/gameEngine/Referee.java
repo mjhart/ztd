@@ -216,4 +216,12 @@ public class Referee {
 		_towers.clear();
 		_money = 0;
 	}
+	
+	public void pause() {
+		_running = false;
+	}
+	
+	public void unpause() {
+		_running = true;
+	}
 }

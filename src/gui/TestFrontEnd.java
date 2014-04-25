@@ -295,6 +295,10 @@ public class TestFrontEnd extends SwingFrontEnd {
 					_c.unhighlight();
 					_command = null;
 				}
+				else if (_command.equals("Pause")) {
+					//TODO Pause screen
+					_ref.pause();
+				}
 				else if (_command.equals("Quit")) {
 					System.exit(0);
 				}

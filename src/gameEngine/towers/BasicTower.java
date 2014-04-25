@@ -6,15 +6,28 @@ import gameEngine.zombie.Zombie;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import cs195n.Vec2f;
 import cs195n.Vec2i;
 
 
 public class BasicTower extends AbstractTower {
+	
+	private BufferedImage _sprite;
 
 	public BasicTower(Vec2f vec, Referee ref) {
 		super(10, 100, 1000000000, vec, ref);
+		
+		try {
+			_sprite = ImageIO.read(new File("towerpics/tower.png"));
+		} catch (IOException e) {
+			System.out.println("ERROR: Could not get image (SpriteImp)");
+		}
 		
 	}
 	
@@ -39,6 +52,10 @@ public class BasicTower extends AbstractTower {
 			return true;
 		}
 		return false;
+	}
+	
+	public BufferedImage getSprite() {
+		return _sprite;
 	}
 	
 }
