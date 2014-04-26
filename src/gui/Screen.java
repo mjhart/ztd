@@ -20,6 +20,7 @@ public class Screen {
 	private ControlButton _go;
 	private boolean _first;
 	private String _type;
+	private Color _background = Color.ORANGE;
 	
 	public Screen(String type, int w, int h) {
 		_w = w;
@@ -35,9 +36,7 @@ public class Screen {
 		int c = 30;
 		if (_type.equals("Pause")) {
 			if (_first) {
-				_cbs.add(new ControlButton("Continue", 3*_w/2, _h/5 + 2*c));
-				_cbs.add(new ControlButton("Restart", 3*_w/2, _h/5 + 3*c));
-				_cbs.add(new ControlButton("Main Menu", 3*_w/2, _h/5 + 4*c));
+				_cbs.add(new ControlButton("Continue", 3*_w/2, _h/5, g));
 				_first = false;
 			}
 			g.setColor(Color.WHITE);
@@ -51,8 +50,8 @@ public class Screen {
 		}
 		else if (_type.equals("Game Over")) {
 			if (_first) {
-				_cbs.add(new ControlButton("Restart", 3*_w/2, _h/5 + 3*c));
-				_cbs.add(new ControlButton("Main Menu", 3*_w/2, _h/5 + 4*c));
+				_cbs.add(new ControlButton("Restart", 3*_w/2, _h/5 + 3*c, g));
+				_cbs.add(new ControlButton("Main Menu", 3*_w/2, _h/5 + 4*c, g));
 				_first = false;
 			}
 			g.setColor(Color.WHITE);
@@ -61,16 +60,14 @@ public class Screen {
 		}
 		
 		java.awt.Color colorholder = g.getColor();
-		g.setColor(Color.GRAY);
+		g.setColor(_background);
 		g.fill(new Rectangle2D.Float(0,0,_w,_h));
 		
-
-				
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
 		
 		for (ControlButton cb: _cbs) {
-			cb.draw();
+			cb.draw(g, _background);
 		}
 		
 		g.setColor(colorholder);
@@ -85,41 +82,16 @@ public class Screen {
 	
 	
 	
-	private class ControlButton {
-		private String _name;
-		private RoundRectangle2D _r;
-		private Rectangle2D _bb;
-		private float x;
-		private float y;
-		public ControlButton(String name, float rightline, float y) {
-			_name = name;
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-			float x = centerX(name, rightline);
-			this.x = x;
-			this.y = y;
-		}
-		public void draw() {
-			g.setColor(Color.BLACK);
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-			FontMetrics fm = g.getFontMetrics();
-			_bb = fm.getStringBounds(_name, g);
-			_r = new RoundRectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5), 5, 5);
-			g.draw(_r);
-			g.drawString(_name, x+5,(int) (y+_bb.getHeight()+1));
-		}
-		public RoundRectangle2D getRoundRect() {
-			return _r;
-		}
-		public String getName() {
-			return _name;
-		}
-	}
 	
 	//Work in terms of vectors or x y?
 	public String contains(int x, int y) {
 		for (ControlButton cb: _cbs) {
 			if (cb.getRoundRect().contains(x, y)) {
+				cb.highlight();
 				return cb.getName();
+			}
+			else {
+				cb.unhighlight();
 			}
 		}
 		return null;

@@ -2,6 +2,7 @@
 package gui;
 
 import gameEngine.towers.BasicTower;
+import gameEngine.towers.TowerFactory;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -34,18 +35,21 @@ public class Console2 {
 	private Text _resources;
 	private Graphics2D g;
 	private boolean _first;
+	private TowerFactory _tf;
+	private Color _background = Color.RED;
 
 	
 	private List<ControlButton> _cbs; //A list of control buttons. Needed to check for mouse clicks
 	private List<TowerButton> _tbs; //A list of tower buttons. Needed to check for mouse clicks
 
 	
-	public Console2(float x, float y, float w, float h) {
+	public Console2(float x, float y, float w, float h, TowerFactory tf) {
 		System.out.println("making new console");
 		_cw = w;
 		_h = h;
 		_x = x;
 		_y = y;
+		_tf = tf;
 		_cbs = new ArrayList<ControlButton>();
 		_tbs = new ArrayList<TowerButton>();
 		_first = true;
@@ -69,22 +73,23 @@ public class Console2 {
 
 			
 			g.setFont(new Font("Helvetica", Font.BOLD, 15));
-			_cbs.add(new ControlButton("Start Round!", _cw, 5*_h/7));
-			_cbs.add(new ControlButton("Pause", _cw, 5*_h/7 + _cboffset));
-			_cbs.add(new ControlButton("Main Menu", _cw, 5*_h/7 + 2*_cboffset));
-			_cbs.add(new ControlButton("Restart", _cw,  5*_h/7 + 3*_cboffset));
-			_cbs.add(new ControlButton("Quit", _cw,  5*_h/7 + 4*_cboffset));
+			_cbs.add(new ControlButton("Start Round!", _cw, 5*_h/7, g));
+			_cbs.add(new ControlButton("Pause", _cw, 5*_h/7 + _cboffset, g));
+			_cbs.add(new ControlButton("Main Menu", _cw, 5*_h/7 + 2*_cboffset, g));
+			_cbs.add(new ControlButton("Restart", _cw,  5*_h/7 + 3*_cboffset, g));
+			_cbs.add(new ControlButton("Quit", _cw,  5*_h/7 + 4*_cboffset, g));
 			
-			_tbs.add(new TowerButton("Basic Tower", _cw/2,  3*_h/7, BasicTower.getSprite())));
-			_tbs.add(new TowerButton("Flame Tower", _cw,  3*_h/7));
-			_tbs.add(new TowerButton("Cannon Tower", _cw*3/2,  3*_h/7));
+			_tbs.add(new TowerButton("Basic Tower", _cw/4, 3*_h/7, _tf.getBasicSprite()));
+			_tbs.add(new TowerButton("Flame Tower", _cw*3/4, 3*_h/7, _tf.getFlameSprite()));
+			_tbs.add(new TowerButton("Cannon Tower", _cw*5/4, 3*_h/7, _tf.getCannonSprite()));
+			_tbs.add(new TowerButton("Electric Tower", _cw*7/4, 3*_h/7, _tf.getElectricSprite()));
 
 			_first = false;
 		}
 		
 		java.awt.Color colorholder = g.getColor();
 		
-		g.setColor(Color.RED);
+		g.setColor(_background);
 		g.fill(new Rectangle2D.Float(_x,_y,_cw,_h));
 		
 		g.setColor(Color.WHITE);
@@ -101,7 +106,7 @@ public class Console2 {
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Helvetica", Font.BOLD, 15));
 		for (ControlButton cb: _cbs) {
-			cb.draw();
+			cb.draw(g, _background);
 		}
 		
 		g.setColor(Color.BLACK);
@@ -125,36 +130,36 @@ public class Console2 {
 		return x;
 	}
 	
-	private class ControlButton {
-		private String _name;
-		private RoundRectangle2D _r;
-		private Rectangle2D _bb;
-		private float x;
-		private float y;
-		public ControlButton(String name, float rightline, float y) {
-			_name = name;
-			float x = centerX(name, rightline);
-			this.x = x;
-			this.y = y;
-			g.setColor(Color.BLACK);
-			g.setFont(new Font("Helvetica", Font.BOLD, 15));
-			FontMetrics fm = g.getFontMetrics();
-			_bb = fm.getStringBounds(name, g);
-			_r = new RoundRectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5), 5, 5);
-		}
-		public void draw() {
-			g.setColor(Color.BLACK);
-			g.setFont(new Font("Helvetica", Font.BOLD, 15));
-			g.draw(_r);
-			g.drawString(_name, x+5,(int) (y+_bb.getHeight()+1));
-		}
-		public RoundRectangle2D getRect() {
-			return _r;
-		}
-		public String getName() {
-			return _name;
-		}
-	}
+//	private class ControlButton {
+//		private String _name;
+//		private RoundRectangle2D _r;
+//		private Rectangle2D _bb;
+//		private float x;
+//		private float y;
+//		public ControlButton(String name, float rightline, float y) {
+//			_name = name;
+//			float x = centerX(name, rightline);
+//			this.x = x;
+//			this.y = y;
+//			g.setColor(Color.BLACK);
+//			g.setFont(new Font("Helvetica", Font.BOLD, 15));
+//			FontMetrics fm = g.getFontMetrics();
+//			_bb = fm.getStringBounds(name, g);
+//			_r = new RoundRectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5), 5, 5);
+//		}
+//		public void draw() {
+//			g.setColor(Color.BLACK);
+//			g.setFont(new Font("Helvetica", Font.BOLD, 15));
+//			g.draw(_r);
+//			g.drawString(_name, x+5,(int) (y+_bb.getHeight()+1));
+//		}
+//		public RoundRectangle2D getRect() {
+//			return _r;
+//		}
+//		public String getName() {
+//			return _name;
+//		}
+//	}
 	
 	private class TowerButton {
 		private String _name;
@@ -267,9 +272,12 @@ public class Console2 {
 	//Work in terms of vectors or x y?
 	public String contains(int x, int y) {
 		for (ControlButton cb: _cbs) {
-			if (cb.getRect().contains(x, y)) {
-				System.out.println(cb.getName());
+			if (cb.getRoundRect().contains(x, y)) {
+				cb.highlight();
 				return cb.getName();
+			}
+			else {
+				cb.unhighlight();
 			}
 		}
 		for (TowerButton tb: _tbs) {

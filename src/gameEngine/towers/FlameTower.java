@@ -5,6 +5,7 @@ import gameEngine.zombie.Zombie;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 import cs195n.Vec2f;
@@ -15,8 +16,8 @@ public class FlameTower extends AbstractTower {
 	
 	private boolean _animate = false;
 	
-	public FlameTower(Vec2f vec, Referee ref) {
-		super(5, 50, 500000000, vec, ref);
+	public FlameTower(Vec2f vec, Referee ref, BufferedImage sprite) {
+		super(5, 50, 500000000, vec, ref, sprite);
 	}
 
 	@Override

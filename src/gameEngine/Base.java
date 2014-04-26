@@ -3,6 +3,7 @@ package gameEngine;
 import gameEngine.towers.BasicTower;
 
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 import cs195n.Vec2f;
 import cs195n.Vec2i;
@@ -13,8 +14,8 @@ public class Base extends BasicTower {
 	private int _health;
 	private MapNode _baseNode;
 	
-	public Base(MapNode n, Vec2f vec, Referee ref) {
-		super(vec, ref);
+	public Base(MapNode n, Vec2f vec, Referee ref, BufferedImage sprite) {
+		super(vec, ref, sprite);
 		_baseNode = n;
 		_health = 100;
 	}

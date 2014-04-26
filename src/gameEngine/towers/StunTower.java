@@ -6,6 +6,7 @@ import gameEngine.zombie.Zombie;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 
 import cs195n.Vec2f;
 import cs195n.Vec2i;
@@ -13,8 +14,8 @@ import cs195n.Vec2i;
 
 public class StunTower extends AbstractTower {
 
-	public StunTower(Vec2f vec, Referee ref) {
-		super(10, 100, 1000000000, vec, ref);
+	public StunTower(Vec2f vec, Referee ref, BufferedImage sprite) {
+		super(10, 100, 1000000000, vec, ref, sprite);
 		
 	}
 	

@@ -20,8 +20,8 @@ import cs195n.Vec2i;
 public class CannonTower extends AbstractTower {
 	
 	private BufferedImage[] _explosionSprites;
-	public CannonTower(Vec2f vec, Referee ref) {
-		super(30, 100, 5000000000l, vec, ref);
+	public CannonTower(Vec2f vec, Referee ref, BufferedImage sprite) {
+		super(30, 100, 5000000000l, vec, ref, sprite);
 		BufferedImage img = null;
 		_explosionSprites = new BufferedImage[16];
 		try {

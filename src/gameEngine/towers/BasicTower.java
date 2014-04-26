@@ -20,14 +20,8 @@ public class BasicTower extends AbstractTower {
 	
 	private BufferedImage _sprite;
 
-	public BasicTower(Vec2f vec, Referee ref) {
-		super(10, 100, 1000000000, vec, ref);
-		
-		try {
-			_sprite = ImageIO.read(new File("towerpics/tower.png"));
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (SpriteImp)");
-		}
+	public BasicTower(Vec2f vec, Referee ref, BufferedImage sprite) {
+		super(10, 100, 1000000000, vec, ref, sprite);
 		
 	}
 	
@@ -52,10 +46,6 @@ public class BasicTower extends AbstractTower {
 			return true;
 		}
 		return false;
-	}
-	
-	public BufferedImage getSprite() {
-		return _sprite;
 	}
 	
 }

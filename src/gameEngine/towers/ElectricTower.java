@@ -6,6 +6,7 @@ import gameEngine.zombie.Zombie;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +18,8 @@ public class ElectricTower extends AbstractTower {
 	
 	private boolean _animate = false;
 	
-	public ElectricTower(Vec2f vec, Referee ref) {
-		super(30, 100, 1000000000, vec, ref);
+	public ElectricTower(Vec2f vec, Referee ref, BufferedImage sprite) {
+		super(30, 100, 1000000000, vec, ref, sprite);
 	}
 
 	@Override
