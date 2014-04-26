@@ -145,10 +145,10 @@ public class Referee {
 	
 	/**
 	 * Gets all the zombies within a given radius of a set of 
-	 * coordinates.
+	 * coordinates
 	 * @param coords coordinates to be used for comparison
-	 * @param radius distance within zombies will be added to 
-	 * return set
+	 * @param radius - zombies within sqrt(radius) will be 
+	 * added to return list
 	 * @return list of zombies
 	 */
 	public List<Zombie> getZombiesInR(Vec2f coords, double radius) {
@@ -198,7 +198,7 @@ public class Referee {
 	
 	public void setMap(Map m) {
 		_m = m;
-		_b  = new Base(_m.getBaseNode(), _m.getBaseNode()._coords, this);
+		_b  = new Base(_m.getBaseNode(), _m.getBaseNode()._coords, this, null);
 	}
 	
 	public List<AbstractTower> towers() {

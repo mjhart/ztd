@@ -21,7 +21,7 @@ public class CannonTower extends AbstractTower {
 	
 	private BufferedImage[] _explosionSprites;
 	public CannonTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(30, 100, 5000000000l, vec, ref, sprite);
+		super(30, 1000000, 5000000000l, vec, ref, sprite);
 		BufferedImage img = null;
 		_explosionSprites = new BufferedImage[16];
 		try {
@@ -42,8 +42,8 @@ public class CannonTower extends AbstractTower {
 	}
 
 	@Override
-	public void drawSimple(Graphics2D g, Vec2i coords) {
-		super.drawSimple(g, coords, java.awt.Color.BLACK);
+	public void drawSimple(Graphics2D g) {
+		super.drawSimple(g, java.awt.Color.BLACK);
 	}
 
 	@Override

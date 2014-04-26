@@ -26,8 +26,8 @@ public class StunTower extends AbstractTower {
 	}
 
 	@Override
-	public void drawSimple(Graphics2D g, Vec2i coords) {
-		super.drawSimple(g, coords, java.awt.Color.BLUE);
+	public void drawSimple(Graphics2D g) {
+		super.drawSimple(g, java.awt.Color.BLUE);
 	}
 
 	@Override

@@ -137,6 +137,7 @@ public abstract class SwingFrontEnd extends CS195NFrontEnd {
 		frame.setDefaultCloseOperation(closeOp);
 		frame.setLayout(new BorderLayout());
 		frame.add(panel, BorderLayout.CENTER);
+		//frame.setMinimumSize(new Dimension(MINIMUM_WINDOW_SIZE.x, MINIMUM_WINDOW_SIZE.y));
 
 		frame.setUndecorated(fullscreen);
 		if (fullscreen) {
@@ -144,10 +145,10 @@ public abstract class SwingFrontEnd extends CS195NFrontEnd {
 			frame.setBounds(bounds);
 		} else {
 			// uncomment to make minimum window size the minimum size we'll test
-			// panel.setPreferredSize(new Dimension(MINIMUM_WINDOW_SIZE.x,
-			// MINIMUM_WINDOW_SIZE.y));
-			// frame.pack();
-			// frame.setMinimumSize(frame.getSize());
+			 panel.setPreferredSize(new Dimension(MINIMUM_WINDOW_SIZE.x,
+			 MINIMUM_WINDOW_SIZE.y));
+			 frame.pack();
+			 frame.setMinimumSize(frame.getSize());
 
 			panel.setPreferredSize(new Dimension(windowedSize.x, windowedSize.y));
 			frame.pack();

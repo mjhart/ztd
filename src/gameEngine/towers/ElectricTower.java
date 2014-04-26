@@ -29,15 +29,15 @@ public class ElectricTower extends AbstractTower {
 	}
 	
 	@Override
-	public void drawSimple(Graphics2D g, Vec2i coords) {
-		super.drawSimple(g, coords, java.awt.Color.ORANGE);
+	public void drawSimple(Graphics2D g) {
+		super.drawSimple(g, java.awt.Color.ORANGE);
 		
-		//This is just for fun, the drawn oval is not accurate at allgh
-		if (_animate) {
-			g.setColor(java.awt.Color.ORANGE);
-			g.fillOval((int) coords.x - 50, (int) coords.y - 50, 100, 100);
-			_animate = false;
-		}
+//		//This is just for fun, the drawn oval is not accurate at allgh
+//		if (_animate) {
+//			g.setColor(java.awt.Color.ORANGE);
+//			g.fillOval((int) coords.x - 50, (int) coords.y - 50, 100, 100);
+//			_animate = false;
+//		}
 	}
 	
 	

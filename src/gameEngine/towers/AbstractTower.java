@@ -4,9 +4,11 @@ import gameEngine.Referee;
 import gameEngine.projectile.Projectile;
 
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 import cs195n.Vec2f;
@@ -17,14 +19,14 @@ public abstract class AbstractTower {
 	
 	private long _nanosSinceAction;
 	protected int _damage;
-	protected double _radius;
+	protected float _radius;
 	protected long _delay;
 	protected Vec2f _vec;
 	protected Referee _ref;
 	private Set<Projectile> _projectiles;
 	private BufferedImage _sprite;
 	
-	public AbstractTower(int damage, double radius, long delay, Vec2f vec, Referee ref, BufferedImage sprite) {
+	public AbstractTower(int damage, float radius, long delay, Vec2f vec, Referee ref, BufferedImage sprite) {
 		_damage = damage;
 		_radius = radius;
 		_delay = delay;
@@ -36,9 +38,13 @@ public abstract class AbstractTower {
 	}
 	
 	public void doAction(long nanosSincePrevTick) {
+		LinkedList<Projectile> toRemove = new LinkedList<Projectile>();
 		for(Projectile p : _projectiles) {
-			p.action(nanosSincePrevTick);
+			if(p.action(nanosSincePrevTick)) {
+				toRemove.add(p);
+			}
 		}
+		_projectiles.removeAll(toRemove);
 		_nanosSinceAction+=nanosSincePrevTick;
 		if(_nanosSinceAction > _delay) {
 			if(action()) {
@@ -52,19 +58,25 @@ public abstract class AbstractTower {
 	public abstract void draw(Graphics2D g, Vec2i coords);
 	
 	
-	public void drawSimple(Graphics2D g, Vec2i coords, java.awt.Color c) {
-		g.setColor(c);
-		g.fill(new Rectangle2D.Float(coords.x - 5, coords.y - 5, 10, 10));
-	}
-	
-	public void doDraw(Graphics2D g, Vec2i coords) {
+	protected void drawSimple(Graphics2D g, java.awt.Color c) {
 		for(Projectile p : _projectiles) {
 			p.draw(g);
 		}
-		drawSimple(g, coords);
+		g.setColor(c);
+		g.fill(new Rectangle2D.Float(_vec.x - 50, _vec.y - 50, 100, 100));
 	}
 	
-	public abstract void drawSimple(Graphics2D g, Vec2i coords);
+	public void draw2(Graphics2D g) {
+		for(Projectile p : _projectiles) {
+			p.draw(g);
+		}
+		AffineTransform af1 = new AffineTransform();
+		af1.translate(_vec.x - (64 * 5), _vec.y - (64 * 5));
+		af1.scale(5, 5);
+		g.drawImage(_sprite, af1, null);
+	}
+	
+	public abstract void drawSimple(Graphics2D g);
 	
 	public BufferedImage getSprite() {
 		return _sprite;
@@ -91,6 +103,10 @@ public abstract class AbstractTower {
 		if(p != null) {
 			_projectiles.add(p);
 		}
+	}
+	
+	public float getRadius() {
+		return _radius;
 	}
 	
 }
