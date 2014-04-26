@@ -17,6 +17,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,6 +31,9 @@ import cs195n.Vec2f;
 import cs195n.Vec2i;
 
 public class TestFrontEnd extends SwingFrontEnd {
+	
+	private final float CONSOLE_WIDTH = 150;
+	static final Vec2i DEFAULT_WINDOW_SIZE = new Vec2i(960, 540);
 
 	private List<MapNode> nodes;
 	private List<MapWay> ways;
@@ -97,66 +101,12 @@ public class TestFrontEnd extends SwingFrontEnd {
 			_mm.draw(g);
 		}
 		else if (_hasMap) {
-
-			for(MapWay w : _m.getWays()) {
-				List<MapNode> nList = w.getNodes();
-				for(int i=1; i<nList.size(); i++) {
-					g.drawLine(lonToX(nList.get(i-1).getX()), latToY(nList.get(i-1).getY()), lonToX(nList.get(i).getX()), latToY(nList.get(i).getY()));
-					//g.drawLine((int)nList.get(i-1).lon,(int) nList.get(i-1).lat,(int) nList.get(i).lon, (int)nList.get(i).lat);
-				}
-			}
-
-			g.setColor(java.awt.Color.GREEN);
-			g.setStroke(new BasicStroke(3));
-//			for(MapWay h : _m.getHighways()) {
-//				List<MapNode> nList = h.getNodes();
-//				for(int i=1; i<nList.size(); i++) {
-//					g.drawLine(lonToX(nList.get(i-1).getX()), latToY(nList.get(i-1).getY()), lonToX(nList.get(i).getX()), latToY(nList.get(i).getY()));
-//					//g.drawLine((int)nList.get(i-1).lon,(int) nList.get(i-1).lat,(int) nList.get(i).lon, (int)nList.get(i).lat);
-//				}
-//			}
-			for (Line2D l: _highline2D) {
-				g.draw(l);
-			}
-
-			g.setColor(java.awt.Color.BLUE);
-			for(MapNode n : _m.getSourceList()) {
-				MapNode cur = n;
-				MapNode next = cur.getNext();
-				while(next!=null) {
-					g.drawLine(lonToX(cur.getX()), latToY(cur.getY()), lonToX(next.getX()), latToY(next.getY()));
-					cur = next;
-					next = next.getNext();
-				}
-				//System.out.println("new path\n");
-			}
-
-			g.setStroke(new BasicStroke(1));
-
-			//g.drawImage(_baseSprite, lonToX(_base.lon), latToY(_base.lat), _baseSprite.getWidth()/2, _baseSprite.getHeight()/2, null);
-			g.setColor(java.awt.Color.BLUE);
-			g.drawOval(lonToX(_m.getBaseNode().getX())-2, latToY(_m.getBaseNode().getY())-2, 3, 3);
-
-			//g.setColor(java.awt.Color.ORANGE);
-			for(MapNode n : _m.getSourceList()) {
-				g.fillOval(lonToX(n.getX())-2, latToY(n.getY())-2, 5, 5);
-			}
-
+			
+			
+			// draw console
 			_c.draw(g);
 			
-			g.setColor(java.awt.Color.RED);
-			for(Zombie z : _ref.getZombies()) {
-				//g.drawOval(lonToX(z.getCoords().x), latToY(z.getCoords().y), 3, 3);
-				z.draw(g, new Vec2i(lonToX(z.getCoords().x), latToY(z.getCoords().y)));
-			}
-
-			for(AbstractTower t : _ref.towers()) {
-				drawTower(t, g);
-			}
-			
-
-			_c.draw(g);
-			
+			// draw new tower
 			if (_candidate != null) {
 				drawTower(_candidate, g);
 				//TODO This radius is not accurate. Also need to translate to correct coord system
@@ -173,6 +123,69 @@ public class TestFrontEnd extends SwingFrontEnd {
 				g.fill(e);
 				g.setColor(holder);
 			}
+			
+			/* draw map and other stuff */
+			/*
+			g.translate(CONSOLE_WIDTH, 0);
+			g.scale((_size.x - CONSOLE_WIDTH) / 10000, (float) _size.y / 10000);
+			g.setStroke(new BasicStroke(10000 / DEFAULT_WINDOW_SIZE.x));
+			*/
+			
+			g.translate(CONSOLE_WIDTH, 0);
+			g.scale((_size.x - CONSOLE_WIDTH) / 10000, (float) _size.y / 10000);
+			g.setStroke(new BasicStroke(10000 / DEFAULT_WINDOW_SIZE.x));
+			
+			for(MapWay w : _m.getWays()) {
+				List<MapNode> nList = w.getNodes();
+				for(int i=1; i<nList.size(); i++) {
+					//System.out.println(nList.get(i)._coords);
+					//g.drawLine(lonToX(nList.get(i-1).getX()), latToY(nList.get(i-1).getY()), lonToX(nList.get(i).getX()), latToY(nList.get(i).getY()));
+					//g.drawLine((int) nList.get(i-1).getX(), (int) nList.get(i-1).getY(), (int) nList.get(i).getX(), (int) nList.get(i).getY());
+					g.draw(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
+				}
+			}
+
+			g.setColor(java.awt.Color.GREEN);
+			g.setStroke(new BasicStroke(10000 / DEFAULT_WINDOW_SIZE.x * 3));
+
+			
+			for (Line2D l: _highline2D) {
+				g.draw(l);
+			}
+			
+			
+			g.setColor(java.awt.Color.BLUE);
+			for(MapNode n : _m.getSourceList()) {
+				MapNode cur = n;
+				MapNode next = cur.getNext();
+				while(next!=null) {
+					//g.drawLine(lonToX(cur.getX()), latToY(cur.getY()), lonToX(next.getX()), latToY(next.getY()));
+					g.draw(new Line2D.Float(cur.getX(), cur.getY(), next.getX(), next.getY()));
+					cur = next;
+					next = next.getNext();
+				}
+				//System.out.println("new path\n");
+			}
+			
+
+			g.setColor(java.awt.Color.ORANGE);
+			for(MapNode n : _m.getSourceList()) {
+				g.fillOval((int) (n.getX()-35), (int) (n.getY()-35), 70, 70);
+			}
+			
+			g.setColor(java.awt.Color.RED);
+			for(Zombie z : _ref.getZombies()) {
+				//g.drawOval(lonToX(z.getCoords().x), latToY(z.getCoords().y), 3, 3);
+				//z.draw(g, new Vec2i(lonToX(z.getCoords().x), latToY(z.getCoords().y)));
+				z.draw(g);
+			}
+
+			for(AbstractTower t : _ref.towers()) {
+				drawTower(t, g);
+			}
+			
+
+			
 
 		}
 
@@ -188,7 +201,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		wMax = _m.getwMax();
 		wMin = _m.getwMin();
 		srcs = _m.getSources();
-		_c = new Console2(0,0,_size.x/4,_size.y);
+		_c = new Console2(0,0,CONSOLE_WIDTH,_size.y);
 		_hasMap = true;
 		_hasMain = false;
 		_mm.clear();
@@ -196,7 +209,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 		for(MapWay h : _m.getHighways()) {
 			List<MapNode> nList = h.getNodes();
 			for(int i=1; i<nList.size(); i++) {
-				_highline2D.add(new Line2D.Float(lonToX(nList.get(i-1).getX()), latToY(nList.get(i-1).getY()), lonToX(nList.get(i).getX()), latToY(nList.get(i).getY())));
+				//_highline2D.add(new Line2D.Float(lonToX(nList.get(i-1).getX()), latToY(nList.get(i-1).getY()), lonToX(nList.get(i).getX()), latToY(nList.get(i).getY())));
+				_highline2D.add(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
 				//g.drawLine((int)nList.get(i-1).lon,(int) nList.get(i-1).lat,(int) nList.get(i).lon, (int)nList.get(i).lat);
 			}
 		}
@@ -367,11 +381,17 @@ public class TestFrontEnd extends SwingFrontEnd {
 	@Override
 	protected void onResize(Vec2i newSize) {
 		// TODO we should mess with this
-
+		/*
+		_at = new AffineTransform();
+		_at.scale(newSize.x/100, newSize.y/100);
+		
 		if (_size != null) {
 			_at.scale(newSize.x - _size.x + 1, newSize.y - _size.y + 1);
 		}
+		*/
 		_size = newSize;
+		
+		
 		if (_hasMap) {
 			_m.setSize(newSize);
 		}
@@ -379,24 +399,23 @@ public class TestFrontEnd extends SwingFrontEnd {
 	}
 	
 	public static void main(String[] args) {
-		new TestFrontEnd("ZTD", false, new Vec2i(600, 500));
+		new TestFrontEnd("ZTD", false, new Vec2i(DEFAULT_WINDOW_SIZE.x, DEFAULT_WINDOW_SIZE.y));
 	}
 	
 	
 	public int latToY(double lat) {
-		return (int) (lat / 100 * _size.y);
+		return (int) (lat / 10000 * _size.y);
 	}
 	
 	public int lonToX(double lon) {
-		return (int) (lon / 100 * _size.x);
+		return (int) (lon / 10000 * _size.x);
 	}
 	
 	private float yToLat(double y) {
-		return (float) y / _size.y * 100;
+		return (float) y / _size.y * 10000;
 	}
-	
 	private float xToLon(double x) {
-		return (float) x / _size.x * 100;
+		return (float) x / _size.x * 10000;
 	}
 	
 	public Collection<Zombie> getZombie() {

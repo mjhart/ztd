@@ -68,7 +68,7 @@ public class Map {
 		double dist = Double.MAX_VALUE;
 		for(MapWay w : _highways) {
 			for(MapNode n : w.getNodes()) {
-				double d2 = (n.getX()-50)*(n.getX()-50) + (n.getY()-50)*(n.getY()-50);
+				double d2 = (n.getX()-5000)*(n.getX()-5000) + (n.getY()-5000)*(n.getY()-5000);
 				if(d2 < dist) {
 					dist = d2;
 					_baseNode = n;
@@ -113,19 +113,19 @@ public class Map {
 	private List<MapNode> potentialSrcs() {
 		List<MapNode> results = new LinkedList<MapNode>();
 		for(MapNode n : _nodes) {
-			if(n.getX() <= 100 && n.getX() + 5 > 100) {
+			if(n.getX() <= 10000 && n.getX() + 500 > 10000) {
 				results.add(n);
 				continue;
 			}
-			if(n.getY() <= 100 && n.getY() + 5 > 100) {
+			if(n.getY() <= 10000 && n.getY() + 500 > 10000) {
 				results.add(n);
 				continue;
 			}
-			if(n.getX() >= 0 && n.getX() - 5 < 0) {
+			if(n.getX() >= 0 && n.getX() - 500 < 0) {
 				results.add(n);
 				continue;
 			}
-			if(n.getY() >= 0 && n.getY() - 5 < 0) {
+			if(n.getY() >= 0 && n.getY() - 500 < 0) {
 				results.add(n);
 				continue;
 			}
@@ -291,11 +291,11 @@ public class Map {
 	}
 	
 	public float latToY(double lat) {
-		return  (float) ((wMax[1]-lat)/(wMax[1]-wMin[1]) * 100);
+		return  (float) ((wMax[1]-lat)/(wMax[1]-wMin[1]) * 10000);
 	}
 	
 	public float lonToX(double lon) {
-		return  (float) ((lon - wMin[0])/(wMax[0]-wMin[0]) * 100);
+		return  (float) ((lon - wMin[0])/(wMax[0]-wMin[0]) * 10000);
 	}
 	
 }
