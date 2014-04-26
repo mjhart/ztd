@@ -5,6 +5,7 @@ import gameEngine.projectile.Projectile;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,8 +22,9 @@ public abstract class AbstractTower {
 	protected Vec2f _vec;
 	protected Referee _ref;
 	private Set<Projectile> _projectiles;
+	private BufferedImage _sprite;
 	
-	public AbstractTower(int damage, double radius, long delay, Vec2f vec, Referee ref) {
+	public AbstractTower(int damage, double radius, long delay, Vec2f vec, Referee ref, BufferedImage sprite) {
 		_damage = damage;
 		_radius = radius;
 		_delay = delay;
@@ -30,6 +32,7 @@ public abstract class AbstractTower {
 		_ref = ref;
 		_projectiles = new HashSet<Projectile>();
 		_nanosSinceAction = _delay + 1;
+		_sprite = sprite;
 	}
 	
 	public void doAction(long nanosSincePrevTick) {
@@ -62,6 +65,10 @@ public abstract class AbstractTower {
 	}
 	
 	public abstract void drawSimple(Graphics2D g, Vec2i coords);
+	
+	public BufferedImage getSprite() {
+		return _sprite;
+	}
 
 	
 	public Vec2f getCoords() {

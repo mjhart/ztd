@@ -1,6 +1,9 @@
 
 package gui;
 
+import gameEngine.towers.BasicTower;
+import gameEngine.towers.TowerFactory;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -9,6 +12,7 @@ import java.awt.Graphics2D;
 
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +26,8 @@ public class Console2 {
 	private float _x;
 	private float _y;
 	private int _textoffset;
+	private int _cboffset;
+	private int _tboffset;
 	private Text _titleline1;
 	private Text _titleline2;
 	private Text _round;
@@ -29,18 +35,21 @@ public class Console2 {
 	private Text _resources;
 	private Graphics2D g;
 	private boolean _first;
+	private TowerFactory _tf;
+	private Color _background = Color.RED;
 
 	
 	private List<ControlButton> _cbs; //A list of control buttons. Needed to check for mouse clicks
 	private List<TowerButton> _tbs; //A list of tower buttons. Needed to check for mouse clicks
 
 	
-	public Console2(float x, float y, float w, float h) {
+	public Console2(float x, float y, float w, float h, TowerFactory tf) {
 		System.out.println("making new console");
 		_cw = w;
 		_h = h;
 		_x = x;
 		_y = y;
+		_tf = tf;
 		_cbs = new ArrayList<ControlButton>();
 		_tbs = new ArrayList<TowerButton>();
 		_first = true;
@@ -50,32 +59,37 @@ public class Console2 {
 	public void draw(Graphics2D g) {
 		this.g = g;
 		if (_first) {
-			_textoffset = 30;
+			_textoffset = 20;
+			_cboffset = 30;
+			_tboffset = 30;
 			g.setColor(Color.WHITE);
 			g.setFont(new Font("Helvetica", Font.BOLD, 15));
-			_titleline1 = new Text("Zombie", _cw, _h/7);
-			_titleline2 = new Text("Tower Defense", _cw, _h/7+_textoffset);
+			_titleline1 = new Text("Zombie", _cw, _h/8);
+			_titleline2 = new Text("Tower Defense", _cw, _h/8+_textoffset);
 			g.setColor(Color.ORANGE);
 			_round = new Text("Round: 1", _cw, _h/7 + 2*_textoffset);
 			_basehealth = new Text("Base Health: 100", _cw, _h/7 + 3*_textoffset);
 			_resources = new Text("Resources: 500", _cw, _h/7 + 4*_textoffset);
 
-			g.setFont(new Font("Helvetica", Font.BOLD, 15));
-			_cbs.add(new ControlButton("Start Round!", _cw, 5*_h/7));
-			_cbs.add(new ControlButton("Main Menu", _cw, 5*_h/7 + _textoffset));
-			_cbs.add(new ControlButton("Restart", _cw,  5*_h/7 + 2*_textoffset));
-			_cbs.add(new ControlButton("Quit", _cw,  5*_h/7 + 3*_textoffset));
 			
-			_tbs.add(new TowerButton("Basic Tower", _cw,  3*_h/7 + _textoffset));
-			_tbs.add(new TowerButton("Flame Tower", _cw,  3*_h/7 + 2*_textoffset));
-			_tbs.add(new TowerButton("Cannon Tower", _cw,  3*_h/7 + 3*_textoffset));
+			g.setFont(new Font("Helvetica", Font.BOLD, 15));
+			_cbs.add(new ControlButton("Start Round!", _cw, 5*_h/7, g));
+			_cbs.add(new ControlButton("Pause", _cw, 5*_h/7 + _cboffset, g));
+			_cbs.add(new ControlButton("Main Menu", _cw, 5*_h/7 + 2*_cboffset, g));
+			_cbs.add(new ControlButton("Restart", _cw,  5*_h/7 + 3*_cboffset, g));
+			_cbs.add(new ControlButton("Quit", _cw,  5*_h/7 + 4*_cboffset, g));
+			
+			_tbs.add(new TowerButton("Basic Tower", _cw/4, 3*_h/7, _tf.getBasicSprite()));
+			_tbs.add(new TowerButton("Flame Tower", _cw*3/4, 3*_h/7, _tf.getFlameSprite()));
+			_tbs.add(new TowerButton("Cannon Tower", _cw*5/4, 3*_h/7, _tf.getCannonSprite()));
+			_tbs.add(new TowerButton("Electric Tower", _cw*7/4, 3*_h/7, _tf.getElectricSprite()));
 
 			_first = false;
 		}
 		
 		java.awt.Color colorholder = g.getColor();
 		
-		g.setColor(Color.RED);
+		g.setColor(_background);
 		g.fill(new Rectangle2D.Float(_x,_y,_cw,_h));
 		
 		g.setColor(Color.WHITE);
@@ -92,7 +106,7 @@ public class Console2 {
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Helvetica", Font.BOLD, 15));
 		for (ControlButton cb: _cbs) {
-			cb.draw();
+			cb.draw(g, _background);
 		}
 		
 		g.setColor(Color.BLACK);
@@ -111,60 +125,62 @@ public class Console2 {
 		return x;
 	}
 	
-	private class ControlButton {
-		private String _name;
-		private RoundRectangle2D _r;
-		private Rectangle2D _bb;
-		private float x;
-		private float y;
-		public ControlButton(String name, float rightline, float y) {
-			_name = name;
-			float x = centerX(name, rightline);
-			this.x = x;
-			this.y = y;
-			g.setColor(Color.BLACK);
-			g.setFont(new Font("Helvetica", Font.BOLD, 15));
-			FontMetrics fm = g.getFontMetrics();
-			_bb = fm.getStringBounds(name, g);
-			_r = new RoundRectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5), 5, 5);
-		}
-		public void draw() {
-			g.setColor(Color.BLACK);
-			g.setFont(new Font("Helvetica", Font.BOLD, 15));
-			g.draw(_r);
-			g.drawString(_name, x+5,(int) (y+_bb.getHeight()+1));
-		}
-		public RoundRectangle2D getRect() {
-			return _r;
-		}
-		public String getName() {
-			return _name;
-		}
+	private float centerRect(float width, float rightline) {
+		float x = (float) (.5*rightline - .5*width);
+		return x;
 	}
+	
+//	private class ControlButton {
+//		private String _name;
+//		private RoundRectangle2D _r;
+//		private Rectangle2D _bb;
+//		private float x;
+//		private float y;
+//		public ControlButton(String name, float rightline, float y) {
+//			_name = name;
+//			float x = centerX(name, rightline);
+//			this.x = x;
+//			this.y = y;
+//			g.setColor(Color.BLACK);
+//			g.setFont(new Font("Helvetica", Font.BOLD, 15));
+//			FontMetrics fm = g.getFontMetrics();
+//			_bb = fm.getStringBounds(name, g);
+//			_r = new RoundRectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5), 5, 5);
+//		}
+//		public void draw() {
+//			g.setColor(Color.BLACK);
+//			g.setFont(new Font("Helvetica", Font.BOLD, 15));
+//			g.draw(_r);
+//			g.drawString(_name, x+5,(int) (y+_bb.getHeight()+1));
+//		}
+//		public RoundRectangle2D getRect() {
+//			return _r;
+//		}
+//		public String getName() {
+//			return _name;
+//		}
+//	}
 	
 	private class TowerButton {
 		private String _name;
 		private RoundRectangle2D _r;
-		private Rectangle2D _bb;
+		private final float _width = _cw/5;
 		private float x;
 		private float y;
 		private boolean _highlight;
-		public TowerButton(String name, float rightline, float y) {
+		private BufferedImage _sprite;
+		public TowerButton(String name, float rightline, float y, BufferedImage sprite) {
+			_sprite = sprite;
 			_name = name;
-			float x = centerX(name, rightline);
-			this.x = x;
+			this.x = centerRect(_width, rightline);
 			this.y = y;
-			g.setColor(Color.BLACK);
-			g.setFont(new Font("Helvetica", Font.BOLD, 15));
-			FontMetrics fm = g.getFontMetrics();
-			_bb = fm.getStringBounds(name, g);
-			_r = new RoundRectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5), 5, 5);
+			_r = new RoundRectangle2D.Float(x,y,_width,_width, 5, 5);
 		}
 		public void draw() {
 			g.setColor(Color.BLACK);
-			g.setFont(new Font("Helvetica", Font.BOLD, 15));
+			//TODO this won't work right now
+			g.drawImage(_sprite, g.getTransform(), null);
 			g.draw(_r);
-			g.drawString(_name, x+5,(int) (y+_bb.getHeight()+1));
 			if (_highlight) {
 				g.setStroke(new BasicStroke(3));
 				g.setColor(Color.MAGENTA);
@@ -185,6 +201,50 @@ public class Console2 {
 			_highlight = false;
 		}
 	}
+	
+//	private class TowerButton {
+//		private String _name;
+//		private RoundRectangle2D _r;
+//		private Rectangle2D _bb;
+//		private float x;
+//		private float y;
+//		private boolean _highlight;
+//		public TowerButton(String name, float rightline, float y) {
+//			_name = name;
+//			float x = centerX(name, rightline);
+//			this.x = x;
+//			this.y = y;
+//			g.setColor(Color.BLACK);
+//			g.setFont(new Font("Helvetica", Font.BOLD, 15));
+//			FontMetrics fm = g.getFontMetrics();
+//			_bb = fm.getStringBounds(name, g);
+//			_r = new RoundRectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5), 5, 5);
+//		}
+//		public void draw() {
+//			g.setColor(Color.BLACK);
+//			g.setFont(new Font("Helvetica", Font.BOLD, 15));
+//			g.draw(_r);
+//			g.drawString(_name, x+5,(int) (y+_bb.getHeight()+1));
+//			if (_highlight) {
+//				g.setStroke(new BasicStroke(3));
+//				g.setColor(Color.MAGENTA);
+//				g.draw(_r);
+//				g.setStroke(new BasicStroke(1));
+//			}
+//		}
+//		public RoundRectangle2D getRect() {
+//			return _r;
+//		}
+//		public String getName() {
+//			return _name;
+//		}
+//		public void highlight() {
+//			_highlight = true;
+//		}
+//		public void unhighlight() {
+//			_highlight = false;
+//		}
+//	}
 	
 	
 	
@@ -212,9 +272,12 @@ public class Console2 {
 	//Work in terms of vectors or x y?
 	public String contains(int x, int y) {
 		for (ControlButton cb: _cbs) {
-			if (cb.getRect().contains(x, y)) {
-				System.out.println(cb.getName());
+			if (cb.getRoundRect().contains(x, y)) {
+				cb.highlight();
 				return cb.getName();
+			}
+			else {
+				cb.unhighlight();
 			}
 		}
 		for (TowerButton tb: _tbs) {

@@ -6,15 +6,22 @@ import gameEngine.zombie.Zombie;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import cs195n.Vec2f;
 import cs195n.Vec2i;
 
 
 public class BasicTower extends AbstractTower {
+	
+	private BufferedImage _sprite;
 
-	public BasicTower(Vec2f vec, Referee ref) {
-		super(10, 100, 1000000000, vec, ref);
+	public BasicTower(Vec2f vec, Referee ref, BufferedImage sprite) {
+		super(10, 100, 1000000000, vec, ref, sprite);
 		
 	}
 	

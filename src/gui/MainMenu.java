@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 public class MainMenu {
 
 	
@@ -26,6 +27,7 @@ public class MainMenu {
 	private ControlButton _go;
 	private int _etbwidth = 25;
 	private boolean _first;
+	private final Color _background = Color.GRAY;
 	
 	public MainMenu(int w, int h) {
 		_w = w;
@@ -39,20 +41,20 @@ public class MainMenu {
 	public void draw(Graphics2D g) {
 		this.g = g;
 		if (_first) {
-			_go = new ControlButton("GO", _w/2, 3*_h/5);
+			_go = new ControlButton("GO", _w/2, 3*_h/5, g);
 			int c = 30;
 			_addline1 = new EditableTextBox(_etbwidth, _w/2, _h/5 + c);
 			_addline2 = new EditableTextBox(_etbwidth, _w/2, _h/5 + 2*c);
-			_cbs.add(new ControlButton("Brown University", 3*_w/2, _h/5 + 2*c));
-			_cbs.add(new ControlButton("Wall Street", 3*_w/2, _h/5 + 3*c));
-			_cbs.add(new ControlButton("The White House", 3*_w/2, _h/5 + 4*c));
-			_cbs.add(new ControlButton("Eiffel Tower", 3*_w/2, _h/5 + 5*c));
-			_cbs.add(new ControlButton("Statue of Liberty", 3*_w/2, _h/5 + 6*c));
+			_cbs.add(new ControlButton("Brown University", 3*_w/2, _h/5 + 2*c, g));
+			_cbs.add(new ControlButton("Wall Street", 3*_w/2, _h/5 + 3*c, g));
+			_cbs.add(new ControlButton("The White House", 3*_w/2, _h/5 + 4*c, g));
+			_cbs.add(new ControlButton("Eiffel Tower", 3*_w/2, _h/5 + 5*c, g));
+			_cbs.add(new ControlButton("Statue of Liberty", 3*_w/2, _h/5 + 6*c, g));
 			_first = false;
 		}
 		
 		java.awt.Color colorholder = g.getColor();
-		g.setColor(Color.GRAY);
+		g.setColor(_background);
 		g.fill(new Rectangle2D.Float(0,0,_w,_h));
 		
 		g.setColor(Color.WHITE);
@@ -74,10 +76,12 @@ public class MainMenu {
 		g.setFont(new Font("Helvetica", Font.BOLD, 15));
 		_addline1.draw();
 		_addline2.draw();
-		_go.draw();
+		
+		
+		_go.draw(g, _background);
 		
 		for (ControlButton cb: _cbs) {
-			cb.draw();
+			cb.draw(g, _background);
 		}
 		
 		g.setColor(colorholder);
@@ -89,37 +93,6 @@ public class MainMenu {
 		int x = (int) (.5*rightline - .5*c);
 		return x;
 	}
-	
-	private class ControlButton {
-		private String _name;
-		private RoundRectangle2D _r;
-		private Rectangle2D _bb;
-		private float x;
-		private float y;
-		public ControlButton(String name, float rightline, float y) {
-			_name = name;
-			g.setFont(new Font("Helvetica", Font.BOLD, 15));
-			float x = centerX(name, rightline);
-			this.x = x;
-			this.y = y;
-		}
-		public void draw() {
-			g.setColor(Color.BLACK);
-			g.setFont(new Font("Helvetica", Font.BOLD, 15));
-			FontMetrics fm = g.getFontMetrics();
-			_bb = fm.getStringBounds(_name, g);
-			_r = new RoundRectangle2D.Float(x,y,(float) (_bb.getWidth()+10), (float) (_bb.getHeight()+5), 10, 10);
-			g.draw(_r);
-			g.drawString(_name, x+5,(int) (y+_bb.getHeight()+1));
-		}
-		public RoundRectangle2D getRoundRect() {
-			return _r;
-		}
-		public String getName() {
-			return _name;
-		}
-	}
-	
 	
 	
 	private class EditableTextBox {
@@ -194,11 +167,19 @@ public class MainMenu {
 	public String contains(int x, int y) {
 		for (ControlButton cb: _cbs) {
 			if (cb.getRoundRect().contains(x, y)) {
+				cb.highlight();
 				return cb.getName();
+			}
+			else {
+				cb.unhighlight();
 			}
 		}
 		if (_go.getRoundRect().contains(x, y)) {
+			_go.highlight();
 			return (_addline1.getText() + " " + _addline2.getText());
+		}
+		else {
+			_go.unhighlight();
 		}
 		this.chooseAddline(x,y);
 		return null;

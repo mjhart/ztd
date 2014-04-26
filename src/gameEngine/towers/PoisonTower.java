@@ -12,9 +12,9 @@ import cs195n.Vec2f;
 import cs195n.Vec2i;
 
 
-public class GooTower extends AbstractTower {
+public class PoisonTower extends AbstractTower {
 
-	public GooTower(Vec2f vec, Referee ref, BufferedImage sprite) {
+	public PoisonTower(Vec2f vec, Referee ref, BufferedImage sprite) {
 		super(10, 100, 1000000000, vec, ref, sprite);
 		
 	}
@@ -42,6 +42,5 @@ public class GooTower extends AbstractTower {
 		}
 		return false;
 	}
-
 	
 }

@@ -5,6 +5,7 @@ import gameEngine.towers.AbstractTower;
 import gameEngine.towers.BasicTower;
 import gameEngine.towers.CannonTower;
 import gameEngine.towers.FlameTower;
+import gameEngine.towers.TowerFactory;
 import gameEngine.zombie.Zombie;
 
 import java.awt.BasicStroke;
@@ -54,6 +55,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private Map _m;
 	private Referee _ref;
 	private String _command;
+	private TowerFactory _tf;
 	
 	public TestFrontEnd(String title, boolean fullscreen) {
 		super(title, fullscreen);
@@ -65,6 +67,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 		super.setDebugMode(true);
 		
 		_ref = new Referee(_m);
+		
+		_tf = new TowerFactory();
 
 		_mm = new MainMenu(size.x, size.y);
 		_hasMain = true;
@@ -188,7 +192,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		wMax = _m.getwMax();
 		wMin = _m.getwMin();
 		srcs = _m.getSources();
-		_c = new Console2(0,0,_size.x/4,_size.y);
+		_c = new Console2(0,0,_size.x/4,_size.y, _tf);
 		_hasMap = true;
 		_hasMain = false;
 		_mm.clear();
@@ -295,6 +299,10 @@ public class TestFrontEnd extends SwingFrontEnd {
 					_c.unhighlight();
 					_command = null;
 				}
+				else if (_command.equals("Pause")) {
+					//TODO Pause screen
+					_ref.pause();
+				}
 				else if (_command.equals("Quit")) {
 					System.exit(0);
 				}
@@ -304,13 +312,16 @@ public class TestFrontEnd extends SwingFrontEnd {
 				Rectangle2D r = new Rectangle2D.Double(e.getX() - 5, e.getY() - 5, 10, 10);
 				if (_validPlace) {
 					if (_command.equals("Basic")) {
-						_ref.addTower(new BasicTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
-					}
-					else if (_command.equals("Flame")) {
-						_ref.addTower(new FlameTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
+						_ref.addTower(_tf.makeBasic(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
 					}
 					else if (_command.equals("Cannon")) {
-						_ref.addTower(new CannonTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
+						_ref.addTower(_tf.makeCannon(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
+					}
+					else if (_command.equals("Electric")) {
+						_ref.addTower(_tf.makeElectric(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
+					}
+					else if (_command.equals("Flame")) {
+						_ref.addTower(_tf.makeFlame(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
 					}
 					_c.unhighlight();
 					_command = null;
@@ -332,7 +343,13 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onMouseMoved(MouseEvent e) {
-		if (_hasMap) {
+		if (_hasMain) {
+			_mm.contains(e.getX(), e.getY());
+		}
+		
+		
+		
+		else if (_hasMap) {
 			if ((e.getX() > _size.x/4) && (_command != null)) {
 				Rectangle2D r = new Rectangle2D.Double(e.getX() - 5, e.getY() - 5, 10, 10);
 				for (Line2D l: _highline2D) {
@@ -344,15 +361,20 @@ public class TestFrontEnd extends SwingFrontEnd {
 						_validPlace = true;
 					}
 				}
+				//TODO Change this to sprites instead of towers?
 				if (_command.equals("Basic")) {
-					_candidate = new BasicTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
-				}
-				else if (_command.equals("Flame")) {
-					_candidate = new FlameTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+					_candidate = _tf.makeBasic(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
 				}
 				else if (_command.equals("Cannon")) {
-					_candidate = new CannonTower(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+					_candidate = _tf.makeCannon(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
 				}
+				else if (_command.equals("Electric")) {
+					_candidate = _tf.makeElectric(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+				}
+				else if (_command.equals("Flame")) {
+					_candidate = _tf.makeFlame(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+				}
+
 			}
 			else {
 				_candidate = null;

@@ -12,9 +12,9 @@ import cs195n.Vec2f;
 import cs195n.Vec2i;
 
 
-public class GooTower extends AbstractTower {
+public class StunTower extends AbstractTower {
 
-	public GooTower(Vec2f vec, Referee ref, BufferedImage sprite) {
+	public StunTower(Vec2f vec, Referee ref, BufferedImage sprite) {
 		super(10, 100, 1000000000, vec, ref, sprite);
 		
 	}
@@ -36,12 +36,9 @@ public class GooTower extends AbstractTower {
 		if (z != null) {
 			//TODO Goo Projectile
 			//super.addProjectile(new GooProjectile(super._vec, z.getCoords(), this));
-			_ref.dealDamage(z, _damage);
-			System.out.println("Basic Tower Firing");
 			return true;
 		}
 		return false;
 	}
-
 	
 }
