@@ -3,6 +3,8 @@ package gameEngine;
 import gameEngine.towers.AbstractTower;
 import gameEngine.zombie.Zombie;
 import gameEngine.zombie.ZombieFactory;
+import gui.Console2;
+import gui.TestFrontEnd;
 
 import java.awt.Graphics2D;
 import java.util.Collection;
@@ -25,15 +27,19 @@ public class Referee {
 	private List<AbstractTower> _towers;
 	private ZombieFactory _zFactory;
 	private int _money;
+	private TestFrontEnd _frontEnd;
 	
 	// for debugging
 	Zombie _test;
 	
-	public Referee(Map m) {
+	public Referee(Map m, TestFrontEnd fe) {
 		_m = m;
 		_zombies = new HashSet<Zombie>();
 		_towers = new LinkedList<AbstractTower>();
 		_zFactory = new ZombieFactory();
+		_money = 200;
+		_frontEnd = fe;
+		_frontEnd.setResources(200);
 	}
 	
 	public void tick(long nanosSincePreviousTick) {
@@ -70,13 +76,14 @@ public class Referee {
 			
 			// attack base
 			for(Zombie z : _zombies) {
-				if(z.getCoords().dist2(_b.getNode()._coords) < 1) {
+				if(z.getCoords().dist2(_b.getNode()._coords) < 1000) {
 					if(_b.dealDamage(z.atttack(nanosSincePreviousTick))) {
 						_running = false;
 						break;
 					}
 				}
 			}
+			_frontEnd.setBaseHealth(_b.getHealth());
 			
 			// update zombie animation
 			for(Zombie z : _zombies) {
@@ -172,6 +179,7 @@ public class Referee {
 	public void dealDamage(Zombie z, Integer d) {
 		if(z.takeDamage(d) != null) {
 			_money+=_round;
+			_frontEnd.setResources(_money);
 			_zombies.remove(z);
 		}
 	}
@@ -194,6 +202,7 @@ public class Referee {
 		_nanoSinceSpawn = 0;
 		_running = true;
 		_money += _money/10;
+		_frontEnd.setResources(_money);
 	}
 	
 	public void setMap(Map m) {
@@ -215,6 +224,7 @@ public class Referee {
 		_zombies.clear();
 		_towers.clear();
 		_money = 0;
+		_frontEnd.setResources(0);
 	}
 	
 	public void pause() {

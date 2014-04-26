@@ -70,7 +70,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		super(title, fullscreen, size);
 		super.setDebugMode(true);
 		
-		_ref = new Referee(_m);
+		
 		
 		_tf = new TowerFactory();
 
@@ -88,7 +88,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onTick(long nanosSincePreviousTick) {
-		_ref.tick(nanosSincePreviousTick);
+		if(_ref != null) {
+			_ref.tick(nanosSincePreviousTick);
+		}
 	}
 
 	///*
@@ -189,6 +191,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 	}
 	
 	public void makeMap(String add) {
+		
+		_ref = new Referee(_m, this);
 		try {
 			_m = new Map(add, _ref);
 		} catch (Exception e) {
@@ -437,6 +441,17 @@ public class TestFrontEnd extends SwingFrontEnd {
 	
 	public Collection<Zombie> getZombie() {
 		return _ref.getZombies();
+	}
+	
+	public void setResources(int resources) {
+		if(_c != null) {
+			_c.setResources(resources);
+		}
+	}
+	public void setBaseHealth(int health) {
+		if(_c != null) {
+			_c.setBaseHealth(health);
+		}
 	}
 	
 }
