@@ -15,7 +15,7 @@ import cs195n.Vec2i;
 public class StunTower extends AbstractTower {
 
 	public StunTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(10, 100, 1000000000, vec, ref, sprite);
+		super(10, 100, 1000000000, 120, vec, ref, sprite);
 		
 	}
 	

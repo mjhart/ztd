@@ -21,15 +21,17 @@ public abstract class AbstractTower {
 	protected int _damage;
 	protected float _radius;
 	protected long _delay;
+	private int _price;
 	protected Vec2f _vec;
 	protected Referee _ref;
 	private Set<Projectile> _projectiles;
 	private BufferedImage _sprite;
 	
-	public AbstractTower(int damage, float radius, long delay, Vec2f vec, Referee ref, BufferedImage sprite) {
+	public AbstractTower(int damage, float radius, long delay, int price, Vec2f vec, Referee ref, BufferedImage sprite) {
 		_damage = damage;
 		_radius = radius;
 		_delay = delay;
+		_price = price;
 		_vec = vec;
 		_ref = ref;
 		_projectiles = new HashSet<Projectile>();
@@ -71,8 +73,7 @@ public abstract class AbstractTower {
 			p.draw(g);
 		}
 		AffineTransform af1 = new AffineTransform();
-		af1.translate(_vec.x - (64 * 5), _vec.y - (64 * 5));
-		af1.scale(5, 5);
+		af1.translate(_vec.x - (_sprite.getWidth() / 2), _vec.y - (_sprite.getHeight() / 2));
 		g.drawImage(_sprite, af1, null);
 	}
 	
@@ -107,6 +108,10 @@ public abstract class AbstractTower {
 	
 	public float getRadius() {
 		return _radius;
+	}
+	
+	public int getPrice() {
+		return _price;
 	}
 	
 }

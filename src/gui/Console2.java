@@ -1,6 +1,7 @@
 
 package gui;
 
+import gameEngine.Referee;
 import gameEngine.towers.BasicTower;
 import gameEngine.towers.TowerFactory;
 
@@ -9,7 +10,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
@@ -36,6 +36,7 @@ public class Console2 {
 	private Graphics2D g;
 	private boolean _first;
 	private TowerFactory _tf;
+	private Referee _ref;
 	private Color _background = Color.RED;
 
 	
@@ -43,13 +44,14 @@ public class Console2 {
 	private List<TowerButton> _tbs; //A list of tower buttons. Needed to check for mouse clicks
 
 	
-	public Console2(float x, float y, float w, float h, TowerFactory tf) {
+	public Console2(float x, float y, float w, float h, TowerFactory tf, Referee ref) {
 		System.out.println("making new console");
 		_cw = w;
 		_h = h;
 		_x = x;
 		_y = y;
 		_tf = tf;
+		_ref = ref;
 		_cbs = new ArrayList<ControlButton>();
 		_tbs = new ArrayList<TowerButton>();
 		_first = true;
@@ -58,6 +60,9 @@ public class Console2 {
 
 	public void draw(Graphics2D g) {
 		this.g = g;
+		getRound();
+		getResources();
+		getBaseHealth();
 		if (_first) {
 			_textoffset = 20;
 			_cboffset = 30;
@@ -179,7 +184,7 @@ public class Console2 {
 		public void draw() {
 			g.setColor(Color.BLACK);
 			//TODO this won't work right now
-			g.drawImage(_sprite, g.getTransform(), null);
+			//g.drawImage(_sprite, g.getTransform(), null);
 			g.draw(_r);
 			if (_highlight) {
 				g.setStroke(new BasicStroke(3));
@@ -297,15 +302,18 @@ public class Console2 {
 		}
 	}
 	
-	public void setRound(int i) {
+	private void getRound() {
+		int i = _ref.getRound();
 		_round = new Text("Round: " + Integer.toString(i), _cw, _h/7 + 2*_textoffset);
 	}
 	
-	public void setBaseHealth(int i) {
+	private void getBaseHealth() {
+		int i = _ref.getBaseHealth();
 		_basehealth = new Text("Base Health: " + Integer.toString(i), _cw, _h/7 + 3*_textoffset);
 	}
 	
-	public void setResources(int i) {
+	private void getResources() {
+		int i = _ref.getResources();
 		_resources = new Text("Resources: " + Integer.toString(i), _cw, _h/7 + 4*_textoffset);
 	}
 	

@@ -183,7 +183,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 			}
 
 			for(AbstractTower t : _ref.towers()) {
-				t.drawSimple(g);
+				//t.drawSimple(g);
+				t.draw2(g);
 			}	
 
 		}
@@ -192,7 +193,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	
 	public void makeMap(String add) {
 		
-		_ref = new Referee(_m, this);
+		_ref = new Referee(_m);
 		try {
 			_m = new Map(add, _ref);
 		} catch (Exception e) {
@@ -203,7 +204,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		wMin = _m.getwMin();
 		srcs = _m.getSources();
 
-		_c = new Console2(0,0,CONSOLE_WIDTH,_size.y, _tf);
+		_c = new Console2(0,0,CONSOLE_WIDTH,_size.y, _tf, _ref);
 
 		_hasMap = true;
 		_hasMain = false;
@@ -320,7 +321,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 					System.exit(0);
 				}
 			}
-			else if ((e.getX() > _size.x/4) && (_command != null)) {
+			else if ((e.getX() > CONSOLE_WIDTH) && (_command != null)) {
 				//TODO if intersects with a tower, select and have upgrade option
 				Rectangle2D r = new Rectangle2D.Double(e.getX() - 5, e.getY() - 5, 10, 10);
 				if (_validPlace) {
@@ -363,7 +364,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		
 		
 		else if (_hasMap) {
-			if ((e.getX() > _size.x/4) && (_command != null)) {
+			if ((e.getX() > CONSOLE_WIDTH) && (_command != null)) {
 				Rectangle2D r = new Rectangle2D.Double(e.getX() - 5, e.getY() - 5, 10, 10);
 				for (Line2D l: _highline2D) {
 					if (l.intersects(r)) {
@@ -386,6 +387,10 @@ public class TestFrontEnd extends SwingFrontEnd {
 				}
 				else if (_command.equals("Flame")) {
 					_candidate = _tf.makeFlame(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+				}
+				
+				if (_ref.getResources() - _candidate.getPrice() < 0) {
+					_candidate = null;
 				}
 
 			}
@@ -439,19 +444,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 		return (float) ((x - CONSOLE_WIDTH) / (float) (_size.x - CONSOLE_WIDTH) * 10000f);
 	}
 	
-	public Collection<Zombie> getZombie() {
-		return _ref.getZombies();
-	}
+
 	
-	public void setResources(int resources) {
-		if(_c != null) {
-			_c.setResources(resources);
-		}
-	}
-	public void setBaseHealth(int health) {
-		if(_c != null) {
-			_c.setBaseHealth(health);
-		}
-	}
+
 	
 }
