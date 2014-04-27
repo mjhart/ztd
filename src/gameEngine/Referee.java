@@ -198,7 +198,7 @@ public class Referee {
 	
 	public void setMap(Map m) {
 		_m = m;
-		_b  = new Base(_m.getBaseNode(), _m.getBaseNode()._coords, this);
+		//_b  = new Base(_m.getBaseNode(), _m.getBaseNode()._coords, this);
 	}
 	
 	public List<AbstractTower> towers() {

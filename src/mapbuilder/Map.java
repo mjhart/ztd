@@ -4,6 +4,7 @@ import gameEngine.Base;
 import gameEngine.Referee;
 import gameEngine.towers.AbstractTower;
 import gameEngine.zombie.Zombie;
+import gui.SpriteImp;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
@@ -23,6 +24,8 @@ import java.util.PriorityQueue;
 
 import javax.imageio.ImageIO;
 
+import ztdpac.ImageRet;
+
 import cs195n.Vec2f;
 import cs195n.Vec2i;
 import mapbuilder.MapWay;
@@ -40,6 +43,7 @@ public class Map {
 	private BufferedImage _baseSprite;
 	private List<MapNode> _srcs;
 	private Referee _ref;
+	private BufferedImage _img;
 	
 	public Map(String address, Referee ref) {
 		
@@ -48,8 +52,8 @@ public class Map {
 		wMin = new double[2];
 		wMax = new double[2];
 		
-		//File stadd = Retriever.getFromAddress(address);
-		File stadd = new File("stadd.xml");
+		File stadd = Retriever.getFromAddress(address);
+		//File stadd = new File("stadd.xml");
 		XmlParser x = new XmlParser(this);
 		Point2D.Double cent = x.parseAddress(stadd);
 		DistConverter dc = new DistConverter(cent.y, cent.x);
@@ -57,8 +61,14 @@ public class Map {
 		wMin[1] = dc.getBott(cent.y);
 		wMax[0] = dc.getRight(cent.x);
 		wMax[1] = dc.getTop(cent.y);
-		//File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
-		File box = new File("box.xml");
+		File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
+		ImageRet.getImage(wMin[0], wMin[1], wMax[0], wMax[1]);
+		try {
+			_img = ImageIO.read(new File("map.png"));
+		} catch (IOException e) {
+			System.out.println("ERROR: Could not get image (SpriteImp)");
+		}
+		//File box = new File("box.xml");
 		x.parseBox(box);
 		_ways = x.getWays();
 		_nodes = x.getNodes();
@@ -91,6 +101,10 @@ public class Map {
 	
 	public List<MapNode> getSourceList() {
 		return Collections.unmodifiableList(_srcs);
+	}
+	
+	public BufferedImage getImage() {
+		return _img;
 	}
 	
 

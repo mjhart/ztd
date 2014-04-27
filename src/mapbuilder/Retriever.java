@@ -33,6 +33,8 @@ public class Retriever {
 		address = address + bottom + ",";
 		address = address + right + ",";
 		address = address + top;
+
+		//address = "http://api.openstreetmap.org/api/0.6/map?bbox=-71.40404,41.82657,-71.40154,41.82832";
 		
 		try {
 			URL osm = new URL(address);
@@ -50,7 +52,6 @@ public class Retriever {
 			//Close resources
 			in.close();
 			pw.close();			
-			
 			return box;
 		}
 		catch (MalformedURLException e) {

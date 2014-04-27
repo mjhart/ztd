@@ -14,14 +14,14 @@ import javax.imageio.ImageIO;
 
 public class ImageRet {
 	
-	public File getImage(double left, double bottom, double right, double top) {
+	public static File getImage(double left, double bottom, double right, double top) {
 			
 			String address = "http://open.mapquestapi.com/staticmap/v4/getmap?key=Fmjtd%7Cluur2quyn9%2C8s%3Do5-9aas04&bestfit="; //The mapquest server address
 			address = address + top + ",";
 			address = address + left + ",";
 			address = address + bottom + ",";
 			address = address + right + ",";
-			address = address + "&size=600,600&type=map&imagetype=png";
+			address = address + "&size=600,500&type=map&imagetype=png";
 			
 			try {
 				URL mq = new URL(address);

@@ -101,6 +101,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 			_mm.draw(g);
 		}
 		else if (_hasMap) {
+			
+			
+			g.drawImage(_m.getImage(), 0, 0, null);
 
 			for(MapWay w : _m.getWays()) {
 				List<MapNode> nList = w.getNodes();
@@ -122,6 +125,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 			for (Line2D l: _highline2D) {
 				g.draw(l);
 			}
+
 
 			g.setColor(java.awt.Color.BLUE);
 			for(MapNode n : _m.getSourceList()) {
@@ -146,7 +150,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 				g.fillOval(lonToX(n.getX())-2, latToY(n.getY())-2, 5, 5);
 			}
 
-			_c.draw(g);
+			//_c.draw(g);
 			
 			g.setColor(java.awt.Color.RED);
 			for(Zombie z : _ref.getZombies()) {
@@ -159,7 +163,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 			}
 			
 
-			_c.draw(g);
+			//_c.draw(g);
 			
 			if (_candidate != null) {
 				drawTower(_candidate, g);
