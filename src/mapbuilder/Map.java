@@ -52,8 +52,8 @@ public class Map {
 		wMin = new double[2];
 		wMax = new double[2];
 		
-		File stadd = Retriever.getFromAddress(address);
-		//File stadd = new File("stadd.xml");
+		//File stadd = Retriever.getFromAddress(address);
+		File stadd = new File("stadd.xml");
 		XmlParser x = new XmlParser(this);
 		Point2D.Double cent = x.parseAddress(stadd);
 		DistConverter dc = new DistConverter(cent.y, cent.x);
@@ -61,14 +61,14 @@ public class Map {
 		wMin[1] = dc.getBott(cent.y);
 		wMax[0] = dc.getRight(cent.x);
 		wMax[1] = dc.getTop(cent.y);
-		File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
-		ImageRet.getImage(wMin[0], wMin[1], wMax[0], wMax[1]);
-		try {
-			_img = ImageIO.read(new File("map.png"));
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (SpriteImp)");
-		}
-		//File box = new File("box.xml");
+		//File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
+//		ImageRet.getImage(wMin[0], wMin[1], wMax[0], wMax[1]);
+//		try {
+//			_img = ImageIO.read(new File("map.png"));
+//		} catch (IOException e) {
+//			System.out.println("ERROR: Could not get image (SpriteImp)");
+//		}
+		File box = new File("box.xml");
 		x.parseBox(box);
 		_ways = x.getWays();
 		_nodes = x.getNodes();

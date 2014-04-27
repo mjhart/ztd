@@ -158,6 +158,7 @@ public class Console2 {
 			//TODO this won't work right now
 			//g.drawImage(_sprite, g.getTransform(), null);
 			g.draw(_r);
+//			TowerInfo ti = new TowerInfo(_name, )
 			if (_highlight) {
 				g.setStroke(new BasicStroke(3));
 				g.setColor(Color.MAGENTA);

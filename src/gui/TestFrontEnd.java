@@ -365,7 +365,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		
 		else if (_hasMap) {
 			if ((e.getX() > CONSOLE_WIDTH) && (_command != null)) {
-				Rectangle2D r = new Rectangle2D.Double(e.getX() - 5, e.getY() - 5, 10, 10);
+				Rectangle2D r = new Rectangle2D.Double(xToLon(e.getX()) - 50, yToLat(e.getY()) - 50, 100, 100);
 				for (Line2D l: _highline2D) {
 					if (l.intersects(r)) {
 						_validPlace = false;
