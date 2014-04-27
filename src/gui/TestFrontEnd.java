@@ -130,7 +130,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 				}
 				else {
 					g.setColor(new Color(1f, 0f, 0f, .5f));
-					System.out.println("HAHA");
 				}
 				Ellipse2D e = new Ellipse2D.Float(_candidate.getCoords().x - (float) Math.sqrt(_candidate.getRadius()), _candidate.getCoords().y - (float) Math.sqrt(_candidate.getRadius()), (float) Math.sqrt(_candidate.getRadius()) * 2, (float) Math.sqrt(_candidate.getRadius()) * 2);
 				g.fill(e);

@@ -106,10 +106,17 @@ public abstract class AbstractTower {
 		}
 	}
 	
+	public int getDamage() {
+		return _damage;
+	}
+	
 	public float getRadius() {
 		return _radius;
 	}
 	
+	public double getDelay() {
+		return _delay/1000000000.0;
+	}
 	public int getPrice() {
 		return _price;
 	}
