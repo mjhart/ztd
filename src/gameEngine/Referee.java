@@ -3,6 +3,8 @@ package gameEngine;
 import gameEngine.towers.AbstractTower;
 import gameEngine.zombie.Zombie;
 import gameEngine.zombie.ZombieFactory;
+import gui.Console2;
+import gui.TestFrontEnd;
 
 import java.awt.Graphics2D;
 import java.util.Collection;
@@ -25,6 +27,7 @@ public class Referee {
 	private List<AbstractTower> _towers;
 	private ZombieFactory _zFactory;
 	private int _money;
+	private static final int STARTING_MONEY = 200;
 	
 	// for debugging
 	Zombie _test;
@@ -34,6 +37,7 @@ public class Referee {
 		_zombies = new HashSet<Zombie>();
 		_towers = new LinkedList<AbstractTower>();
 		_zFactory = new ZombieFactory();
+		_money = STARTING_MONEY;
 	}
 	
 	public void tick(long nanosSincePreviousTick) {
@@ -70,7 +74,7 @@ public class Referee {
 			
 			// attack base
 			for(Zombie z : _zombies) {
-				if(z.getCoords().dist2(_b.getNode()._coords) < 1) {
+				if(z.getCoords().dist2(_b.getNode()._coords) < 1000) {
 					if(_b.dealDamage(z.atttack(nanosSincePreviousTick))) {
 						_running = false;
 						break;
@@ -145,10 +149,10 @@ public class Referee {
 	
 	/**
 	 * Gets all the zombies within a given radius of a set of 
-	 * coordinates.
+	 * coordinates
 	 * @param coords coordinates to be used for comparison
-	 * @param radius distance within zombies will be added to 
-	 * return set
+	 * @param radius - zombies within sqrt(radius) will be 
+	 * added to return list
 	 * @return list of zombies
 	 */
 	public List<Zombie> getZombiesInR(Vec2f coords, double radius) {
@@ -171,7 +175,7 @@ public class Referee {
 	 */
 	public void dealDamage(Zombie z, Integer d) {
 		if(z.takeDamage(d) != null) {
-			_money+=_round;
+			_money+=10;
 			_zombies.remove(z);
 		}
 	}
@@ -189,16 +193,18 @@ public class Referee {
 	}
 	
 	public void startRound() {
+		if(_round != 0) {
+			_money += _money/10;
+		}
 		_round++;
 		_numZombies = _round * 5;
 		_nanoSinceSpawn = 0;
 		_running = true;
-		_money += _money/10;
 	}
 	
 	public void setMap(Map m) {
 		_m = m;
-		//_b  = new Base(_m.getBaseNode(), _m.getBaseNode()._coords, this);
+		_b  = new Base(_m.getBaseNode(), _m.getBaseNode()._coords, this, null);
 	}
 	
 	public List<AbstractTower> towers() {
@@ -207,6 +213,7 @@ public class Referee {
 	
 	public void addTower(AbstractTower t) {
 		_towers.add(t);
+		_money = _money - t.getPrice();
 	}
 	
 	public void restart() {
@@ -214,7 +221,7 @@ public class Referee {
 		_round = 0;
 		_zombies.clear();
 		_towers.clear();
-		_money = 0;
+		_money = STARTING_MONEY;
 	}
 	
 	public void pause() {
@@ -223,5 +230,22 @@ public class Referee {
 	
 	public void unpause() {
 		_running = true;
+	}
+	
+	public int getResources() {
+		return _money;
+	}
+	
+	public int getBaseHealth() {
+		if (_b != null) {
+			return _b.getHealth();
+		}
+		else {
+			return 0;
+		}
+	}
+	
+	public int getRound() {
+		return _round;
 	}
 }

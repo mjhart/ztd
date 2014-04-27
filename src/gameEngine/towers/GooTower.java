@@ -15,7 +15,7 @@ import cs195n.Vec2i;
 public class GooTower extends AbstractTower {
 
 	public GooTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(10, 100, 1000000000, vec, ref, sprite);
+		super(10, 100, 1000000000, 140, vec, ref, sprite);
 		
 	}
 	
@@ -26,8 +26,8 @@ public class GooTower extends AbstractTower {
 	}
 
 	@Override
-	public void drawSimple(Graphics2D g, Vec2i coords) {
-		super.drawSimple(g, coords, java.awt.Color.BLUE);
+	public void drawSimple(Graphics2D g) {
+		super.drawSimple(g, java.awt.Color.BLUE);
 	}
 
 	@Override

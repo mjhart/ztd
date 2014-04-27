@@ -32,6 +32,10 @@ public class Base extends BasicTower {
 	public MapNode getNode() {
 		return _baseNode;
 	}
+	
+	public int getHealth() {
+		return _health;
+	}
 
 	@Override
 	public void draw(Graphics2D g, Vec2i coords) {
@@ -40,7 +44,7 @@ public class Base extends BasicTower {
 	}
 
 	@Override
-	public void drawSimple(Graphics2D g, Vec2i coords) {
+	public void drawSimple(Graphics2D g) {
 		// TODO Auto-generated method stub
 		
 	}

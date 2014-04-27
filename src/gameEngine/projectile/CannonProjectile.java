@@ -6,6 +6,7 @@ import gameEngine.zombie.Zombie;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -37,29 +38,29 @@ public class CannonProjectile implements Projectile {
 	}
 	
 	@Override
-	public void action(long nanosSincePrevTick) {
+	public boolean action(long nanosSincePrevTick) {
 		// TODO Auto-generated method stub
 		if(_explode) {
 			_nanosExploding+=nanosSincePrevTick;
 			if(_nanosExploding > 100000000l / 16) {
 				if(_frame == 15) {
-					_t.removeProjectile(this);
-					return;
+					return true;
 				}
 				_frame++;
 				_nanosExploding = 0;
 			}
 		}
 		else {
-			if(_coords.dist2(_target) < 1) {
-				List<Zombie> splash = _ref.getZombiesInR(_target, 10);
+			if(_coords.dist2(_target) < 10000) {
+				List<Zombie> splash = _ref.getZombiesInR(_target, 250000);
 				for (Zombie nb: splash) {
 					_ref.dealDamage(nb, _damage);
 				}
 				_explode = true;
 			}
-			_coords = _coords.plus(_path.normalized().smult(0.5f));
+			_coords = _coords.plus(_path.normalized().smult(50));
 		}
+		return false;
 	}
 
 	@Override
@@ -72,11 +73,14 @@ public class CannonProjectile implements Projectile {
 			g.fillOval((int) (_coords.x * 6) - 25, (int) (_coords.y * 5) - 25, 50, 50);
 			g.setColor(c);
 			*/
-			g.drawImage(_sprites[_frame], (int) (_coords.x * 6) - 32, (int) (_coords.y * 5) - 32, null);
+			AffineTransform af = new AffineTransform();
+			af.translate(_coords.x - 32 * 10, _coords.y - 32 * 10);
+			af.scale(10, 10);
+			g.drawImage(_sprites[_frame], af, null);
 		}
 		else {
 			g.setColor(java.awt.Color.BLACK);
-			g.fillOval((int) (_coords.x * 6) - 2, (int) (_coords.y * 5) - 2, 5, 5);
+			g.fillOval((int) _coords.x - 25, (int) _coords.y - 25, 50, 50);
 		}
 	}
 

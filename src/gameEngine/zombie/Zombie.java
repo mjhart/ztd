@@ -34,7 +34,7 @@ public abstract class Zombie {
 	}
 
 	public void move() {
-		if(_coords.dist2(_tCoords) < 1) {
+		if(_coords.dist2(_tCoords) < 1000) {
 			if(_target.getNext() == null) {
 				return;
 			}
@@ -72,7 +72,7 @@ public abstract class Zombie {
 	
 	public void updateImage(long nanosSincePrevTick) {
 		_nanoSincePrevAnimation+=nanosSincePrevTick;
-		if(_nanoSincePrevAnimation > 10000000 / _speed) {
+		if(_nanoSincePrevAnimation > 1000000000 / _speed) {
 			_nanoSincePrevAnimation = 0;
 			_frame = (_frame+1)%_sprites.length;
 			return;
@@ -80,22 +80,15 @@ public abstract class Zombie {
 		//System.out.println("Not updating image");
 	}
 	
-	public void draw(Graphics2D g, Vec2i coords) {
-		//g.drawImage(_sprites[_frame], coords.x, coords.y, null);
-		AffineTransform af = g.getTransform();
+	public void draw(Graphics2D g) {
+		//AffineTransform af = g.getTransform();
 		AffineTransform af1 = new AffineTransform();
-		af1.translate(coords.x - 128 / 4, coords.y - 128 / 4);
-		af1.scale(0.5, 0.5);
-		af1.rotate(_angle, 128 / 2, 128 / 2);
+		af1.translate(_coords.x - (64 * 5), _coords.y - (64 * 5));
+		af1.scale(5, 5);
+		af1.rotate(_angle, 64, 64);
 		g.drawImage(_sprites[_frame], af1, null);
-		//g.scale(0.5, 0.5);
-		//g.rotate(Math.PI/2);
-		//g.rotate(_angle);
-		//g.drawImage(_sprites[_frame], coords.x-15, coords.y-15, 30, 30, null);
-		//g.drawImage(_sprites[_frame], coords.x, coords.y, null);
-		//g.drawImage
-		g.setTransform(af);
-	} 
+		//g.setTransform(af);
+	}
 	
 	public double getDist() {
 		return _dist;

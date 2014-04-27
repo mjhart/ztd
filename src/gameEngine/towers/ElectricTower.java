@@ -2,12 +2,14 @@ package gameEngine.towers;
 
 
 import gameEngine.Referee;
+import gameEngine.projectile.ElectricProjectile;
 import gameEngine.zombie.Zombie;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import cs195n.Vec2f;
@@ -16,10 +18,9 @@ import cs195n.Vec2i;
 
 public class ElectricTower extends AbstractTower {
 	
-	private boolean _animate = false;
 	
 	public ElectricTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(30, 100, 1000000000, vec, ref, sprite);
+		super(30, 500000, 1000000000, 300, vec, ref, sprite);
 	}
 
 	@Override
@@ -29,23 +30,24 @@ public class ElectricTower extends AbstractTower {
 	}
 	
 	@Override
-	public void drawSimple(Graphics2D g, Vec2i coords) {
-		super.drawSimple(g, coords, java.awt.Color.ORANGE);
+	public void drawSimple(Graphics2D g) {
+		super.drawSimple(g, java.awt.Color.ORANGE);
 		
-		//This is just for fun, the drawn oval is not accurate at allgh
-		if (_animate) {
-			g.setColor(java.awt.Color.ORANGE);
-			g.fillOval((int) coords.x - 50, (int) coords.y - 50, 100, 100);
-			_animate = false;
-		}
+//		//This is just for fun, the drawn oval is not accurate at allgh
+//		if (_animate) {
+//			g.setColor(java.awt.Color.ORANGE);
+//			g.fillOval((int) coords.x - 50, (int) coords.y - 50, 100, 100);
+//			_animate = false;
+//		}
 	}
 	
 	
 	
 	@Override
 	public boolean action() {
-		List<Zombie> alreadyhit = new ArrayList<>();
+		HashSet<Zombie> alreadyhit = new HashSet<>();
 		int i = 1;
+		Vec2f prevCoords = _vec;
 		Zombie z = _ref.getFarthest(_vec, _radius);
 		if (z == null) {
 			return false;
@@ -53,19 +55,18 @@ public class ElectricTower extends AbstractTower {
 		while ((z != null) && (i < 5)) {
 			_ref.dealDamage(z, _damage/i);
 			//TODO animation
-			
+			addProjectile(new ElectricProjectile(prevCoords, z.getCoords()));
 			alreadyhit.add(z);
-			
 			List<Zombie> nbs = _ref.getZombiesInR(z.getCoords(), _radius);
 			Zombie nearnb = null;
 			double minsqdist = Double.POSITIVE_INFINITY;
 			for (Zombie nb: nbs) {
-				if ((sqdist(z.getCoords(), nb.getCoords()) < minsqdist) && (!alreadyhit.contains(nb))) {
+				if ((z.getCoords().dist2(nb.getCoords()) < minsqdist) && (!alreadyhit.contains(nb))) {
 					nearnb = nb;
-					minsqdist = sqdist(z.getCoords(), nb.getCoords());
+					minsqdist = z.getCoords().dist2(nb.getCoords());
 				}
 			}
-			
+			prevCoords = z.getCoords();
 			z = nearnb;
 			i++;
 		}

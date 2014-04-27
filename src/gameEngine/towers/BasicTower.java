@@ -21,8 +21,8 @@ public class BasicTower extends AbstractTower {
 	private BufferedImage _sprite;
 
 	public BasicTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(10, 100, 1000000000, vec, ref, sprite);
-		
+		super(10, 1000000, 1000000000, 100, vec, ref, sprite);
+		//System.out.println("Basic Tower at " + vec);
 	}
 	
 	@Override
@@ -32,8 +32,8 @@ public class BasicTower extends AbstractTower {
 	}
 
 	@Override
-	public void drawSimple(Graphics2D g, Vec2i coords) {
-		super.drawSimple(g, coords, java.awt.Color.BLUE);
+	public void drawSimple(Graphics2D g) {
+		super.drawSimple(g, java.awt.Color.BLUE);
 	}
 
 	@Override

@@ -20,19 +20,9 @@ import cs195n.Vec2i;
 public class CannonTower extends AbstractTower {
 	
 	private BufferedImage[] _explosionSprites;
-	public CannonTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(30, 100, 5000000000l, vec, ref, sprite);
-		BufferedImage img = null;
-		_explosionSprites = new BufferedImage[16];
-		try {
-			img = ImageIO.read(new File("stuff/explosion.png"));
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (SpriteImp)");
-		}
-		for(int i=0; i<4; i++) {
-			for(int j=0; j<4; j++)
-			_explosionSprites[i * 4 + j] = img.getSubimage(64 * j, 64 * i, 64, 64);
-		}
+	public CannonTower(Vec2f vec, Referee ref, BufferedImage sprite, BufferedImage[] explosionSprites) {
+		super(30, 4000000, 5000000000l, 150, vec, ref, sprite);
+		_explosionSprites = explosionSprites;
 	}
 	
 	@Override
@@ -42,8 +32,8 @@ public class CannonTower extends AbstractTower {
 	}
 
 	@Override
-	public void drawSimple(Graphics2D g, Vec2i coords) {
-		super.drawSimple(g, coords, java.awt.Color.BLACK);
+	public void drawSimple(Graphics2D g) {
+		super.drawSimple(g, java.awt.Color.BLACK);
 	}
 
 	@Override
