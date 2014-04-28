@@ -14,6 +14,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -36,7 +37,7 @@ import cs195n.Vec2i;
 
 public class TestFrontEnd extends SwingFrontEnd {
 	
-	private final float CONSOLE_WIDTH = 150;
+	private final float CONSOLE_WIDTH = 170;
 	static final Vec2i DEFAULT_WINDOW_SIZE = new Vec2i(960, 810);
 
 	private List<MapNode> nodes;
@@ -53,6 +54,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private List<AbstractTower> _towers;
 	private AbstractTower _candidate;
 	private boolean _validPlace;
+	private AbstractTower _placedTower;
 	
 	private MapNode base;
 	
@@ -117,11 +119,13 @@ public class TestFrontEnd extends SwingFrontEnd {
 			_c.draw(g);
 			
 			
-			
+			float defaultstroke = 10000 / DEFAULT_WINDOW_SIZE.x;
 			
 			g.translate(CONSOLE_WIDTH, 0);
 			g.scale((_size.x - CONSOLE_WIDTH) / 10000, (float) _size.y / 10000);
-			g.setStroke(new BasicStroke(10000 / DEFAULT_WINDOW_SIZE.x));
+			//g.setStroke(new BasicStroke(10000 / DEFAULT_WINDOW_SIZE.x));
+			g.setStroke(new BasicStroke(defaultstroke));
+
 			
 			// draw new tower
 			if (_candidate != null) {
@@ -151,37 +155,91 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 
 
+			g.setColor(new Color(144,238,144));
+			if (_m.getLanduse() != null) {
+				for (Building b: _m.getLanduse()) {
+					g.fill(b.getPolygon());
+				}
+			}
+			
+			if (_m.getWaterways() != null) {
+				System.out.println("Waterways " + _m.getWaterways().size());
+				g.setColor(new Color(173,216,230));
+				for (Building b: _m.getWaterways()) {
+					g.fill(b.getPolygon());
+				}
+			}
+			
+
+			g.setColor(new Color(255,222,173));
+			g.setStroke(new BasicStroke(defaultstroke * 3));
+			for (Line2D l: _highline2D) {
+				g.draw(l);
+			}
+			
+			g.setColor(new Color(178,34,34));
+			g.setStroke(new BasicStroke(defaultstroke));
+			if (_m.getFootways() != null) {
+				for(MapWay h : _m.getFootways()) {
+					List<MapNode> nList = h.getNodes();
+					for(int i=1; i<nList.size(); i++) {
+						g.draw(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
+					}
+				}
+			}
+			
+			g.setColor(new Color(255,222,173));
+			g.setStroke(new BasicStroke(6*defaultstroke));
+			if (_m.getResidential() != null) {
+				for(MapWay h : _m.getResidential()) {
+					List<MapNode> nList = h.getNodes();
+					for(int i=1; i<nList.size(); i++) {
+						g.draw(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
+					}
+				}
+			}
+			
+			g.setColor(new Color(255,215,0));
+			g.setStroke(new BasicStroke(6*defaultstroke));
+			if (_m.getSecondary() != null) {
+				for(MapWay h : _m.getSecondary()) {
+					List<MapNode> nList = h.getNodes();
+					for(int i=1; i<nList.size(); i++) {
+						g.draw(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
+					}
+				}
+			}
+			
+			g.setColor(new Color(250,128,114));
+			g.setStroke(new BasicStroke(6*defaultstroke));
+			if (_m.getTertiary() != null) {
+				for(MapWay h : _m.getTertiary()) {
+					List<MapNode> nList = h.getNodes();
+					for(int i=1; i<nList.size(); i++) {
+						g.draw(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
+					}
+				}
+			}
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			g.setColor(Color.GRAY.brighter());
 			for (Building b: _m.getBuildings()) {
 				g.fill(b.getPolygon());
 			}
 			
-			
-			//Getting rid of overlap
-			g.setColor(Color.BLACK);
-			g.setFont(new Font("Helvetica", Font.BOLD, 110));
-			for (Building b: _m.getBuildings()) {
-				Rectangle2D r = b.getPolygon().getBounds();
-				if (b.getName() != null) {
-					String[] namearr = b.getName().split("\\s+");
-					FontMetrics fm = g.getFontMetrics();
-					boolean draw = true;
-					for (int i = 0; i < namearr.length; i++) {
-						if (fm.stringWidth(namearr[i]) > r.getWidth()) {
-							draw = false;
-							break;
-						}
-					}
-					if ((namearr.length * fm.getHeight() < r.getHeight()) && (draw)) {
-						for (int i = 0; i < namearr.length; i++) {
-							g.drawString(namearr[i], (int) r.getX() + 100, (int) r.getCenterY() - 50 + 110*i);
-						}
-					}
-				}
-			}
-			
 			//DONT DELETE THIS
-//			//All names
+			//Getting rid of overlap
 //			g.setColor(Color.BLACK);
 //			g.setFont(new Font("Helvetica", Font.BOLD, 110));
 //			for (Building b: _m.getBuildings()) {
@@ -189,19 +247,41 @@ public class TestFrontEnd extends SwingFrontEnd {
 //				if (b.getName() != null) {
 //					String[] namearr = b.getName().split("\\s+");
 //					FontMetrics fm = g.getFontMetrics();
+//					boolean draw = true;
 //					for (int i = 0; i < namearr.length; i++) {
-//						g.drawString(namearr[i], (int) r.getX() + 100, (int) r.getCenterY() - 50 + 110*i);
+//						if (fm.stringWidth(namearr[i]) > r.getWidth()) {
+//							draw = false;
+//							break;
+//						}
+//					}
+//					if ((namearr.length * fm.getHeight() < r.getHeight()) && (draw)) {
+//						for (int i = 0; i < namearr.length; i++) {
+//							g.drawString(namearr[i], (int) r.getX() + 100, (int) r.getCenterY() - 50 + 110*i);
+//						}
 //					}
 //				}
 //			}
 			//DONT DELETE THIS
+
 			
-			
-			g.setColor(java.awt.Color.GREEN);
-			g.setStroke(new BasicStroke(10000 / DEFAULT_WINDOW_SIZE.x * 3));
-			for (Line2D l: _highline2D) {
-				g.draw(l);
+			//DONT DELETE THIS
+			//All names
+			g.setColor(Color.BLACK);
+			g.setFont(new Font("Helvetica", Font.BOLD, 110));
+			for (Building b: _m.getBuildings()) {
+				Rectangle2D r = b.getPolygon().getBounds();
+				if (b.getName() != null) {
+					String[] namearr = b.getName().split("\\s+");
+					FontMetrics fm = g.getFontMetrics();
+					for (int i = 0; i < namearr.length; i++) {
+						g.drawString(namearr[i], (int) r.getX() + 100, (int) r.getCenterY() - 50 + 110*i);
+					}
+				}
 			}
+			//DONT DELETE THIS
+			
+			
+
 
 			g.setColor(java.awt.Color.BLUE);
 			for(MapNode n : _m.getSourceList()) {
@@ -350,7 +430,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 	protected void onMouseClicked(MouseEvent e) {
 		if (_hasMain) {
 			String add = _mm.contains(e.getX(), e.getY(), true);
-			System.out.println("MM returned: " + add);
 			if (add != null) {
 				this.makeMap(add);
 			}
@@ -358,21 +437,26 @@ public class TestFrontEnd extends SwingFrontEnd {
 		else if (_hasMap) {
 			String command = _c.contains(e.getX(), e.getY());
 			if (command != null) {
+				_c.noUpgrades();
+				System.out.println(command);
 				String[] fw = command.split("\\s+");
 				_command = fw[0];
 				if (_command.equals("Start")) {
 					_ref.startRound();
 					_c.unhighlight();
+					_c.noUpgrades();
 				}
 				else if (_command.equals("Main")) {
 					_hasMain = true;
 					_hasMap = false;
+					_highline2D.clear();
 					_c = null;
 					_m = null; //TODO reset map (ie zombies)
 				}
 				else if (_command.equals("Restart")) {
 					_ref.restart();
 					_c.unhighlight();
+					_c.noUpgrades();
 					_command = null;
 				}
 				else if (_command.equals("Pause")) {
@@ -384,7 +468,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 				}
 			}
 			else if ((e.getX() > CONSOLE_WIDTH) && (_command != null)) {
-				//TODO if intersects with a tower, select and have upgrade option
 				Rectangle2D r = new Rectangle2D.Double(e.getX() - 5, e.getY() - 5, 10, 10);
 				if (_validPlace) {
 					if (_command.equals("Basic")) {
@@ -402,6 +485,18 @@ public class TestFrontEnd extends SwingFrontEnd {
 					_c.unhighlight();
 					_command = null;
 					_candidate = null;
+				}
+			}
+			else if (command == null) {
+				_command = null;
+				_c.unhighlight();
+				_c.noUpgrades();
+				for (AbstractTower t: _ref.towers()) {
+					if (t.contains(xToLon(e.getX()), yToLat(e.getY()))) {
+						_placedTower = t;
+						_c.showUpgrades();
+						break;
+					}
 				}
 			}
 		}
@@ -460,8 +555,10 @@ public class TestFrontEnd extends SwingFrontEnd {
 					_candidate = _tf.makeFlame(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
 				}
 				
-				if (_ref.getResources() - _candidate.getPrice() < 0) {
-					_candidate = null;
+				if (_candidate != null) {
+					if (_ref.getResources() - _candidate.getPrice() < 0) {
+						_candidate = null;
+					}
 				}
 				
 				
@@ -480,15 +577,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onResize(Vec2i newSize) {
-		// TODO we should mess with this
-		/*
-		_at = new AffineTransform();
-		_at.scale(newSize.x/100, newSize.y/100);
-		
-		if (_size != null) {
-			_at.scale(newSize.x - _size.x + 1, newSize.y - _size.y + 1);
-		}
-		*/
 		_size = newSize;
 		
 		

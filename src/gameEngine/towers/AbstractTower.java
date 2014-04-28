@@ -91,6 +91,16 @@ public abstract class AbstractTower {
 		}
 		return false;
 	}
+	
+	public boolean contains(float x, float y) {
+		int w = _sprite.getWidth();
+		int h = _sprite.getHeight();
+		Rectangle2D r = new Rectangle2D.Float(_vec.x - w/2, _vec.y - h/2, w, h);
+		if (r.contains(x, y)) {
+			return true;
+		}
+		return false;
+	}
 
 	
 	public Vec2f getCoords() {

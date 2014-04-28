@@ -41,6 +41,7 @@ public class Console2 {
 	private Referee _ref;
 	private Color _background = Color.RED;
 	private float _tiheight;
+	private UpgradeInfo _ui;
 
 	
 	private List<ControlButton> _cbs; //A list of control buttons. Needed to check for mouse clicks
@@ -107,6 +108,10 @@ public class Console2 {
 		
 		if (_info != null) {
 			_info.draw();
+		}
+		
+		if (_ui != null) {
+			_ui.draw();
 		}
 		
 		g.setColor(Color.BLACK);
@@ -187,14 +192,12 @@ public class Console2 {
 
 
 	private class TowerInfo {
-
 		private String _name;
 		private final float _width = _cw - 20;
 		private float x;
 		private float y;
 		private RoundRectangle2D _back;
 		private AbstractTower _t;
-
 		public TowerInfo(String name, AbstractTower t, float rightline, float y) {
 			_name = name;
 			_t = t;
@@ -204,6 +207,7 @@ public class Console2 {
 		}
 
 		public void draw() {
+			g.setColor(Color.ORANGE);
 			g.draw(_back);
 			g.setColor(Color.BLACK);
 			g.setFont(new Font("Helvetica", Font.BOLD, 15));
@@ -213,6 +217,39 @@ public class Console2 {
 			g.drawString("Damage: " + _t.getDamage(), x, y + 3*c);
 			g.drawString("Radius: " + _t.getRadius(), x, y + 4*c);
 			g.drawString("Delay: " + _t.getDelay() + " secs", x, y + 5*c);
+		}
+	}
+	
+	
+	private class UpgradeInfo {
+		private final float _width = _cw - 20;
+		private float x;
+		private float y;
+		private RoundRectangle2D _back;
+		private ControlButton _halfdelay;
+		private ControlButton _doubledamage;
+		public UpgradeInfo(float rightline, float y) {
+			this.x = centerRect(_width, rightline);
+			this.y = y;
+			_back = new RoundRectangle2D.Float(x,y,_width,_width + 30, 5, 5);
+			_halfdelay = new ControlButton("Halve Delay", rightline,  y + 30, g);
+			_doubledamage = new ControlButton("Double Damage", rightline,  y + 60, g);
+			_cbs.add(_halfdelay);
+			_cbs.add(_doubledamage);
+
+		}
+
+		public void draw() {
+			g.setColor(Color.ORANGE);
+			g.draw(_back);
+			_halfdelay.draw(g, _background);
+			_doubledamage.draw(g, _background);
+		}
+		public void removeButtons() {
+			_cbs.remove(_halfdelay);
+			_cbs.remove(_doubledamage);
+			_halfdelay = null;
+			_doubledamage = null;
 		}
 	}
 	
@@ -262,6 +299,16 @@ public class Console2 {
 	public void unhighlight() {
 		for (TowerButton tb: _tbs) {
 			tb.unhighlight();
+		}
+	}
+	
+	public void showUpgrades() {
+		_ui = new UpgradeInfo(_cw, _tiheight);	}
+	
+	public void noUpgrades() {
+		if (_ui != null) {
+			_ui.removeButtons();
+			_ui = null;
 		}
 	}
 	
