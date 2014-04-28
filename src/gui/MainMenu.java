@@ -251,44 +251,6 @@ public class MainMenu {
 	}
 	
 
-//	public void keyTyped(String letter) {
-//		EditableTextBox holder = null;
-//		EditableTextBox notholder = null;
-//		if ((_toggle == 1) && (_addline1.getText().length() < _etbwidth)) {
-//			holder = _addline1;
-//			notholder = _addline2;
-//		}
-//		else {
-//			_toggle = 2;
-//			holder = _addline2;
-//			notholder = _addline1;
-//		}
-//		
-//		if (letter.length() > 1) {
-//			if (letter.equals("backspace")) {
-//				if ((_addline2.getText().length() == 0) && (_toggle == 2)) {
-//					_toggle = 1;
-//					notholder.backspace();
-//				}
-//				else {
-//					holder.backspace();
-//				}
-//			}
-//			else if (letter.equals("enter")) {
-//				if (_toggle == 1) {
-//					_toggle = 2;
-//				}
-//				else {
-//					_toggle = 1;
-//				}
-//
-//			}
-//		}
-//		else {
-//			holder.addLetter(letter);
-//		}
-//	}
-	
 	
 	
 	public void clear() {

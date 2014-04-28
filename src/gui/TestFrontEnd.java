@@ -10,6 +10,8 @@ import gameEngine.zombie.Zombie;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import mapbuilder.Building;
 import mapbuilder.Map;
 import mapbuilder.MapNode;
 import mapbuilder.MapWay;
@@ -136,20 +139,66 @@ public class TestFrontEnd extends SwingFrontEnd {
 				g.setColor(holder);
 			}
 			
-			for(MapWay w : _m.getWays()) {
-				List<MapNode> nList = w.getNodes();
-				for(int i=1; i<nList.size(); i++) {
-					//System.out.println(nList.get(i)._coords);
-					//g.drawLine(lonToX(nList.get(i-1).getX()), latToY(nList.get(i-1).getY()), lonToX(nList.get(i).getX()), latToY(nList.get(i).getY()));
-					//g.drawLine((int) nList.get(i-1).getX(), (int) nList.get(i-1).getY(), (int) nList.get(i).getX(), (int) nList.get(i).getY());
-					g.draw(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
+//			for(MapWay w : _m.getWays()) {
+//				List<MapNode> nList = w.getNodes();
+//				for(int i=1; i<nList.size(); i++) {
+//					//System.out.println(nList.get(i)._coords);
+//					//g.drawLine(lonToX(nList.get(i-1).getX()), latToY(nList.get(i-1).getY()), lonToX(nList.get(i).getX()), latToY(nList.get(i).getY()));
+//					//g.drawLine((int) nList.get(i-1).getX(), (int) nList.get(i-1).getY(), (int) nList.get(i).getX(), (int) nList.get(i).getY());
+//					g.draw(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
+//				}
+//			}
+
+
+
+			g.setColor(Color.GRAY.brighter());
+			for (Building b: _m.getBuildings()) {
+				g.fill(b.getPolygon());
+			}
+			
+			
+			//Getting rid of overlap
+			g.setColor(Color.BLACK);
+			g.setFont(new Font("Helvetica", Font.BOLD, 110));
+			for (Building b: _m.getBuildings()) {
+				Rectangle2D r = b.getPolygon().getBounds();
+				if (b.getName() != null) {
+					String[] namearr = b.getName().split("\\s+");
+					FontMetrics fm = g.getFontMetrics();
+					boolean draw = true;
+					for (int i = 0; i < namearr.length; i++) {
+						if (fm.stringWidth(namearr[i]) > r.getWidth()) {
+							draw = false;
+							break;
+						}
+					}
+					if ((namearr.length * fm.getHeight() < r.getHeight()) && (draw)) {
+						for (int i = 0; i < namearr.length; i++) {
+							g.drawString(namearr[i], (int) r.getX() + 100, (int) r.getCenterY() - 50 + 110*i);
+						}
+					}
 				}
 			}
-
+			
+			//DONT DELETE THIS
+//			//All names
+//			g.setColor(Color.BLACK);
+//			g.setFont(new Font("Helvetica", Font.BOLD, 110));
+//			for (Building b: _m.getBuildings()) {
+//				Rectangle2D r = b.getPolygon().getBounds();
+//				if (b.getName() != null) {
+//					String[] namearr = b.getName().split("\\s+");
+//					FontMetrics fm = g.getFontMetrics();
+//					for (int i = 0; i < namearr.length; i++) {
+//						g.drawString(namearr[i], (int) r.getX() + 100, (int) r.getCenterY() - 50 + 110*i);
+//					}
+//				}
+//			}
+			//DONT DELETE THIS
+			
+			
 			g.setColor(java.awt.Color.GREEN);
 			g.setStroke(new BasicStroke(10000 / DEFAULT_WINDOW_SIZE.x * 3));
-
-			
 			for (Line2D l: _highline2D) {
 				g.draw(l);
 			}
@@ -388,6 +437,15 @@ public class TestFrontEnd extends SwingFrontEnd {
 						_validPlace = true;
 					}
 				}
+				for (AbstractTower t: _ref.towers()) {
+					if (t.intersectRect(r)) {
+						_validPlace = false;
+						break;
+					}
+				}
+				
+				
+				
 				//TODO Change this to sprites instead of towers?
 				if (_command.equals("Basic")) {
 					_candidate = _tf.makeBasic(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
@@ -405,6 +463,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 				if (_ref.getResources() - _candidate.getPrice() < 0) {
 					_candidate = null;
 				}
+				
+				
+				
 
 			}
 			else {

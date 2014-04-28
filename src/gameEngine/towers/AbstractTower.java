@@ -82,6 +82,15 @@ public abstract class AbstractTower {
 	public BufferedImage getSprite() {
 		return _sprite;
 	}
+	
+	public boolean intersectRect(Rectangle2D r) {
+		int w = _sprite.getWidth();
+		int h = _sprite.getHeight();
+		if (r.intersects(_vec.x - w/2, _vec.y - h/2, w, h)) {
+			return true;
+		}
+		return false;
+	}
 
 	
 	public Vec2f getCoords() {

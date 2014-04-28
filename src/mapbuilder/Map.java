@@ -35,6 +35,7 @@ public class Map {
 	private List<MapWay> _ways;
 	private List<MapWay> _highways;
 	private List<MapNode> _nodes;
+	private List<Building> _buildings;
 	private double[] wMin;
 	private double[] wMax;
 	private Vec2i _size;
@@ -73,6 +74,7 @@ public class Map {
 		_ways = x.getWays();
 		_nodes = x.getNodes();
 		_highways = x.getHighs();
+		_buildings = x.getBuildings();
 		
 		// find closest highway node to center
 		double dist = Double.MAX_VALUE;
@@ -118,6 +120,10 @@ public class Map {
 	
 	public List<MapWay> getHighways() {
 		return Collections.unmodifiableList(_highways);
+	}
+	
+	public List<Building> getBuildings() {
+		return Collections.unmodifiableList(_buildings);
 	}
 	
 	
