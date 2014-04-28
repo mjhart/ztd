@@ -43,7 +43,7 @@ public class CannonProjectile implements Projectile {
 		if(_explode) {
 			_nanosExploding+=nanosSincePrevTick;
 			if(_nanosExploding > 100000000l / 16) {
-				if(_frame == 15) {
+				if(_frame == _sprites.length - 1) {
 					return true;
 				}
 				_frame++;

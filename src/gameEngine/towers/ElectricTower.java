@@ -18,9 +18,11 @@ import cs195n.Vec2i;
 
 public class ElectricTower extends AbstractTower {
 	
+	private BufferedImage[] _lightningSprites;
 	
-	public ElectricTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(30, 500000, 1000000000, 300, vec, ref, sprite);
+	public ElectricTower(Vec2f vec, Referee ref, BufferedImage sprite, BufferedImage[] lightningSprites) {
+		super(30, 500000, 1000000000, 30, vec, ref, sprite);
+		_lightningSprites = lightningSprites;
 	}
 
 	@Override
@@ -55,7 +57,7 @@ public class ElectricTower extends AbstractTower {
 		while ((z != null) && (i < 5)) {
 			_ref.dealDamage(z, _damage/i);
 			//TODO animation
-			addProjectile(new ElectricProjectile(prevCoords, z.getCoords()));
+			addProjectile(new ElectricProjectile(prevCoords, z.getCoords(), _lightningSprites));
 			alreadyhit.add(z);
 			List<Zombie> nbs = _ref.getZombiesInR(z.getCoords(), _radius);
 			Zombie nearnb = null;

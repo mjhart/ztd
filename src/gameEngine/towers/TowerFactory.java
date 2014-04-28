@@ -24,6 +24,7 @@ public class TowerFactory {
 	private BufferedImage _poisonsprite;
 	private BufferedImage _stunsprite;
 	private BufferedImage[] _explosionSprites;
+	private BufferedImage[] _lightningSprites;
 
 	public TowerFactory() {
 		BufferedImage img = null;
@@ -42,12 +43,24 @@ public class TowerFactory {
 			System.out.println("ERROR: Could not get image (cannonTower.png)");
 		}
 		
-		// read electric sprite
+		// read electric tower sprite
 		try {
 			_electricsprite = ImageIO.read(new File("towerpics/cannonTower.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (cannonTower.png)");
 		}
+		
+		// read electric projectile sprites
+		try {
+			img = ImageIO.read(new File("stuff/lightning.png"));
+		} catch (IOException e) {
+			System.out.println("ERROR: Could not get image (explosion.png)");
+		}
+		_lightningSprites = new BufferedImage[3];
+		_lightningSprites[0] = img.getSubimage(0, 0, 135, 90);
+		_lightningSprites[1] = img.getSubimage(135, 0, 250, 90);
+		_lightningSprites[2] = img.getSubimage(385, 0, 405, 90);
+		
 		
 		
 		// read explosion sprites
@@ -77,7 +90,7 @@ public class TowerFactory {
 	}
 	
 	public ElectricTower makeElectric(Vec2f vec, Referee ref) {
-		return new ElectricTower(vec, ref, _electricsprite);
+		return new ElectricTower(vec, ref, _electricsprite, _lightningSprites);
 	}
 	
 	public FlameTower makeFlame(Vec2f vec, Referee ref) {

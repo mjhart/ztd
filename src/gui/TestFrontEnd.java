@@ -11,6 +11,7 @@ import gameEngine.zombie.Zombie;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -60,6 +61,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private Referee _ref;
 	private String _command;
 	private TowerFactory _tf;
+	private Polygon _poly;
 	
 	public TestFrontEnd(String title, boolean fullscreen) {
 		super(title, fullscreen);
@@ -82,6 +84,11 @@ public class TestFrontEnd extends SwingFrontEnd {
 		_validPlace = false;
 		_candidate = null;
 		_at = new AffineTransform(1, 0, 0, 1, 0, 0);
+		
+		_poly = new Polygon();
+		_poly.addPoint(100, 100);
+		_poly.addPoint(500, 500);
+		_poly.addPoint(100,  500);
 		
 		super.startup();
 	}
@@ -186,6 +193,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 				//t.drawSimple(g);
 				t.draw2(g);
 			}
+			
+			g.setColor(java.awt.Color.CYAN);
+			g.fill(_poly);
 
 		}
 
@@ -389,7 +399,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 					_candidate = _tf.makeFlame(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
 				}
 				
-				if (_ref.getResources() - _candidate.getPrice() < 0) {
+				if (_candidate != null && _ref.getResources() - _candidate.getPrice() < 0) {
 					_candidate = null;
 				}
 
