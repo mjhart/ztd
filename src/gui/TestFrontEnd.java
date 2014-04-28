@@ -232,16 +232,29 @@ public class TestFrontEnd extends SwingFrontEnd {
 	protected void onKeyPressed(KeyEvent e) {
 		String s = Character.toString(e.getKeyChar());
 		if (_hasMain) {
-
 			if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
 				s = "backspace";
-				System.out.println("back");
 			}
 			else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				s = "enter";
 			}
+			else if (e.getKeyCode() == KeyEvent.VK_TAB) {
+				s = "tab";
+			}
 			else if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
 				s = ""; //Don't print shift
+			}
+			else if (e.getKeyCode() == KeyEvent.VK_UP) {
+				s = ""; //Don't print up
+			}
+			else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+				s = ""; //Don't print left
+			}
+			else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+				s = ""; //Don't print down
+			}
+			else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				s = ""; //Don't print right
 			}
 			_mm.keyTyped(s);
 		}
@@ -287,7 +300,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	@Override
 	protected void onMouseClicked(MouseEvent e) {
 		if (_hasMain) {
-			String add = _mm.contains(e.getX(), e.getY());
+			String add = _mm.contains(e.getX(), e.getY(), true);
 			System.out.println("MM returned: " + add);
 			if (add != null) {
 				this.makeMap(add);
@@ -358,7 +371,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	@Override
 	protected void onMouseMoved(MouseEvent e) {
 		if (_hasMain) {
-			_mm.contains(e.getX(), e.getY());
+			_mm.contains(e.getX(), e.getY(), false);
 		}
 		
 		

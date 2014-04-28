@@ -33,7 +33,7 @@ public class MainMenu {
 		_w = w;
 		_h = h;
 		_cbs = new ArrayList<ControlButton>();
-		_toggle = 1;
+		_toggle = 0;
 		this.g = null;
 		_first = true;
 	}
@@ -97,11 +97,14 @@ public class MainMenu {
 	
 	private class EditableTextBox {
 		private String _text;
+		private String _disptext;
 		private String _widthholder;
 		private RoundRectangle2D _r;
 		private Rectangle2D _bb;
 		private float x;
 		private float y;
+		private int blink = 0;
+		private boolean _selected = false;
 		public EditableTextBox(float textwidth, float rightline, float y) {
 			_widthholder = "";
 			for (int i = 0; i < textwidth; i++) {
@@ -110,8 +113,6 @@ public class MainMenu {
 			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			float x = centerX(_widthholder, rightline);
 			this.x = x;
-			System.out.println(x);
-			System.out.println(_w);
 			this.y = y;
 			_text = "";
 			_bb = null;
@@ -125,12 +126,19 @@ public class MainMenu {
 			g.setColor(Color.BLACK);
 			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			g.draw(_r);
-			g.drawString(_text, x+5,(int) (y+_bb.getHeight()+1));
+			_disptext = _text;
+			if ((blink > 50) && (blink < 100) && (_selected)) {
+				_disptext = _disptext + "|";
+			}
+			while (fm.getStringBounds(_disptext, g).getWidth() > _bb.getWidth()) {
+				_disptext = _disptext.substring(1);
+			}
+			g.drawString(_disptext, x+5,(int) (y+_bb.getHeight()+1));
+			blink++;
+			blink = blink % 100;
 		}
 		public void addLetter(String letter) {
-			if (_text.length() < _etbwidth) {
-				_text = _text + letter;
-			}
+			_text = _text + letter;
 		}
 		public void backspace() {
 			int len = _text.length();
@@ -150,6 +158,12 @@ public class MainMenu {
 			}
 			return false;
 		}
+		public void select() {
+			_selected = true;
+		}
+		public void unselect() {
+			_selected = false;
+		}
 	}
 	
 	
@@ -164,7 +178,7 @@ public class MainMenu {
 	
 	
 	//Work in terms of vectors or x y?
-	public String contains(int x, int y) {
+	public String contains(int x, int y, boolean click) {
 		for (ControlButton cb: _cbs) {
 			if (cb.getRoundRect().contains(x, y)) {
 				cb.highlight();
@@ -181,7 +195,9 @@ public class MainMenu {
 		else {
 			_go.unhighlight();
 		}
-		this.chooseAddline(x,y);
+		if (click) {
+			this.chooseAddline(x,y);
+		}
 		return null;
 	}
 	
@@ -190,51 +206,89 @@ public class MainMenu {
 	public void chooseAddline(int x, int y) {
 		if (_addline1.contains(x, y)) {
 			_toggle = 1;
+			_addline1.select();
+			_addline2.unselect();
 		}
 		else if (_addline2.contains(x, y)) {
 			_toggle = 2;
+			_addline2.select();
+			_addline1.unselect();
 		}
+		System.out.println("Choose: " + _toggle);
 	}
 	
 	
-	
+	//Right now this is set up so that if neither addline in in focus nothing happens
 	public void keyTyped(String letter) {
+		System.out.println(_toggle);
 		EditableTextBox holder = null;
-		EditableTextBox notholder = null;
-		if ((_toggle == 1) && (_addline1.getText().length() < _etbwidth)) {
+		boolean focus = true;
+		if (_toggle == 1) {
 			holder = _addline1;
-			notholder = _addline2;
 		}
-		else {
+		else if (_toggle == 2) {
 			_toggle = 2;
 			holder = _addline2;
-			notholder = _addline1;
-		}
-		
-		if (letter.length() > 1) {
-			if (letter.equals("backspace")) {
-				if ((_addline2.getText().length() == 0) && (_toggle == 2)) {
-					_toggle = 1;
-					notholder.backspace();
-				}
-				else {
-					holder.backspace();
-				}
-			}
-			else if (letter.equals("enter")) {
-				if (_toggle == 1) {
-					_toggle = 2;
-				}
-				else {
-					_toggle = 1;
-				}
-
-			}
 		}
 		else {
+			focus = false;
+		}
+		if ((letter.length() > 1) && (focus)) {
+			if (letter.equals("backspace")) {
+				holder.backspace();
+			}
+			else if ((letter.equals("enter")) || (letter.equals("tab"))) {
+				if (_toggle == 1) {
+					_toggle = 2;
+					_addline2.select();
+					_addline1.unselect();
+				}
+			}
+		}
+		else if (focus) {
 			holder.addLetter(letter);
 		}
 	}
+	
+
+//	public void keyTyped(String letter) {
+//		EditableTextBox holder = null;
+//		EditableTextBox notholder = null;
+//		if ((_toggle == 1) && (_addline1.getText().length() < _etbwidth)) {
+//			holder = _addline1;
+//			notholder = _addline2;
+//		}
+//		else {
+//			_toggle = 2;
+//			holder = _addline2;
+//			notholder = _addline1;
+//		}
+//		
+//		if (letter.length() > 1) {
+//			if (letter.equals("backspace")) {
+//				if ((_addline2.getText().length() == 0) && (_toggle == 2)) {
+//					_toggle = 1;
+//					notholder.backspace();
+//				}
+//				else {
+//					holder.backspace();
+//				}
+//			}
+//			else if (letter.equals("enter")) {
+//				if (_toggle == 1) {
+//					_toggle = 2;
+//				}
+//				else {
+//					_toggle = 1;
+//				}
+//
+//			}
+//		}
+//		else {
+//			holder.addLetter(letter);
+//		}
+//	}
+	
 	
 	
 	public void clear() {
