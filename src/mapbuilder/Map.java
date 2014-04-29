@@ -35,6 +35,14 @@ public class Map {
 	private List<MapWay> _ways;
 	private List<MapWay> _highways;
 	private List<MapNode> _nodes;
+	private List<Building> _buildings;
+	private List<Building> _landuse;
+	private List<Building> _waterways;
+	private List<MapWay> _footways;
+	private List<MapWay> _residential;
+	private List<MapWay> _secondary;
+	private List<MapWay> _tertiary;
+
 	private double[] wMin;
 	private double[] wMax;
 	private Vec2i _size;
@@ -52,8 +60,8 @@ public class Map {
 		wMin = new double[2];
 		wMax = new double[2];
 		
-		//File stadd = Retriever.getFromAddress(address);
-		File stadd = new File("stadd.xml");
+		File stadd = Retriever.getFromAddress(address);
+		//File stadd = new File("stadd.xml");
 		XmlParser x = new XmlParser(this);
 		Point2D.Double cent = x.parseAddress(stadd);
 		DistConverter dc = new DistConverter(cent.y, cent.x);
@@ -61,18 +69,19 @@ public class Map {
 		wMin[1] = dc.getBott(cent.y);
 		wMax[0] = dc.getRight(cent.x);
 		wMax[1] = dc.getTop(cent.y);
-		//File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
-//		ImageRet.getImage(wMin[0], wMin[1], wMax[0], wMax[1]);
-//		try {
-//			_img = ImageIO.read(new File("map.png"));
-//		} catch (IOException e) {
-//			System.out.println("ERROR: Could not get image (SpriteImp)");
-//		}
-		File box = new File("box.xml");
+		File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
+		//File box = new File("box.xml");
 		x.parseBox(box);
 		_ways = x.getWays();
 		_nodes = x.getNodes();
 		_highways = x.getHighs();
+		_buildings = x.getBuildings();
+		_landuse = x.getLanduse();
+		_waterways = x.getWaterways();
+		_footways = x.getFootways();
+		_residential = x.getResidential();
+		_secondary = x.getSecondary();
+		_tertiary = x.getTertiary();
 		
 		// find closest highway node to center
 		double dist = Double.MAX_VALUE;
@@ -118,6 +127,34 @@ public class Map {
 	
 	public List<MapWay> getHighways() {
 		return Collections.unmodifiableList(_highways);
+	}
+	
+	public List<Building> getBuildings() {
+		return Collections.unmodifiableList(_buildings);
+	}
+	
+	public List<Building> getLanduse() {
+		return Collections.unmodifiableList(_landuse);
+	}
+	
+	public List<Building> getWaterways() {
+		return Collections.unmodifiableList(_waterways);
+	}
+	
+	public List<MapWay> getFootways() {
+		return Collections.unmodifiableList(_footways);
+	}
+	
+	public List<MapWay> getResidential() {
+		return Collections.unmodifiableList(_residential);
+	}
+	
+	public List<MapWay> getSecondary() {
+		return Collections.unmodifiableList(_secondary);
+	}
+	
+	public List<MapWay> getTertiary() {
+		return Collections.unmodifiableList(_tertiary);
 	}
 	
 	

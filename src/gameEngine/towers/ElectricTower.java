@@ -74,12 +74,6 @@ public class ElectricTower extends AbstractTower {
 		}
 		return true;
 	}
-	
-	private double sqdist(Vec2f v1, Vec2f v2) {
-		float x = v1.x - v2.x;
-		float y = v1.y - v2.y;
-		return x*x + y*y;
-	}
 
 
 }

@@ -26,6 +26,14 @@ public class XmlParser {
 	private List<MapNode> mapnodes;
 	private List<MapWay> mapways;
 	private List<MapWay> highways;
+	private List<Building> buildings;
+	private List<Building> landuse;
+	private List<Building> waterways;
+	private List<MapWay> footways;
+	private List<MapWay> residential;
+	private List<MapWay> secondary;
+	private List<MapWay> tertiary;
+
 	private HashMap<String, MapNode> mnhash;
 	private boolean doneparsebox;
 	private Map _m;
@@ -35,6 +43,14 @@ public class XmlParser {
 		mapways = new ArrayList<MapWay>(0);
 		mnhash = new HashMap<String, MapNode>();
 		highways = new ArrayList<MapWay>(0);
+		buildings = new ArrayList<>(0);
+		landuse = new ArrayList<>(0);
+		waterways = new ArrayList<>(0);
+		footways = new ArrayList<MapWay>(0);
+		residential = new ArrayList<MapWay>(0);
+		secondary = new ArrayList<MapWay>(0);
+		tertiary = new ArrayList<MapWay>(0);
+
 		doneparsebox = false;
 		_m = m;
 	}
@@ -77,10 +93,12 @@ public class XmlParser {
 					MapWay mw = new MapWay(el.getAttribute("id"));
 					
 					boolean isHighway = false;
-					if (XmlParser.isHighway("tag", el) == true) {
+					if (XmlParser.isBlank("tag", el, "highway") == true) {
 						isHighway = true;
 						highways.add(mw);
 					}
+					
+
 
 					List<String> mapnodeids = XmlParser.getMapNodes("nd", el); //Get the nodes on this way
 					for (String id: mapnodeids) {
@@ -99,18 +117,51 @@ public class XmlParser {
 						mapways.add(mw);
 					}
 					
-//					//Add to highways if it is a highway
-//					if (XmlParser.isHighway("tag", el) == true) {
-//						highways.add(mw);
-//					}
+					
+					if (XmlParser.isBlank("tag", el, "building") == true) {
+						Building b = new Building(mw);
+						b.setName(XmlParser.getVFromK("tag", el, "name"));
+						buildings.add(b);
+					}
+					if (XmlParser.isBlank("tag", el, "waterway") == true) {
+						Building b = new Building(mw);
+						b.setName(XmlParser.getVFromK("tag", el, "name"));
+						waterways.add(b);
+					}
+					if (XmlParser.isBlank("tag", el, "landuse") == true) {
+						if (XmlParser.getVFromK("tag", el, "landuse").equals("grass")) {
+								Building b = new Building(mw);
+								b.setName(XmlParser.getVFromK("tag", el, "name"));
+								landuse.add(b);
+						}
+					}
+					
+					if (XmlParser.isBlank("tag", el, "highway") == true) {
+						if (XmlParser.getVFromK("tag", el, "highway").equals("footway")) {
+							footways.add(mw);
+						}
+					}
+					if (XmlParser.isBlank("tag", el, "highway") == true) {
+						if (XmlParser.getVFromK("tag", el, "highway").equals("residential")) {
+							residential.add(mw);
+						}
+					}
+					if (XmlParser.isBlank("tag", el, "highway") == true) {
+						if (XmlParser.getVFromK("tag", el, "highway").equals("secondary")) {
+							secondary.add(mw);
+						}
+					}
+					if (XmlParser.isBlank("tag", el, "highway") == true) {
+						if (XmlParser.getVFromK("tag", el, "highway").equals("tertiary")) {
+							tertiary.add(mw);
+						}
+					}
+
+					
 					
 				}
 			}
-			
-			System.out.println("Node hashmap size " + mnhash.size());
-			System.out.println("Node list size " + mapnodes.size());
-			System.out.println("Way list size " + mapways.size());
-			System.out.println("Highways size " + highways.size());
+
 			doneparsebox = true;
 		
 		}
@@ -143,15 +194,11 @@ public class XmlParser {
 		return res;
 	}
 	
-	/**
-	 * This helper method returns true if the given way is a highway, else false. note
-	 * that a "highway" for OSM purposes is defined as any type of road, street, or path
-	 * @param tag In this case it is "tag"
-	 * @param e The way we wish to examine
-	 * @return True if the way is a highway, else false
-	 */
-	private static boolean isHighway(String tag, Element e) {
-		boolean markhighway = false;
+
+	
+
+	private static boolean isBlank(String tag, Element e, String key) {
+		boolean markblank = false;
 		List<String> res = new ArrayList<String>(0);
 		NodeList nl = e.getElementsByTagName(tag);
 		//Add all "tag" attributes
@@ -164,11 +211,26 @@ public class XmlParser {
 		}
 		//Iterate through tags searching for highway, mark if found
 		for (String s: res) {
-			if (s.equals("highway")) {
-				markhighway = true;
+			if (s.equals(key)) {
+				markblank = true;
 			}
 		}
-		return markhighway;
+		return markblank;
+	}
+	
+	private static String getVFromK(String tag, Element e, String key) {
+		String v = null;
+		HashMap<String, String> res = new HashMap<>(0);
+		NodeList nl = e.getElementsByTagName(tag);
+		//Add all "tag" attributes
+		for (int i = 0; i < nl.getLength(); i++) {
+			Node n = nl.item(i);
+			if (n.getNodeType() == Node.ELEMENT_NODE) {
+				Element el = (Element) n;
+				res.put(el.getAttribute("k"), el.getAttribute("v"));
+			}
+		}
+		return res.get(key);
 	}
 	
 	
@@ -251,5 +313,49 @@ public class XmlParser {
 	public HashMap<String, MapNode> getNodesHash() {
 		return mnhash;
 	}
+	
+	public List<Building> getBuildings() {
+		return buildings;
+	}
+	
+	public List<Building> getLanduse() {
+		return landuse;
+	}
+	
+	public List<Building> getWaterways() {
+		return waterways;
+	}
+	
+	public List<MapWay> getFootways() {
+		return footways;
+	}
+	
+	public List<MapWay> getResidential() {
+		return residential;
+	}
+	
+	public List<MapWay> getSecondary() {
+		return secondary;
+	}
+	
+	public List<MapWay> getTertiary() {
+		return tertiary;
+	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

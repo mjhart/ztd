@@ -1,5 +1,6 @@
 package gameEngine.projectile;
 
+import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -27,7 +28,7 @@ public class ElectricProjectile implements Projectile {
 	@Override
 	public boolean action(long nanosSincePrevTick) {
 		_timeToLive+=nanosSincePrevTick;
-		if(_timeToLive > 500000000l / 4) {
+		if(_timeToLive > 100000000l / 4) {
 			if(_frame == _sprites.length - 1) {
 				return true;
 			}
@@ -39,13 +40,16 @@ public class ElectricProjectile implements Projectile {
 
 	@Override
 	public void draw(Graphics2D g) {
-		//g.setColor(java.awt.Color.RED);
-		//g.drawLine((int)_source.x, (int)_source.y, (int)_dest.x, (int)_dest.y);
+		g.setStroke(new BasicStroke());
+		g.setColor(java.awt.Color.RED);
+		g.drawLine((int)_source.x, (int)_source.y, (int)_dest.x, (int)_dest.y);
+		/*
 		AffineTransform af1 = new AffineTransform();
 		af1.translate(_source.x, _source.y - _sprites[_frame].getHeight() / 2);
-		af1.scale(_dest.minus(_source).mag() / 405  , 5);
+		af1.scale(_dest.dist(_source) / 1000  , 5);
 		af1.rotate(_angle, 0, _sprites[_frame].getHeight() / 2);
 		g.drawImage(_sprites[_frame], af1, null);
+		*/
 	}
 
 }
