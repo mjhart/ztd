@@ -42,6 +42,8 @@ public class Map {
 	private List<MapWay> _residential;
 	private List<MapWay> _secondary;
 	private List<MapWay> _tertiary;
+	
+	private static final int MIN_DIST = 400000;
 
 	private double[] wMin;
 	private double[] wMax;
@@ -160,30 +162,125 @@ public class Map {
 	
 	/* path finding methods */
 	
-	
+	///*
+	private List<MapNode> potentialSrcs() {
+		List<MapNode> results = new LinkedList<MapNode>();
+		for(MapWay w : _highways) {
+			for(MapNode n : w.getNodes()) {
+				if(n.getX() >= 10000 && n.getX() - 500 < 10000) {
+					boolean farEnough = true;
+					for(MapNode n2 : results) {
+						if(n._coords.dist2(n2._coords) < MIN_DIST) {
+							farEnough = false;
+							break;
+						}
+					}
+					if(farEnough) {
+						results.add(n);
+					}
+					continue;
+				}
+				if(n.getY() >= 10000 && n.getY() - 500 < 10000) {
+					boolean farEnough = true;
+					for(MapNode n2 : results) {
+						if(n._coords.dist2(n2._coords) < MIN_DIST) {
+							farEnough = false;
+							break;
+						}
+					}
+					if(farEnough) {
+						results.add(n);
+					}
+					continue;
+				}
+				if(n.getX() <= 0 && n.getX() + 500 > 0) {
+					boolean farEnough = true;
+					for(MapNode n2 : results) {
+						if(n._coords.dist2(n2._coords) < MIN_DIST) {
+							farEnough = false;
+							break;
+						}
+					}
+					if(farEnough) {
+						results.add(n);
+					}
+					continue;
+				}
+				if(n.getY() <= 0 && n.getY() + 500 > 0) {
+					boolean farEnough = true;
+					for(MapNode n2 : results) {
+						if(n._coords.dist2(n2._coords) < MIN_DIST) {
+							farEnough = false;
+							break;
+						}
+					}
+					if(farEnough) {
+						results.add(n);
+					}
+					continue;
+				}
+			}
+		}
+		return results;
+	}
+	//*/
+	/*
 	private List<MapNode> potentialSrcs() {
 		List<MapNode> results = new LinkedList<MapNode>();
 		for(MapNode n : _nodes) {
-			if(n.getX() <= 10000 && n.getX() + 500 > 10000) {
-				results.add(n);
-				continue;
+			if(n.getX() >= 10000 && n.getX() - 500 < 10000) {
+				boolean farEnough = true;
+				for(MapNode n2 : results) {
+					if(n._coords.dist2(n2._coords) < MIN_DIST) {
+						farEnough = false;
+					}
+				}
+				if(farEnough) {
+					results.add(n);
+					continue;
+				}
 			}
-			if(n.getY() <= 10000 && n.getY() + 500 > 10000) {
-				results.add(n);
-				continue;
+			if(n.getY() >= 10000 && n.getY() - 500 < 10000) {
+				boolean farEnough = true;
+				for(MapNode n2 : results) {
+					if(n._coords.dist2(n2._coords) < MIN_DIST) {
+						farEnough = false;
+					}
+				}
+				if(farEnough) {
+					results.add(n);
+					continue;
+				}
 			}
-			if(n.getX() >= 0 && n.getX() - 500 < 0) {
-				results.add(n);
-				continue;
+			if(n.getX() <= 0 && n.getX() + 500 > 0) {
+				boolean farEnough = true;
+				for(MapNode n2 : results) {
+					if(n._coords.dist2(n2._coords) < MIN_DIST) {
+						farEnough = false;
+					}
+				}
+				if(farEnough) {
+					results.add(n);
+					continue;
+				}
 			}
-			if(n.getY() >= 0 && n.getY() - 500 < 0) {
-				results.add(n);
-				continue;
+			if(n.getY() <= 0 && n.getY() + 500 > 0) {
+				boolean farEnough = true;
+				for(MapNode n2 : results) {
+					if(n._coords.dist2(n2._coords) < MIN_DIST) {
+						farEnough = false;
+					}
+				}
+				if(farEnough) {
+					results.add(n);
+					continue;
+				}
 			}
 		}
 		//System.out.println(results);
 		return results;
 	}
+	*/
 	
 	private List<MapNode> findPaths(List<MapNode> srcList, MapNode base) {
 		LinkedList<MapNode> spawns = new LinkedList<MapNode>();

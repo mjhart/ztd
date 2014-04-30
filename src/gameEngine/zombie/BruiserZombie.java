@@ -1,12 +1,14 @@
 package gameEngine.zombie;
 
+import gameEngine.Base;
+
 import java.awt.image.BufferedImage;
 
 import mapbuilder.MapNode;
 
 public class BruiserZombie extends Zombie {
 
-	public BruiserZombie(MapNode src, BufferedImage[] sprites) {
-		super(src._coords, 75, 3, src.getNext(), src.getNext()._coords, 7f, sprites);
+	public BruiserZombie(MapNode src, BufferedImage[] sprites, Base base) {
+		super(src._coords, 75, 3, src.getNext(), 7f, sprites, base);
 	}
 }

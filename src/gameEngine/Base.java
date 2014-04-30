@@ -36,6 +36,10 @@ public class Base extends BasicTower {
 	public int getHealth() {
 		return _health;
 	}
+	
+	public void setHealth(int health) {
+		_health = health;
+	}
 
 	@Override
 	public void draw(Graphics2D g, Vec2i coords) {

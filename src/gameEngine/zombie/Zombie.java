@@ -1,5 +1,7 @@
 package gameEngine.zombie;
 
+import gameEngine.Base;
+
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -13,7 +15,6 @@ public abstract class Zombie {
 	private int _health;
 	private int _strength;
 	private MapNode _target;
-	private Vec2f _tCoords;
 	private float _speed;
 	private long _nanoSincePrevAttack;
 	private BufferedImage[] _sprites;
@@ -21,31 +22,37 @@ public abstract class Zombie {
 	private long _nanoSincePrevAnimation;
 	private float _angle;
 	private double _dist;
+	private Base _base;
+	private boolean _atBase;
 	
-	public Zombie(Vec2f coords, int health, int strength, MapNode target, Vec2f tCoords, float speed, BufferedImage[] sprites) {
+	public Zombie(Vec2f coords, int health, int strength, MapNode target, float speed, BufferedImage[] sprites, Base base) {
 		_coords = coords;
 		_health = health;
 		_strength = strength;
 		_target = target;
-		_tCoords = tCoords;
 		_speed = speed;
 		_sprites = sprites;
 		_dist = target.getDist();
+		_base = base;
+		_atBase = false;
+		_nanoSincePrevAttack = 1000000001;
 	}
 
 	public void move() {
-		if(_coords.dist2(_tCoords) < 1000) {
-			if(_target.getNext() == null) {
-				return;
+		if(!_atBase) {
+			if(_coords.dist2(_target._coords) < 1000) {
+				if(_target.getNext() == null) {
+					_atBase = true;
+					return;
+				}
+				_target = _target.getNext();
 			}
-			_target = _target.getNext();
-			_tCoords = _target._coords;
+
+			Vec2f path = _target._coords.minus(_coords);
+			_angle = path.angle();
+			_coords = _coords.plus(path.normalized().smult(_speed));
+			_dist-=(_speed);
 		}
-		
-		Vec2f path = _tCoords.minus(_coords);
-		_angle = path.angle();
-		_coords = _coords.plus(path.normalized().smult(_speed));
-		_dist-=(_speed);
 	}
 	
 	public Zombie takeDamage(int damage) {
@@ -65,7 +72,9 @@ public abstract class Zombie {
 		_nanoSincePrevAttack+=nanoSincePrevTick;
 		if(_nanoSincePrevAttack > 1000000000) {
 			_nanoSincePrevAttack = 0;
-			return _strength;
+			if(_atBase) {
+				return _strength;
+			}
 		}
 		return 0;
 	}

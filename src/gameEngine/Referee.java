@@ -34,16 +34,14 @@ public class Referee {
 	private ZombieFactory _zFactory;
 	private int _money;
 	private static final int STARTING_MONEY = 300;
+	private static final int STARTING_HEALTH = 100;
 	private BufferedImage _basesprite;
 	
-	// for debugging
-	Zombie _test;
 	
 	public Referee(Map m) {
 		_m = m;
 		_zombies = new HashSet<Zombie>();
 		_towers = new LinkedList<AbstractTower>();
-		_zFactory = new ZombieFactory();
 		_money = STARTING_MONEY;
 		getBaseSprite();
 	}
@@ -67,21 +65,19 @@ public class Referee {
 	public void tick(long nanosSincePreviousTick) {
 		if(_running) {
 			
-			
-			// for debugging 
-			if(_test == null) {
-				_test = _zombies.toArray(new Zombie[1])[0];
-			}
-			else {
-				//System.out.println(_test.getDist());
-			}
-			
 			// add new zombies
 			if(_numZombies > 0) {
 				_nanoSinceSpawn+=nanosSincePreviousTick;
 				if(_nanoSinceSpawn > 1000000000) {
 					_nanoSinceSpawn = 0;
-					createZombie();
+					
+					
+					//TODO decide which is better
+					///*
+					for(int i=0; i<_round && _numZombies > 0 && i < 5; i++) {
+						createZombie();
+					}
+					//*/
 				}
 			}
 			
@@ -98,11 +94,9 @@ public class Referee {
 			
 			// attack base
 			for(Zombie z : _zombies) {
-				if(z.getCoords().dist2(_b.getNode()._coords) < 1000) {
-					if(_b.dealDamage(z.atttack(nanosSincePreviousTick))) {
-						_running = false;
-						break;
-					}
+				if(_b.dealDamage(z.atttack(nanosSincePreviousTick))) {
+					_running = false;
+					break;
 				}
 			}
 			
@@ -127,7 +121,7 @@ public class Referee {
 		double max = Math.random()*10;
 		
 		// sprint zombie
-		if(_round > 1) {
+		if(_round > 5) {
 			double sprint = Math.random() * 7;
 			if(sprint > max) {
 				type = 1;
@@ -136,11 +130,20 @@ public class Referee {
 		}
 		
 		// bruiser
-		if(_round > 3) {
+		if(_round > 10) {
 			double bruise = Math.random() * 5;
 			if(bruise > max) {
 				type = 2;
 				max = bruise;
+			}
+		}
+		
+		// range
+		if(_round > 15) {
+			double range = Math.random() * 5;
+			if(range > max) {
+				type = 3;
+				max = range;
 			}
 		}
 		
@@ -152,6 +155,9 @@ public class Referee {
 				
 			case 2:
 				_zombies.add(_zFactory.makeBruiserZombie(_m.getSourceList().get(rnd)));
+				
+			case 3:
+				_zombies.add(_zFactory.makeRangeZombie(_m.getSourceList().get(rnd)));
 	
 			default:
 				_zombies.add(_zFactory.makeBasicZombie(_m.getSourceList().get(rnd)));
@@ -216,9 +222,15 @@ public class Referee {
 		return result;
 	}
 	
+	public void startGame() {
+		if(_round == 0) {
+			startRound();
+		}
+	}
+	
 	public void startRound() {
 		if(_round != 0) {
-			_money += _money/10;
+			_money += _money/20;
 		}
 		_round++;
 		_numZombies = _round * 5;
@@ -230,6 +242,7 @@ public class Referee {
 		_m = m;
 		_b  = new Base(_m.getBaseNode(), _m.getBaseNode()._coords, this, _basesprite);
 		_towers.add(_b);
+		_zFactory = new ZombieFactory(_b);
 	}
 	
 	public List<AbstractTower> towers() {
@@ -244,6 +257,7 @@ public class Referee {
 	public void restart() {
 		_running = false;
 		_round = 0;
+		_b.setHealth(STARTING_HEALTH);
 		_zombies.clear();
 		_towers.clear();
 		_money = STARTING_MONEY;

@@ -1,5 +1,7 @@
 package gameEngine.zombie;
 
+import gameEngine.Base;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +12,13 @@ import mapbuilder.MapNode;
 
 public class ZombieFactory {
 	private BufferedImage[] _basicSprites;
+	private Base _base;
 	
-	public ZombieFactory() {
+	public ZombieFactory(Base base) {
+		
+		System.out.println(base);
+		
+		_base = base;
 		BufferedImage img = null;
 		_basicSprites = new BufferedImage[7];
 		try {
@@ -26,14 +33,18 @@ public class ZombieFactory {
 	}
 	
 	public BasicZombie makeBasicZombie(MapNode src) {
-		return new BasicZombie(src, _basicSprites);
+		return new BasicZombie(src, _basicSprites, _base);
 	}
 	
 	public SprintZombie makeSprintZombie(MapNode src) {
-		return new SprintZombie(src, _basicSprites);
+		return new SprintZombie(src, _basicSprites, _base);
 	}
 	
 	public BruiserZombie makeBruiserZombie(MapNode src) {
-		return new BruiserZombie(src, _basicSprites);
+		return new BruiserZombie(src, _basicSprites, _base);
+	}
+	
+	public RangeZombie makeRangeZombie(MapNode src) {
+		return new RangeZombie(src, _basicSprites, _base);
 	}
 }

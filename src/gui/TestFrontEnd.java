@@ -2,9 +2,6 @@ package gui;
 
 import gameEngine.Referee;
 import gameEngine.towers.AbstractTower;
-import gameEngine.towers.BasicTower;
-import gameEngine.towers.CannonTower;
-import gameEngine.towers.FlameTower;
 import gameEngine.towers.TowerFactory;
 import gameEngine.zombie.Zombie;
 
@@ -13,20 +10,15 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.awt.Polygon;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import mapbuilder.Building;
@@ -501,7 +493,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	
 	private boolean parseConsoleControlButton() {
 		if (_command.equals("Start")) {
-			_ref.startRound();
+			_ref.startGame();
 			_c.unhighlight();
 			_c.noUpgrades();
 			return true;
