@@ -20,6 +20,7 @@ public class Screen {
 	private ControlButton _go;
 	private boolean _first;
 	private String _type;
+	private Text _t;
 	private Color _background = Color.ORANGE;
 	
 	public Screen(String type, int w, int h) {
@@ -36,16 +37,17 @@ public class Screen {
 		int c = 30;
 		if (_type.equals("Pause")) {
 			if (_first) {
-				_cbs.add(new ControlButton("Continue", 3*_w/2, _h/5, g));
+				g.setColor(Color.BLACK);
+				g.setFont(new Font("Helvetica", Font.PLAIN, 15));
+				_cbs.add(new ControlButton("Continue", _w, _h/2, g));
 				_first = false;
 			}
-			g.setColor(Color.WHITE);
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 30));
-			new Text("PAUSE", centerX("PAUSE", _w), _h/10);
+			g.setFont(new Font("Helvetica", Font.PLAIN, 70));
+			_t = new Text("PAUSE", _w, _h/5);
 		}
 		else if (_type.equals("Loading")) {
 			g.setColor(Color.WHITE);
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+			g.setFont(new Font("Helvetica", Font.PLAIN, 30));
 			new Text("LOADING...", centerX("PAUSE", _w), _h/10);
 		}
 		else if (_type.equals("Game Over")) {
@@ -55,22 +57,26 @@ public class Screen {
 				_first = false;
 			}
 			g.setColor(Color.WHITE);
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+			g.setFont(new Font("Helvetica", Font.PLAIN, 30));
 			new Text("GAME OVER", centerX("PAUSE", _w), _h/10);
 		}
 		
 		java.awt.Color colorholder = g.getColor();
-		g.setColor(_background);
+		g.setColor(new Color(_background.getRed(), _background.getGreen(), _background.getBlue(), 100));
 		g.fill(new Rectangle2D.Float(0,0,_w,_h));
 		
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-		
+		g.setFont(new Font("Helvetica", Font.PLAIN, 15));
 		for (ControlButton cb: _cbs) {
-			cb.draw(g, _background);
+			cb.draw(g, Color.GRAY.brighter());
 		}
 		
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Helvetica", Font.PLAIN, 70));
+		_t.draw();
+		
 		g.setColor(colorholder);
+		_first = false;
 	}
 	
 	private float centerX(String name, float rightline) {
@@ -98,9 +104,35 @@ public class Screen {
 	}
 	
 	private class Text {
-		public Text(String name, float x, float y) {
+		private String _name;
+		private float x;
+		private float y;
+		public Text(String name, float rightline, float y) {
+			this.x = centerX(name, rightline);
+			this.y = y;
+			_name = name;
 			g.drawString(name, x, y);
 		}
+		public void draw() {
+			g.drawString(_name, x, y);
+		}
+		public void setName(String name) {
+			_name = name;
+		}
+	}
+	
+	//Work in terms of vectors or x y?
+	public String contains(int x, int y, boolean click) {
+		for (ControlButton cb: _cbs) {
+			if (cb.getRoundRect().contains(x, y)) {
+				cb.highlight();
+				return cb.getName();
+			}
+			else {
+				cb.unhighlight();
+			}
+		}
+		return null;
 	}
 
 }

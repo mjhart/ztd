@@ -224,8 +224,10 @@ public class Referee {
 		_money = STARTING_MONEY;
 	}
 	
-	public void pause() {
+	public boolean pause() {
+		boolean holder = _running;
 		_running = false;
+		return holder;
 	}
 	
 	public void unpause() {

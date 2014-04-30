@@ -198,25 +198,28 @@ public class Console2 {
 		private float y;
 		private RoundRectangle2D _back;
 		private AbstractTower _t;
+		public float _rightline;
 		public TowerInfo(String name, AbstractTower t, float rightline, float y) {
 			_name = name;
 			_t = t;
 			this.x = centerRect(_width, rightline);
 			this.y = y;
 			_back = new RoundRectangle2D.Float(x,y,_width,_width + 30, 5, 5);
+			_rightline = rightline;
 		}
 
 		public void draw() {
 			g.setColor(Color.ORANGE);
 			g.draw(_back);
 			g.setColor(Color.BLACK);
-			g.setFont(new Font("Helvetica", Font.BOLD, 15));
+			g.setFont(new Font("Helvetica", Font.BOLD, 20));
 			int c = 30;
-			g.drawString(_name, x, y + c);
-			g.drawString("Price: " + _t.getPrice(), x, y + 2*c);
-			g.drawString("Damage: " + _t.getDamage(), x, y + 3*c);
-			g.drawString("Radius: " + _t.getRadius(), x, y + 4*c);
-			g.drawString("Delay: " + _t.getDelay() + " secs", x, y + 5*c);
+			g.setFont(new Font("Helvetica", Font.BOLD, 15));
+			g.drawString(_name, centerX(_name, _rightline), y + c);
+			g.drawString("Price: " + _t.getPrice(), x + 2, y + 2*c);
+			g.drawString("Damage: " + _t.getDamage(), x + 2, y + 3*c);
+			g.drawString("Radius: " + (int) _t.getRadius(), x + 2, y + 4*c);
+			g.drawString("Delay: " + _t.getDelay() + " secs", x + 2, y + 5*c);
 		}
 	}
 	

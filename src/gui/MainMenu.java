@@ -177,7 +177,6 @@ public class MainMenu {
 	
 	
 	
-	//Work in terms of vectors or x y?
 	public String contains(int x, int y, boolean click) {
 		for (ControlButton cb: _cbs) {
 			if (cb.getRoundRect().contains(x, y)) {

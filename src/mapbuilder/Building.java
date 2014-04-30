@@ -12,7 +12,6 @@ public class Building {
 	public Building(MapWay mw) {
 		List<MapNode> nList = mw.getNodes();
 		int size = nList.size();
-		System.out.println("size " + size);
 		int[] xpoints = new int[size];
 		int[] ypoints = new int[size];
 		for(int i = 0; i < size; i++) {

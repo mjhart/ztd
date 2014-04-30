@@ -2,6 +2,8 @@ package gameEngine.towers;
 
 import gameEngine.Referee;
 
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -43,12 +45,39 @@ public class TowerFactory {
 			System.out.println("ERROR: Could not get image (cannonTower.png)");
 		}
 		
+		// read cannon sprite
+		try {
+			_cannonsprite = ImageIO.read(new File("towerpics/cannonTower.png"));
+		} catch (IOException e) {
+			System.out.println("ERROR: Could not get image (cannonTower.png)");
+		}
+		
 		// read electric tower sprite
 		try {
 			_electricsprite = ImageIO.read(new File("towerpics/cannonTower.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (cannonTower.png)");
 		}
+		
+		// read flame sprite
+		try {
+			img = ImageIO.read(new File("towerpics/flames.png"));
+		} catch (IOException e) {
+			System.out.println("ERROR: Could not get image (flames.png)");
+		}
+		_flamesprite = img.getSubimage(0, 0, 48, 64);		
+		BufferedImage holder = new BufferedImage(96, 128, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = holder.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		//g.drawImage(img, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, observer)
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		// read electric projectile sprites
 		try {

@@ -24,6 +24,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -52,6 +53,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private Console2 _c;
 	private boolean _hasMain;
 	private boolean _hasMap;
+	private boolean _showMap;
 	private List<AbstractTower> _towers;
 	private AbstractTower _candidate;
 	private boolean _validPlace;
@@ -66,6 +68,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private Referee _ref;
 	private String _command;
 	private TowerFactory _tf;
+	private Screen _screen;
+	private boolean _hasScreen;
+	private boolean _wasRunning;
 	
 	public TestFrontEnd(String title, boolean fullscreen) {
 		super(title, fullscreen);
@@ -83,6 +88,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 		_mm = new MainMenu(size.x, size.y);
 		_hasMain = true;
 		_hasMap = false;
+		_showMap = false;
+		_hasScreen = false;
+		_wasRunning = false;
 		
 		_highline2D = new ArrayList<>();
 		_validPlace = false;
@@ -112,7 +120,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		if (_hasMain) {
 			_mm.draw(g);
 		}
-		else if (_hasMap) {
+		else if (_showMap) {
 			
 			
 
@@ -127,21 +135,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 			g.setStroke(new BasicStroke(defaultstroke));
 
 			
-			// draw new tower
-			if (_candidate != null) {
-				_candidate.drawSimple(g);
-				//TODO This radius is not accurate. Also need to translate to correct coord system
-				Color holder = g.getColor();
-				if (_validPlace) {
-					g.setColor(new Color(0f, 1f, 0f, .5f));
-				}
-				else {
-					g.setColor(new Color(1f, 0f, 0f, .5f));
-				}
-				Ellipse2D e = new Ellipse2D.Float(_candidate.getCoords().x - (float) Math.sqrt(_candidate.getRadius()), _candidate.getCoords().y - (float) Math.sqrt(_candidate.getRadius()), (float) Math.sqrt(_candidate.getRadius()) * 2, (float) Math.sqrt(_candidate.getRadius()) * 2);
-				g.fill(e);
-				g.setColor(holder);
-			}
+
 			
 //			for(MapWay w : _m.getWays()) {
 //				List<MapNode> nList = w.getNodes();
@@ -163,7 +157,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 			}
 			
 			if (_m.getWaterways() != null) {
-				System.out.println("Waterways " + _m.getWaterways().size());
 				g.setColor(new Color(173,216,230));
 				for (Building b: _m.getWaterways()) {
 					g.fill(b.getPolygon());
@@ -316,13 +309,34 @@ public class TestFrontEnd extends SwingFrontEnd {
 				t.draw2(g);
 			}
 			
+			// draw new tower
+			if (_candidate != null) {
+				_candidate.draw2(g);
+				//TODO This radius is not accurate. Also need to translate to correct coord system
+				Color holder = g.getColor();
+				if (_validPlace) {
+					g.setColor(new Color(0f, 1f, 0f, .5f));
+				}
+				else {
+					g.setColor(new Color(1f, 0f, 0f, .5f));
+				}
+				Ellipse2D e = new Ellipse2D.Float(_candidate.getCoords().x - (float) Math.sqrt(_candidate.getRadius()), _candidate.getCoords().y - (float) Math.sqrt(_candidate.getRadius()), (float) Math.sqrt(_candidate.getRadius()) * 2, (float) Math.sqrt(_candidate.getRadius()) * 2);
+				g.fill(e);
+				g.setColor(holder);
+			}
+			
 			g.setColor(java.awt.Color.CYAN);
 			
 			g.setStroke(new BasicStroke());
 			g.setTransform(new AffineTransform());
 			// draw console
 			_c.draw(g);
+			
+			
 
+		}
+		if (_hasScreen) {
+			_screen.draw(g);
 		}
 
 	}
@@ -343,6 +357,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		_c = new Console2(0,0,CONSOLE_WIDTH,_size.y, _tf, _ref);
 
 		_hasMap = true;
+		_showMap = true;
 		_hasMain = false;
 		_mm.clear();
 		
@@ -448,47 +463,12 @@ public class TestFrontEnd extends SwingFrontEnd {
 				System.out.println(command);
 				String[] fw = command.split("\\s+");
 				_command = fw[0];
-				if (_command.equals("Start")) {
-					_ref.startRound();
-					_c.unhighlight();
-					_c.noUpgrades();
-				}
-				else if (_command.equals("Main")) {
-					_hasMain = true;
-					_hasMap = false;
-					_highline2D.clear();
-					_c = null;
-					_m = null; //TODO reset map (ie zombies)
-				}
-				else if (_command.equals("Restart")) {
-					_ref.restart();
-					_c.unhighlight();
-					_c.noUpgrades();
-					_command = null;
-				}
-				else if (_command.equals("Pause")) {
-					//TODO Pause screen
-					_ref.pause();
-				}
-				else if (_command.equals("Quit")) {
-					System.exit(0);
-				}
+				parseConsoleControlButton();
 			}
 			else if ((e.getX() > CONSOLE_WIDTH) && (_command != null)) {
 				Rectangle2D r = new Rectangle2D.Double(e.getX() - 5, e.getY() - 5, 10, 10);
 				if (_validPlace) {
-					if (_command.equals("Basic")) {
-						_ref.addTower(_tf.makeBasic(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
-					}
-					else if (_command.equals("Cannon")) {
-						_ref.addTower(_tf.makeCannon(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
-					}
-					else if (_command.equals("Electric")) {
-						_ref.addTower(_tf.makeElectric(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
-					}
-					else if (_command.equals("Flame")) {
-						_ref.addTower(_tf.makeFlame(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref));
-					}
+					_ref.addTower(parseConsoleTowerButton(e));
 					_c.unhighlight();
 					_command = null;
 					_candidate = null;
@@ -506,6 +486,76 @@ public class TestFrontEnd extends SwingFrontEnd {
 					}
 				}
 			}
+		}
+		else {
+			String command = _screen.contains(e.getX(), e.getY());
+			if (command != null) {
+				String[] fw = command.split("\\s+");
+				_command = fw[0];
+				parseConsoleControlButton();
+			}
+			_command = null;
+		}
+
+	}
+	
+	private void parseConsoleControlButton() {
+		if (_command.equals("Start")) {
+			_ref.startRound();
+			_c.unhighlight();
+			_c.noUpgrades();
+		}
+		else if (_command.equals("Main")) {
+			_hasMain = true;
+			_hasMap = false;
+			_showMap = false;
+			_highline2D.clear();
+			_c = null;
+			_m = null;
+		}
+		else if (_command.equals("Restart")) {
+			_ref.restart();
+			_c.unhighlight();
+			_c.noUpgrades();
+			_command = null;
+		}
+		else if (_command.equals("Pause")) {
+			_screen = new Screen("Pause", _size.x, _size.y);
+			_hasMap = false;
+			_showMap = true;
+			_hasScreen = true;
+			_wasRunning = _ref.pause();
+		}
+		else if (_command.equals("Continue")) {
+			_screen = null;
+			_hasMap = true;
+			_showMap = true;
+			_hasScreen = false;
+			if (_wasRunning) {
+				_ref.unpause();
+			}
+		}
+		else if (_command.equals("Quit")) {
+			System.exit(0);
+		}
+	}
+	
+	private AbstractTower parseConsoleTowerButton(MouseEvent e) {
+		if (_command.equals("Basic")) {
+			return _tf.makeBasic(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+		}
+		else if (_command.equals("Cannon")) {
+			return _tf.makeCannon(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+		}
+		else if (_command.equals("Electric")) {
+			return _tf.makeElectric(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+		}
+		else if (_command.equals("Flame")) {
+			return _tf.makeFlame(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+		}
+		else {
+			System.out.println("Bad tower button command. This should never happen");
+			return null;
 		}
 
 	}
@@ -525,11 +575,13 @@ public class TestFrontEnd extends SwingFrontEnd {
 			_mm.contains(e.getX(), e.getY(), false);
 		}
 		
-		
-		
 		else if (_hasMap) {
 			if ((e.getX() > CONSOLE_WIDTH) && (_command != null)) {
-				Rectangle2D r = new Rectangle2D.Double(xToLon(e.getX()) - 50, yToLat(e.getY()) - 50, 100, 100);
+				_candidate = parseConsoleTowerButton(e);
+				BufferedImage sprite = _candidate.getSprite();
+				int w = sprite.getWidth();
+				int h = sprite.getHeight();
+				Rectangle2D r = new Rectangle2D.Double(xToLon(e.getX()) - w/2, yToLat(e.getY()) - h/2, w, h);
 				for (Line2D l: _highline2D) {
 					if (l.intersects(r)) {
 						_validPlace = false;
@@ -545,22 +597,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 						break;
 					}
 				}
+
 				
-				
-				
-				//TODO Change this to sprites instead of towers?
-				if (_command.equals("Basic")) {
-					_candidate = _tf.makeBasic(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
-				}
-				else if (_command.equals("Cannon")) {
-					_candidate = _tf.makeCannon(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
-				}
-				else if (_command.equals("Electric")) {
-					_candidate = _tf.makeElectric(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
-				}
-				else if (_command.equals("Flame")) {
-					_candidate = _tf.makeFlame(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
-				}
+
 				
 				if (_candidate != null) {
 					if (_ref.getResources() - _candidate.getPrice() < 0) {
@@ -575,6 +614,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 			else {
 				_candidate = null;
 			}
+		}
+		else if (_hasScreen) {
+			_screen.contains(e.getX(), e.getY(), false);
 		}
 
 	}
