@@ -21,7 +21,7 @@ public class ElectricTower extends AbstractTower {
 	private BufferedImage[] _lightningSprites;
 	
 	public ElectricTower(Vec2f vec, Referee ref, BufferedImage sprite, BufferedImage[] lightningSprites) {
-		super(30, 500000, 1000000000, 30, vec, ref, sprite);
+		super(30, 500000, 1000000000, 300, vec, ref, sprite);
 		_lightningSprites = lightningSprites;
 	}
 

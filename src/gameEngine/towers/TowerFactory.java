@@ -85,8 +85,25 @@ public class TowerFactory {
 	    g.dispose();
 	    _flamesprite = scaled;
 		
-		//Image holder = _flamesprite.getScaledInstance(96, 128, 0);
+	    
+	    
+	    
+		// read electric sprite
+		try {
+			img = ImageIO.read(new File("towerpics/stuntowersheet.png"));
+		} catch (IOException e) {
+			System.out.println("ERROR: Could not get image (flames.png)");
+		}
+		_electricsprite = img.getSubimage(0, 0, 118, 118);		
+		w = _electricsprite.getWidth();
+		h = _electricsprite.getHeight();
 		
+		scaled = new BufferedImage(5*w, 5*h, _electricsprite.getType());
+		g = scaled.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g.drawImage(_electricsprite, 0, 0, 5*w, 5*h, 0, 0, w, h, null);
+	    g.dispose();
+	    _electricsprite = scaled;
 		
 		
 		

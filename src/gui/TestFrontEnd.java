@@ -296,23 +296,22 @@ public class TestFrontEnd extends SwingFrontEnd {
 			}
 
 			
+
+
+			for(AbstractTower t : _ref.towers()) {
+				t.draw2(g);
+			}
+			
 			g.setColor(java.awt.Color.RED);
 			for(Zombie z : _ref.getZombies()) {
 				//g.drawOval(lonToX(z.getCoords().x), latToY(z.getCoords().y), 3, 3);
 				//z.draw(g, new Vec2i(lonToX(z.getCoords().x), latToY(z.getCoords().y)));
 				z.draw(g);
 			}
-
-			for(AbstractTower t : _ref.towers()) {
-
-				//t.drawSimple(g);
-				t.draw2(g);
-			}
 			
 			// draw new tower
 			if (_candidate != null) {
 				_candidate.draw2(g);
-				//TODO This radius is not accurate. Also need to translate to correct coord system
 				Color holder = g.getColor();
 				if (_validPlace) {
 					g.setColor(new Color(0f, 1f, 0f, .5f));
@@ -329,7 +328,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 			
 			g.setStroke(new BasicStroke());
 			g.setTransform(new AffineTransform());
-			// draw console
 			_c.draw(g);
 			
 			
@@ -463,7 +461,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 				System.out.println(command);
 				String[] fw = command.split("\\s+");
 				_command = fw[0];
-				parseConsoleControlButton();
+				if (parseConsoleControlButton()) {
+					_command = null;
+				}
 			}
 			else if ((e.getX() > CONSOLE_WIDTH) && (_command != null)) {
 				Rectangle2D r = new Rectangle2D.Double(e.getX() - 5, e.getY() - 5, 10, 10);
@@ -499,11 +499,12 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	}
 	
-	private void parseConsoleControlButton() {
+	private boolean parseConsoleControlButton() {
 		if (_command.equals("Start")) {
 			_ref.startRound();
 			_c.unhighlight();
 			_c.noUpgrades();
+			return true;
 		}
 		else if (_command.equals("Main")) {
 			_hasMain = true;
@@ -512,12 +513,14 @@ public class TestFrontEnd extends SwingFrontEnd {
 			_highline2D.clear();
 			_c = null;
 			_m = null;
+			return true;
 		}
 		else if (_command.equals("Restart")) {
 			_ref.restart();
 			_c.unhighlight();
 			_c.noUpgrades();
 			_command = null;
+			return true;
 		}
 		else if (_command.equals("Pause")) {
 			_screen = new Screen("Pause", _size.x, _size.y);
@@ -525,6 +528,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 			_showMap = true;
 			_hasScreen = true;
 			_wasRunning = _ref.pause();
+			return true;
 		}
 		else if (_command.equals("Continue")) {
 			_screen = null;
@@ -534,10 +538,12 @@ public class TestFrontEnd extends SwingFrontEnd {
 			if (_wasRunning) {
 				_ref.unpause();
 			}
+			return true;
 		}
 		else if (_command.equals("Quit")) {
 			System.exit(0);
 		}
+		return false;
 	}
 	
 	private AbstractTower parseConsoleTowerButton(MouseEvent e) {
@@ -581,7 +587,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 				BufferedImage sprite = _candidate.getSprite();
 				int w = sprite.getWidth();
 				int h = sprite.getHeight();
-				Rectangle2D r = new Rectangle2D.Double(xToLon(e.getX()) - w/2, yToLat(e.getY()) - h/2, w, h);
+				Rectangle2D r = new Rectangle2D.Double(xToLon(e.getX() + 3) - w/2, yToLat(e.getY() + 3) - h/2, w - 8, h - 8);
 				for (Line2D l: _highline2D) {
 					if (l.intersects(r)) {
 						_validPlace = false;

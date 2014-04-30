@@ -7,11 +7,17 @@ import gui.Console2;
 import gui.TestFrontEnd;
 
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import cs195n.Vec2f;
 import mapbuilder.Map;
@@ -27,7 +33,8 @@ public class Referee {
 	private List<AbstractTower> _towers;
 	private ZombieFactory _zFactory;
 	private int _money;
-	private static final int STARTING_MONEY = 200;
+	private static final int STARTING_MONEY = 300;
+	private BufferedImage _basesprite;
 	
 	// for debugging
 	Zombie _test;
@@ -38,6 +45,23 @@ public class Referee {
 		_towers = new LinkedList<AbstractTower>();
 		_zFactory = new ZombieFactory();
 		_money = STARTING_MONEY;
+		getBaseSprite();
+	}
+	
+	private void getBaseSprite() {
+		try {
+			_basesprite = ImageIO.read(new File("towerpics/house.png"));
+		} catch (IOException e) {
+			System.out.println("ERROR: Could not get image (house.png)");
+		}
+		int w = _basesprite.getWidth();
+		int h = _basesprite.getHeight();
+		BufferedImage scaled = new BufferedImage(3*w, 3*h, _basesprite.getType());
+		Graphics2D g = scaled.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g.drawImage(_basesprite, 0, 0, 3*w, 3*h, 0, 0, w, h, null);
+	    g.dispose();
+	    _basesprite = scaled;
 	}
 	
 	public void tick(long nanosSincePreviousTick) {
@@ -204,7 +228,8 @@ public class Referee {
 	
 	public void setMap(Map m) {
 		_m = m;
-		_b  = new Base(_m.getBaseNode(), _m.getBaseNode()._coords, this, null);
+		_b  = new Base(_m.getBaseNode(), _m.getBaseNode()._coords, this, _basesprite);
+		_towers.add(_b);
 	}
 	
 	public List<AbstractTower> towers() {
