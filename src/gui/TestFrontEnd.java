@@ -281,12 +281,12 @@ public class TestFrontEnd extends SwingFrontEnd {
 				//System.out.println("new path\n");
 			}
 			
-
+			/*
 			g.setColor(java.awt.Color.ORANGE);
 			for(MapNode n : _m.getSourceList()) {
 				g.fillOval((int) (n.getX()-35), (int) (n.getY()-35), 70, 70);
 			}
-
+			*/
 			
 
 

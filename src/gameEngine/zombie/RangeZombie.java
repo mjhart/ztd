@@ -14,8 +14,8 @@ public class RangeZombie extends Zombie {
 	private long _nanoSincePrevAttack;
 	private Base _base;
 	
-	public RangeZombie(MapNode src, BufferedImage[] sprites, Base base) {
-		super(src._coords, 50, 1, src.getNext(), 10f, sprites, base);
+	public RangeZombie(MapNode src, BufferedImage[] sprites, BufferedImage[] attack, Base base) {
+		super(src._coords, 50, 1, src.getNext(), 10f, sprites, attack, base);
 		
 		_nanoSincePrevAttack = 1500000001;
 		_inRange = false;

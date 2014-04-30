@@ -18,6 +18,7 @@ public abstract class Zombie {
 	private float _speed;
 	private long _nanoSincePrevAttack;
 	private BufferedImage[] _sprites;
+	private BufferedImage[] _attack;
 	private int  _frame;
 	private long _nanoSincePrevAnimation;
 	private float _angle;
@@ -25,7 +26,7 @@ public abstract class Zombie {
 	private Base _base;
 	private boolean _atBase;
 	
-	public Zombie(Vec2f coords, int health, int strength, MapNode target, float speed, BufferedImage[] sprites, Base base) {
+	public Zombie(Vec2f coords, int health, int strength, MapNode target, float speed, BufferedImage[] sprites, BufferedImage[] attack, Base base) {
 		_coords = coords;
 		_health = health;
 		_strength = strength;
@@ -36,6 +37,7 @@ public abstract class Zombie {
 		_base = base;
 		_atBase = false;
 		_nanoSincePrevAttack = 1000000001;
+		_attack = attack;
 	}
 
 	public void move() {
@@ -95,7 +97,12 @@ public abstract class Zombie {
 		af1.translate(_coords.x - (64 * 5), _coords.y - (64 * 5));
 		af1.scale(5, 5);
 		af1.rotate(_angle, 64, 64);
-		g.drawImage(_sprites[_frame], af1, null);
+		if(_atBase) {
+			g.drawImage(_attack[_frame], af1, null);
+		}
+		else {
+			g.drawImage(_sprites[_frame], af1, null);
+		}
 		//g.setTransform(af);
 	}
 	

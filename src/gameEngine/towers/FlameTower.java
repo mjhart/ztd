@@ -1,6 +1,7 @@
 package gameEngine.towers;
 
 import gameEngine.Referee;
+import gameEngine.projectile.FireProjectile;
 import gameEngine.zombie.Zombie;
 
 import java.awt.Graphics2D;
@@ -46,7 +47,7 @@ public class FlameTower extends AbstractTower {
 		if (!zombies.isEmpty()) {
 			for (Zombie z: zombies) {
 				_ref.dealDamage(z, _damage);
-				_animate = true;
+				addProjectile(new FireProjectile(getCoords()));
 				System.out.println("Flame Tower Firing");
 			}
 			return true;
