@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
@@ -163,8 +164,12 @@ public class Console2 {
 		public void draw() {
 			g.setColor(Color.BLACK);
 			//TODO this won't work right now
-			//g.drawImage(_sprite, g.getTransform(), null);
+			//g.drawImage(_sprite, new AffineTransform(), null);
 			g.draw(_r);
+			String first = _name.substring(0, 1);
+			first.toUpperCase();
+			g.setFont(new Font("Helvetica", Font.BOLD, 20));
+			g.drawString(first, x+_width/4 +2, y + 25);
 			if (_highlight) {
 				g.setStroke(new BasicStroke(3));
 				g.setColor(Color.MAGENTA);

@@ -4,6 +4,8 @@ import gameEngine.Referee;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -66,11 +68,24 @@ public class TowerFactory {
 			System.out.println("ERROR: Could not get image (flames.png)");
 		}
 		_flamesprite = img.getSubimage(0, 0, 48, 64);		
-		BufferedImage holder = new BufferedImage(96, 128, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = holder.createGraphics();
-		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		//g.drawImage(img, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, observer)
+		int w = _flamesprite.getWidth();
+		int h = _flamesprite.getHeight();
+//		BufferedImage scaled = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+//		AffineTransform at = new AffineTransform();
+//		at.scale(.3, .3);
+//		AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+//		scaled = scaleOp.filter(_flamesprite, scaled);
+//		_flamesprite = scaled;
 		
+		
+		BufferedImage scaled = new BufferedImage(5*w, 5*h, _flamesprite.getType());
+		Graphics2D g = scaled.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g.drawImage(_flamesprite, 0, 0, 5*w, 5*h, 0, 0, w, h, null);
+	    g.dispose();
+	    _flamesprite = scaled;
+		
+		//Image holder = _flamesprite.getScaledInstance(96, 128, 0);
 		
 		
 		
