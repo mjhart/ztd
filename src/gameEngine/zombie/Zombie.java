@@ -18,6 +18,7 @@ public abstract class Zombie {
 	private int _strength;
 	private MapNode _target;
 	private float _speed;
+	private float _startSpeed;
 	private long _nanoSincePrevAttack;
 	private BufferedImage[] _sprites;
 	private BufferedImage[] _attack;
@@ -35,6 +36,7 @@ public abstract class Zombie {
 		_strength = strength;
 		_target = target;
 		_speed = speed;
+		_startSpeed = _speed;
 		_sprites = sprites;
 		_dist = target.getDist();
 		_base = base;
@@ -119,14 +121,19 @@ public abstract class Zombie {
 		return _dist;
 	}
 	
-	public void changeSpeed(float delta) {
-		if(_speed + delta >= 3) {
-			_speed += delta;
-		}
-		else {
-			delta = 3;
+	public void setSpeed(float speed) {
+		if(speed >= 0) {
+			_speed = speed;
 		}
 		System.out.println(_speed);
+	}
+	
+	public float getSpeed() {
+		return _speed;
+	}
+	
+	public int getHealth() {
+		return _health;
 	}
 	
 	

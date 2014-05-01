@@ -2,6 +2,8 @@ package gameEngine.towers;
 
 import gameEngine.Referee;
 import gameEngine.projectile.BasicProjectile;
+import gameEngine.projectile.GooProjectile;
+import gameEngine.projectile.PoisonProjectile;
 import gameEngine.zombie.Zombie;
 
 import java.awt.Graphics2D;
@@ -15,7 +17,7 @@ import cs195n.Vec2i;
 public class PoisonTower extends AbstractTower {
 
 	public PoisonTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(10, 100, 1000000000, 190, vec, ref, sprite);
+		super(10, 1000000, 30000000000l, 100, vec, ref, sprite);
 		
 	}
 	
@@ -35,9 +37,8 @@ public class PoisonTower extends AbstractTower {
 		Zombie z = _ref.getFarthest(_vec, _radius);
 		if (z != null) {
 			//TODO Goo Projectile
-			//super.addProjectile(new GooProjectile(super._vec, z.getCoords(), this));
-			_ref.dealDamage(z, _damage);
-			System.out.println("Basic Tower Firing");
+			super.addProjectile(new PoisonProjectile(super._vec, z, super._ref, super._damage));
+			System.out.println("Goo Tower Firing");
 			return true;
 		}
 		return false;

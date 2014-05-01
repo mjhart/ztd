@@ -114,9 +114,14 @@ public class TowerFactory {
 	    g.dispose();
 	    _electricsprite = scaled;
 	    
-	    // read goo sprite 
+	    // TODO read goo sprite 
 	    _goosprite = _basicsprite;
+	    
+	    // TODO read poison sprite
+		_poisonsprite = _basicsprite;
 		
+		//TODO read laser sprite
+		_lasersprite = _basicsprite;
 		
 		
 		

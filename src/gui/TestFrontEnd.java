@@ -481,7 +481,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	
 	private AbstractTower parseConsoleTowerButton(MouseEvent e) {
 		if (_command.equals("Basic")) {
-			return _tf.makeBasic(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+			return _tf.makeLaser(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
 		}
 		else if (_command.equals("Cannon")) {
 			return _tf.makeCannon(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
