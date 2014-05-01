@@ -39,6 +39,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private List<MapWay> highs;
 	private List<MapNode> srcs;
 	private List<Line2D> _highline2D;
+	private List<Line2D> _zombieline2D;
 	private AffineTransform _at;
 	
 	private MainMenu _mm;
@@ -85,6 +86,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 		_wasRunning = false;
 		
 		_highline2D = new ArrayList<>();
+		_zombieline2D = new ArrayList<>();
+
 		_validPlace = false;
 		_candidate = null;
 		_at = new AffineTransform(1, 0, 0, 1, 0, 0);
@@ -269,17 +272,10 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 
 			g.setColor(java.awt.Color.BLUE);
-			for(MapNode n : _m.getSourceList()) {
-				MapNode cur = n;
-				MapNode next = cur.getNext();
-				while(next!=null) {
-					//g.drawLine(lonToX(cur.getX()), latToY(cur.getY()), lonToX(next.getX()), latToY(next.getY()));
-					g.draw(new Line2D.Float(cur.getX(), cur.getY(), next.getX(), next.getY()));
-					cur = next;
-					next = next.getNext();
-				}
-				//System.out.println("new path\n");
+			for (Line2D l: _zombieline2D) {
+				g.draw(l);
 			}
+			
 			
 			/*
 			g.setColor(java.awt.Color.ORANGE);
@@ -354,11 +350,21 @@ public class TestFrontEnd extends SwingFrontEnd {
 		for(MapWay h : _m.getHighways()) {
 			List<MapNode> nList = h.getNodes();
 			for(int i=1; i<nList.size(); i++) {
-				//_highline2D.add(new Line2D.Float(lonToX(nList.get(i-1).getX()), latToY(nList.get(i-1).getY()), lonToX(nList.get(i).getX()), latToY(nList.get(i).getY())));
 				_highline2D.add(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
-				//g.drawLine((int)nList.get(i-1).lon,(int) nList.get(i-1).lat,(int) nList.get(i).lon, (int)nList.get(i).lat);
 			}
 		}
+		
+		for(MapNode n : _m.getSourceList()) {
+			MapNode cur = n;
+			MapNode next = cur.getNext();
+			while(next!=null) {
+				Line2D l = new Line2D.Float(cur.getX(), cur.getY(), next.getX(), next.getY());
+				_zombieline2D.add(l);
+				cur = next;
+				next = next.getNext();
+			}
+		}
+		
 	}
 
 
@@ -580,7 +586,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 				int w = sprite.getWidth();
 				int h = sprite.getHeight();
 				Rectangle2D r = new Rectangle2D.Double(xToLon(e.getX() + 3) - w/2, yToLat(e.getY() + 3) - h/2, w - 8, h - 8);
-				for (Line2D l: _highline2D) {
+				for (Line2D l: _zombieline2D) {
 					if (l.intersects(r)) {
 						_validPlace = false;
 						break;

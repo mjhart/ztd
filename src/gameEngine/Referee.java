@@ -261,6 +261,7 @@ public class Referee {
 		_zombies.clear();
 		_towers.clear();
 		_money = STARTING_MONEY;
+		_towers.add(_b);
 	}
 	
 	public boolean pause() {
