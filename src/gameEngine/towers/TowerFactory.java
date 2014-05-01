@@ -47,12 +47,7 @@ public class TowerFactory {
 			System.out.println("ERROR: Could not get image (cannonTower.png)");
 		}
 		
-		// read cannon sprite
-		try {
-			_cannonsprite = ImageIO.read(new File("towerpics/cannonTower.png"));
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (cannonTower.png)");
-		}
+
 		
 		// read electric tower sprite
 		try {
@@ -77,7 +72,6 @@ public class TowerFactory {
 //		scaled = scaleOp.filter(_flamesprite, scaled);
 //		_flamesprite = scaled;
 		
-		
 		BufferedImage scaled = new BufferedImage(5*w, 5*h, _flamesprite.getType());
 		Graphics2D g = scaled.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -85,6 +79,21 @@ public class TowerFactory {
 	    g.dispose();
 	    _flamesprite = scaled;
 		
+	    
+		// read cannon sprite
+		try {
+			_cannonsprite = ImageIO.read(new File("towerpics/cannonTower.png"));
+		} catch (IOException e) {
+			System.out.println("ERROR: Could not get image (cannonTower.png)");
+		}
+		w = _cannonsprite.getWidth();
+		h = _cannonsprite.getHeight();
+		scaled = new BufferedImage(3*w, 3*h, _cannonsprite.getType());
+		g = scaled.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g.drawImage(_cannonsprite, 0, 0, 3*w, 3*h, 0, 0, w, h, null);
+	    g.dispose();
+	    _cannonsprite = scaled;
 	    
 	    
 	    

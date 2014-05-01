@@ -47,13 +47,10 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private boolean _hasMain;
 	private boolean _hasMap;
 	private boolean _showMap;
-	private List<AbstractTower> _towers;
 	private AbstractTower _candidate;
 	private boolean _validPlace;
 	private AbstractTower _placedTower;
-	
-	private MapNode base;
-	
+		
 	private Vec2i _size;
 	private double[] wMin = {0,0};
 	private double[] wMax = {0,0};
@@ -102,26 +99,14 @@ public class TestFrontEnd extends SwingFrontEnd {
 		}
 	}
 
-	///*
 	@Override
 	protected void onDraw(Graphics2D g) {
-
-		//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		//AffineTransform af = new AffineTransform(_size.x*(wMax[0]-wMin[0]), 0, 0, -1*_size.y*(wMax[1]-wMin[1]), -1*_size.x*wMin[0]/(wMax[0]-wMin[0]), _size.y*wMax[1]/(wMax[1]-wMin[1]));
-		//g.setTransform(_at);
-
-
 
 		if (_hasMain) {
 			_mm.draw(g);
 		}
 		else if (_showMap) {
-			
-			
 
-			
-			
-			
 			float defaultstroke = 10000 / DEFAULT_WINDOW_SIZE.x;
 			
 			g.translate(CONSOLE_WIDTH, 0);
@@ -129,162 +114,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 			//g.setStroke(new BasicStroke(10000 / DEFAULT_WINDOW_SIZE.x));
 			g.setStroke(new BasicStroke(defaultstroke));
 
-			
-
-			
-//			for(MapWay w : _m.getWays()) {
-//				List<MapNode> nList = w.getNodes();
-//				for(int i=1; i<nList.size(); i++) {
-//					//System.out.println(nList.get(i)._coords);
-//					//g.drawLine(lonToX(nList.get(i-1).getX()), latToY(nList.get(i-1).getY()), lonToX(nList.get(i).getX()), latToY(nList.get(i).getY()));
-//					//g.drawLine((int) nList.get(i-1).getX(), (int) nList.get(i-1).getY(), (int) nList.get(i).getX(), (int) nList.get(i).getY());
-//					g.draw(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
-//				}
-//			}
-
-
-
-			g.setColor(new Color(144,238,144));
-			if (_m.getLanduse() != null) {
-				for (Building b: _m.getLanduse()) {
-					g.fill(b.getPolygon());
-				}
-			}
-			
-			if (_m.getWaterways() != null) {
-				g.setColor(new Color(173,216,230));
-				for (Building b: _m.getWaterways()) {
-					g.fill(b.getPolygon());
-				}
-			}
-			
-
-			g.setColor(new Color(255,222,173));
-			g.setStroke(new BasicStroke(defaultstroke * 3));
-			for (Line2D l: _highline2D) {
-				g.draw(l);
-			}
-			
-			g.setColor(new Color(178,34,34));
-			g.setStroke(new BasicStroke(defaultstroke));
-			if (_m.getFootways() != null) {
-				for(MapWay h : _m.getFootways()) {
-					List<MapNode> nList = h.getNodes();
-					for(int i=1; i<nList.size(); i++) {
-						g.draw(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
-					}
-				}
-			}
-			
-			g.setColor(new Color(255,222,173));
-			g.setStroke(new BasicStroke(6*defaultstroke));
-			if (_m.getResidential() != null) {
-				for(MapWay h : _m.getResidential()) {
-					List<MapNode> nList = h.getNodes();
-					for(int i=1; i<nList.size(); i++) {
-						g.draw(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
-					}
-				}
-			}
-			
-			g.setColor(new Color(255,215,0));
-			g.setStroke(new BasicStroke(6*defaultstroke));
-			if (_m.getSecondary() != null) {
-				for(MapWay h : _m.getSecondary()) {
-					List<MapNode> nList = h.getNodes();
-					for(int i=1; i<nList.size(); i++) {
-						g.draw(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
-					}
-				}
-			}
-			
-			g.setColor(new Color(250,128,114));
-			g.setStroke(new BasicStroke(6*defaultstroke));
-			if (_m.getTertiary() != null) {
-				for(MapWay h : _m.getTertiary()) {
-					List<MapNode> nList = h.getNodes();
-					for(int i=1; i<nList.size(); i++) {
-						g.draw(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
-					}
-				}
-			}
-
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			g.setColor(Color.GRAY.brighter());
-			for (Building b: _m.getBuildings()) {
-				g.fill(b.getPolygon());
-			}
-			
-			//DONT DELETE THIS
-			//Getting rid of overlap
-//			g.setColor(Color.BLACK);
-//			g.setFont(new Font("Helvetica", Font.BOLD, 110));
-//			for (Building b: _m.getBuildings()) {
-//				Rectangle2D r = b.getPolygon().getBounds();
-//				if (b.getName() != null) {
-//					String[] namearr = b.getName().split("\\s+");
-//					FontMetrics fm = g.getFontMetrics();
-//					boolean draw = true;
-//					for (int i = 0; i < namearr.length; i++) {
-//						if (fm.stringWidth(namearr[i]) > r.getWidth()) {
-//							draw = false;
-//							break;
-//						}
-//					}
-//					if ((namearr.length * fm.getHeight() < r.getHeight()) && (draw)) {
-//						for (int i = 0; i < namearr.length; i++) {
-//							g.drawString(namearr[i], (int) r.getX() + 100, (int) r.getCenterY() - 50 + 110*i);
-//						}
-//					}
-//				}
-//			}
-			//DONT DELETE THIS
-
-			
-			//DONT DELETE THIS
-			//All names
-			g.setColor(Color.BLACK);
-			g.setFont(new Font("Helvetica", Font.BOLD, 110));
-			for (Building b: _m.getBuildings()) {
-				Rectangle2D r = b.getPolygon().getBounds();
-				if (b.getName() != null) {
-					String[] namearr = b.getName().split("\\s+");
-					FontMetrics fm = g.getFontMetrics();
-					for (int i = 0; i < namearr.length; i++) {
-						g.drawString(namearr[i], (int) r.getX() + 100, (int) r.getCenterY() - 50 + 110*i);
-					}
-				}
-			}
-			//DONT DELETE THIS
-			
-			
-
-
-			g.setColor(java.awt.Color.BLUE);
-			for (Line2D l: _zombieline2D) {
-				g.draw(l);
-			}
-			
-			
-			/*
-			g.setColor(java.awt.Color.ORANGE);
-			for(MapNode n : _m.getSourceList()) {
-				g.fillOval((int) (n.getX()-35), (int) (n.getY()-35), 70, 70);
-			}
-			*/
-			
-
+			this.drawMap(g, defaultstroke);
 
 			for(AbstractTower t : _ref.towers()) {
 				t.draw2(g);
@@ -312,12 +142,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 				g.setColor(holder);
 			}
 			
-			g.setColor(java.awt.Color.CYAN);
-			
 			g.setStroke(new BasicStroke());
 			g.setTransform(new AffineTransform());
 			_c.draw(g);
-			
 			
 
 		}
@@ -325,6 +152,141 @@ public class TestFrontEnd extends SwingFrontEnd {
 			_screen.draw(g);
 		}
 
+	}
+	
+	public void drawMap(Graphics2D g, float defaultstroke) {
+		//Landuse
+		g.setColor(new Color(144,238,144));
+		if (_m.getLanduse() != null) {
+			for (Building b: _m.getLanduse()) {
+				g.fill(b.getPolygon());
+			}
+		}
+		
+		//Waterways
+		if (_m.getWaterways() != null) {
+			g.setColor(new Color(173,216,230));
+			for (Building b: _m.getWaterways()) {
+				g.fill(b.getPolygon());
+			}
+		}
+		
+		//Buildings
+		g.setColor(Color.GRAY.brighter());
+		for (Building b: _m.getBuildings()) {
+			g.fill(b.getPolygon());
+		}
+		
+		//DONT DELETE THIS
+		//Getting rid of overlap
+//		g.setColor(Color.BLACK);
+//		g.setFont(new Font("Helvetica", Font.BOLD, 110));
+//		for (Building b: _m.getBuildings()) {
+//			Rectangle2D r = b.getPolygon().getBounds();
+//			if (b.getName() != null) {
+//				String[] namearr = b.getName().split("\\s+");
+//				FontMetrics fm = g.getFontMetrics();
+//				boolean draw = true;
+//				for (int i = 0; i < namearr.length; i++) {
+//					if (fm.stringWidth(namearr[i]) > r.getWidth()) {
+//						draw = false;
+//						break;
+//					}
+//				}
+//				if ((namearr.length * fm.getHeight() < r.getHeight()) && (draw)) {
+//					for (int i = 0; i < namearr.length; i++) {
+//						g.drawString(namearr[i], (int) r.getX() + 100, (int) r.getCenterY() - 50 + 110*i);
+//					}
+//				}
+//			}
+//		}
+		//DONT DELETE THIS
+
+		
+		//DONT DELETE THIS
+		//All names
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Helvetica", Font.BOLD, 110));
+		for (Building b: _m.getBuildings()) {
+			Rectangle2D r = b.getPolygon().getBounds();
+			if (b.getName() != null) {
+				String[] namearr = b.getName().split("\\s+");
+				for (int i = 0; i < namearr.length; i++) {
+					g.drawString(namearr[i], (int) r.getX() + 100, (int) r.getCenterY() - 50 + 110*i);
+				}
+			}
+		}
+		//DONT DELETE THIS
+		
+		//All highways, draw thin
+		g.setColor(new Color(255,222,173));
+		g.setStroke(new BasicStroke(defaultstroke));
+		for (Line2D l: _highline2D) {
+			g.draw(l);
+		}
+		
+		//Footways
+		g.setColor(new Color(178,34,34));
+		g.setStroke(new BasicStroke(defaultstroke));
+		if (_m.getFootways() != null) {
+			for(MapWay h : _m.getFootways()) {
+				List<MapNode> nList = h.getNodes();
+				for(int i=1; i<nList.size(); i++) {
+					g.draw(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
+				}
+			}
+		}
+		
+		//Residential
+		g.setColor(new Color(255,222,173));
+		g.setStroke(new BasicStroke(6*defaultstroke));
+		if (_m.getResidential() != null) {
+			for(MapWay h : _m.getResidential()) {
+				List<MapNode> nList = h.getNodes();
+				for(int i=1; i<nList.size(); i++) {
+					g.draw(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
+				}
+			}
+		}
+		
+		//Secondary
+		g.setColor(new Color(255,215,0));
+		g.setStroke(new BasicStroke(6*defaultstroke));
+		if (_m.getSecondary() != null) {
+			for(MapWay h : _m.getSecondary()) {
+				List<MapNode> nList = h.getNodes();
+				for(int i=1; i<nList.size(); i++) {
+					g.draw(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
+				}
+			}
+		}
+		
+		//Tertiary
+		g.setColor(new Color(250,128,114));
+		g.setStroke(new BasicStroke(6*defaultstroke));
+		if (_m.getTertiary() != null) {
+			for(MapWay h : _m.getTertiary()) {
+				List<MapNode> nList = h.getNodes();
+				for(int i=1; i<nList.size(); i++) {
+					g.draw(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
+				}
+			}
+		}
+
+		//Zombie highways
+		g.setColor(java.awt.Color.BLUE);
+		g.setStroke(new BasicStroke(6*defaultstroke));
+		for (Line2D l: _zombieline2D) {
+			g.draw(l);
+		}
+		
+		/*
+		//Source nodes
+		g.setColor(java.awt.Color.ORANGE);
+		for(MapNode n : _m.getSourceList()) {
+			g.fillOval((int) (n.getX()-35), (int) (n.getY()-35), 70, 70);
+		}
+		*/
 	}
 	
 	public void makeMap(String add) {
@@ -369,11 +331,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 
 	@Override
-	protected void onKeyTyped(KeyEvent e) {
-
-	}
-	
-	
+	protected void onKeyTyped(KeyEvent e) {}
 
 	@Override
 	protected void onKeyPressed(KeyEvent e) {
@@ -439,10 +397,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	}
 
 	@Override
-	protected void onKeyReleased(KeyEvent e) {
-
-
-	}
+	protected void onKeyReleased(KeyEvent e) {}
 
 	@Override
 	protected void onMouseClicked(MouseEvent e) {
@@ -464,7 +419,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 				}
 			}
 			else if ((e.getX() > CONSOLE_WIDTH) && (_command != null)) {
-				Rectangle2D r = new Rectangle2D.Double(e.getX() - 5, e.getY() - 5, 10, 10);
 				if (_validPlace) {
 					_ref.addTower(parseConsoleTowerButton(e));
 					_c.unhighlight();
@@ -561,7 +515,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 			System.out.println("Bad tower button command. This should never happen");
 			return null;
 		}
-
 	}
 
 	@Override
@@ -603,16 +556,11 @@ public class TestFrontEnd extends SwingFrontEnd {
 				}
 
 				
-
-				
 				if (_candidate != null) {
 					if (_ref.getResources() - _candidate.getPrice() < 0) {
 						_candidate = null;
 					}
 				}
-				
-				
-				
 
 			}
 			else {
@@ -632,11 +580,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 	protected void onResize(Vec2i newSize) {
 		_size = newSize;
 		
-		
 		if (_hasMap) {
 			_m.setSize(newSize);
 		}
-		
 	}
 	
 	public static void main(String[] args) {
