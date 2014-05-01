@@ -34,8 +34,9 @@ public class Referee {
 	private ZombieFactory _zFactory;
 	private int _money;
 	private static final int STARTING_MONEY = 300;
-	private static final int STARTING_HEALTH = 100;
+	private static final int STARTING_HEALTH = 1;
 	private BufferedImage _basesprite;
+	private boolean _gameOver;
 	
 	
 	public Referee(Map m) {
@@ -44,6 +45,7 @@ public class Referee {
 		_towers = new LinkedList<AbstractTower>();
 		_money = STARTING_MONEY;
 		getBaseSprite();
+		_gameOver = false;
 	}
 	
 	private void getBaseSprite() {
@@ -96,6 +98,7 @@ public class Referee {
 			for(Zombie z : _zombies) {
 				if(_b.dealDamage(z.atttack(nanosSincePreviousTick))) {
 					_running = false;
+					_gameOver = true;
 					break;
 				}
 			}
@@ -241,6 +244,7 @@ public class Referee {
 	public void setMap(Map m) {
 		_m = m;
 		_b  = new Base(_m.getBaseNode(), _m.getBaseNode()._coords, this, _basesprite);
+		_b.setHealth(STARTING_HEALTH);
 		_towers.add(_b);
 		_zFactory = new ZombieFactory(_b);
 	}
@@ -262,6 +266,7 @@ public class Referee {
 		_towers.clear();
 		_money = STARTING_MONEY;
 		_towers.add(_b);
+		_gameOver = false;
 	}
 	
 	public boolean pause() {
@@ -289,5 +294,9 @@ public class Referee {
 	
 	public int getRound() {
 		return _round;
+	}
+	
+	public boolean getGameOver() {
+		return _gameOver;
 	}
 }

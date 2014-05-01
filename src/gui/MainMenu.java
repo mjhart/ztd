@@ -70,7 +70,7 @@ public class MainMenu {
 		new Text("Or choose from one", centerX("Or choose from one", 3*_w/2), _h/5);
 		new Text("of our locations", centerX("of our locations", 3*_w/2), _h/5 + c - 10);
 		
-		g.drawLine((int) (_w/2), (int) (_h/5), (int) (_w/2), (int) (4*_h/5));
+		g.drawLine((int) (_w/2), (int) (_h/5), (int) (_w/2), (int) (3*_h/5));
 		
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Helvetica", Font.BOLD, 15));

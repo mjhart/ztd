@@ -71,8 +71,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 		super(title, fullscreen, size);
 		super.setDebugMode(true);
 		
-		
-		
 		_tf = new TowerFactory();
 
 		_mm = new MainMenu(size.x, size.y);
@@ -101,17 +99,13 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onDraw(Graphics2D g) {
-
 		if (_hasMain) {
 			_mm.draw(g);
 		}
 		else if (_showMap) {
-
-			float defaultstroke = 10000 / DEFAULT_WINDOW_SIZE.x;
-			
 			g.translate(CONSOLE_WIDTH, 0);
 			g.scale((_size.x - CONSOLE_WIDTH) / 10000, (float) _size.y / 10000);
-			//g.setStroke(new BasicStroke(10000 / DEFAULT_WINDOW_SIZE.x));
+			float defaultstroke = 10000 / DEFAULT_WINDOW_SIZE.x;
 			g.setStroke(new BasicStroke(defaultstroke));
 
 			this.drawMap(g, defaultstroke);
@@ -127,29 +121,17 @@ public class TestFrontEnd extends SwingFrontEnd {
 				z.draw(g);
 			}
 			
-			// draw new tower
-			if (_candidate != null) {
-				_candidate.draw2(g);
-				Color holder = g.getColor();
-				if (_validPlace) {
-					g.setColor(new Color(0f, 1f, 0f, .5f));
-				}
-				else {
-					g.setColor(new Color(1f, 0f, 0f, .5f));
-				}
-				Ellipse2D e = new Ellipse2D.Float(_candidate.getCoords().x - (float) Math.sqrt(_candidate.getRadius()), _candidate.getCoords().y - (float) Math.sqrt(_candidate.getRadius()), (float) Math.sqrt(_candidate.getRadius()) * 2, (float) Math.sqrt(_candidate.getRadius()) * 2);
-				g.fill(e);
-				g.setColor(holder);
-			}
+			this.drawCandidate(g);
 			
 			g.setStroke(new BasicStroke());
 			g.setTransform(new AffineTransform());
 			_c.draw(g);
 			
-
+			this.checkGameOver();
 		}
 		if (_hasScreen) {
 			_screen.draw(g);
+			System.out.println("Drawing screen");
 		}
 
 	}
@@ -289,8 +271,33 @@ public class TestFrontEnd extends SwingFrontEnd {
 		*/
 	}
 	
+	public void drawCandidate(Graphics2D g) {
+		if (_candidate != null) {
+			_candidate.draw2(g);
+			Color holder = g.getColor();
+			if (_validPlace) {
+				g.setColor(new Color(0f, 1f, 0f, .5f));
+			}
+			else {
+				g.setColor(new Color(1f, 0f, 0f, .5f));
+			}
+			Ellipse2D e = new Ellipse2D.Float(_candidate.getCoords().x - (float) Math.sqrt(_candidate.getRadius()), _candidate.getCoords().y - (float) Math.sqrt(_candidate.getRadius()), (float) Math.sqrt(_candidate.getRadius()) * 2, (float) Math.sqrt(_candidate.getRadius()) * 2);
+			g.fill(e);
+			g.setColor(holder);
+		}
+	}
+	
+	public void checkGameOver() {
+		if (_ref.getGameOver()) {
+			_screen = new Screen("Game Over", _size.x, _size.y);
+			_hasMap = false;
+			_showMap = true;
+			_hasScreen = true;
+		}
+	}
+	
+	
 	public void makeMap(String add) {
-		
 		_ref = new Referee(_m);
 		try {
 			_m = new Map(add, _ref);
@@ -414,9 +421,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 				System.out.println(command);
 				String[] fw = command.split("\\s+");
 				_command = fw[0];
-				if (parseConsoleControlButton()) {
-					_command = null;
-				}
+			}
+			if (parseConsoleControlButton()) {
+				_command = null;
 			}
 			else if ((e.getX() > CONSOLE_WIDTH) && (_command != null)) {
 				if (_validPlace) {
@@ -440,7 +447,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 			}
 		}
 		else {
-			String command = _screen.contains(e.getX(), e.getY());
+			String command = _screen.contains(e.getX(), e.getY(), true);
 			if (command != null) {
 				String[] fw = command.split("\\s+");
 				_command = fw[0];
@@ -462,12 +469,16 @@ public class TestFrontEnd extends SwingFrontEnd {
 			_hasMain = true;
 			_hasMap = false;
 			_showMap = false;
+			_hasScreen = false;
+			_screen = null;
 			_highline2D.clear();
 			_c = null;
 			_m = null;
 			return true;
 		}
 		else if (_command.equals("Restart")) {
+			_hasScreen = false;
+			_screen = null;
 			_ref.restart();
 			_c.unhighlight();
 			_c.noUpgrades();
@@ -604,9 +615,5 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private float xToLon(double x) {
 		return (float) ((x - CONSOLE_WIDTH) / (float) (_size.x - CONSOLE_WIDTH) * 10000f);
 	}
-	
-
-	
-
 	
 }

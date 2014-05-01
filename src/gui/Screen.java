@@ -16,8 +16,7 @@ public class Screen {
 	private int _h; //Height of the whole frame
 	private Graphics2D g;
 	
-	private List<ControlButton> _cbs; //A list of control buttons. Needed to check for mouse clicks
-	private ControlButton _go;
+	private List<HugeButton> _cbs; //A list of control buttons. Needed to check for mouse clicks
 	private boolean _first;
 	private String _type;
 	private Text _t;
@@ -26,7 +25,7 @@ public class Screen {
 	public Screen(String type, int w, int h) {
 		_w = w;
 		_h = h;
-		_cbs = new ArrayList<ControlButton>();
+		_cbs = new ArrayList<HugeButton>();
 		this.g = null;
 		_first = true;
 		_type = type;
@@ -39,7 +38,7 @@ public class Screen {
 			if (_first) {
 				g.setColor(Color.BLACK);
 				g.setFont(new Font("Helvetica", Font.PLAIN, 15));
-				_cbs.add(new ControlButton("Continue", _w, _h/2, g));
+				_cbs.add(new HugeButton("Continue", _w, _h/2, g));
 				_first = false;
 			}
 			g.setFont(new Font("Helvetica", Font.PLAIN, 70));
@@ -52,23 +51,22 @@ public class Screen {
 		}
 		else if (_type.equals("Game Over")) {
 			if (_first) {
-				_cbs.add(new ControlButton("Restart", 3*_w/2, _h/5 + 3*c, g));
-				_cbs.add(new ControlButton("Main Menu", 3*_w/2, _h/5 + 4*c, g));
+				g.setColor(Color.BLACK);
+				g.setFont(new Font("Helvetica", Font.PLAIN, 15));
+				_cbs.add(new HugeButton("Restart", _w, _h/2, g));
+				_cbs.add(new HugeButton("Main Menu", _w, _h/2 + 60, g));
 				_first = false;
 			}
-			g.setColor(Color.WHITE);
-			g.setFont(new Font("Helvetica", Font.PLAIN, 30));
-			new Text("GAME OVER", centerX("PAUSE", _w), _h/10);
+			g.setFont(new Font("Helvetica", Font.PLAIN, 70));
+			_t = new Text("Game Over", _w, _h/5);
 		}
 		
 		java.awt.Color colorholder = g.getColor();
-		g.setColor(new Color(_background.getRed(), _background.getGreen(), _background.getBlue(), 100));
+		g.setColor(new Color(_background.getRed(), _background.getGreen(), _background.getBlue(), 150));
 		g.fill(new Rectangle2D.Float(0,0,_w,_h));
 		
-		g.setColor(Color.BLACK);
-		g.setFont(new Font("Helvetica", Font.PLAIN, 15));
-		for (ControlButton cb: _cbs) {
-			cb.draw(g, Color.GRAY.brighter());
+		for (HugeButton cb: _cbs) {
+			cb.draw(g, Color.GRAY);
 		}
 		
 		g.setColor(Color.BLACK);
@@ -87,22 +85,6 @@ public class Screen {
 	}
 	
 	
-	
-	
-	//Work in terms of vectors or x y?
-	public String contains(int x, int y) {
-		for (ControlButton cb: _cbs) {
-			if (cb.getRoundRect().contains(x, y)) {
-				cb.highlight();
-				return cb.getName();
-			}
-			else {
-				cb.unhighlight();
-			}
-		}
-		return null;
-	}
-	
 	private class Text {
 		private String _name;
 		private float x;
@@ -116,14 +98,10 @@ public class Screen {
 		public void draw() {
 			g.drawString(_name, x, y);
 		}
-		public void setName(String name) {
-			_name = name;
-		}
 	}
 	
-	//Work in terms of vectors or x y?
 	public String contains(int x, int y, boolean click) {
-		for (ControlButton cb: _cbs) {
+		for (HugeButton cb: _cbs) {
 			if (cb.getRoundRect().contains(x, y)) {
 				cb.highlight();
 				return cb.getName();
