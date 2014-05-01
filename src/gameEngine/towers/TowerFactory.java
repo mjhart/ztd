@@ -113,6 +113,9 @@ public class TowerFactory {
 		g.drawImage(_electricsprite, 0, 0, 5*w, 5*h, 0, 0, w, h, null);
 	    g.dispose();
 	    _electricsprite = scaled;
+	    
+	    // read goo sprite 
+	    _goosprite = _basicsprite;
 		
 		
 		
