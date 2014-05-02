@@ -1,7 +1,6 @@
 package mapbuilder;
 
 import java.awt.Polygon;
-import java.awt.geom.Line2D;
 import java.util.List;
 
 public class Building {

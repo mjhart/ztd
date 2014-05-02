@@ -43,6 +43,7 @@ public class Console2 {
 	private Color _background = Color.RED;
 	private float _tiheight;
 	private UpgradeInfo _ui;
+	private final float _tbwidth;
 
 	
 	private List<ControlButton> _cbs; //A list of control buttons. Needed to check for mouse clicks
@@ -52,6 +53,7 @@ public class Console2 {
 	public Console2(float x, float y, float w, float h, TowerFactory tf, Referee ref) {
 		System.out.println("making new console");
 		_cw = w;
+		_tbwidth = _cw/5;
 		_h = h;
 		_x = x;
 		_y = y;
@@ -89,6 +91,12 @@ public class Console2 {
 			_tbs.add(new TowerButton("Flame Tower", _cw*3/4, 2*_h/7, _tf.makeFlame(zero, _ref)));
 			_tbs.add(new TowerButton("Cannon Tower", _cw*5/4, 2*_h/7, _tf.makeCannon(zero, _ref)));
 			_tbs.add(new TowerButton("Electric Tower", _cw*7/4, 2*_h/7, _tf.makeElectric(zero, _ref)));
+			
+			_tbs.add(new TowerButton("Goo Tower", _cw/4, 2*_h/7 + _tbwidth + 5, _tf.makeGoo(zero, _ref)));
+			_tbs.add(new TowerButton("Laser Tower", _cw*3/4, 2*_h/7 + _tbwidth + 5, _tf.makeLaser(zero, _ref)));
+			_tbs.add(new TowerButton("Poison Tower", _cw*5/4, 2*_h/7 + _tbwidth + 5, _tf.makePoison(zero, _ref)));
+			_tbs.add(new TowerButton("Stun Tower", _cw*7/4, 2*_h/7 + _tbwidth + 5, _tf.makeStun(zero, _ref)));
+
 
 			_first = false;
 		}
@@ -147,7 +155,6 @@ public class Console2 {
 	private class TowerButton {
 		private String _name;
 		private RoundRectangle2D _r;
-		private final float _width = _cw/5;
 		private float x;
 		private float y;
 		private boolean _highlight;
@@ -157,9 +164,9 @@ public class Console2 {
 			_t = t;
 			_sprite = t.getSprite();
 			_name = name;
-			this.x = centerRect(_width, rightline);
+			this.x = centerRect(_tbwidth, rightline);
 			this.y = y;
-			_r = new RoundRectangle2D.Float(x,y,_width,_width, 5, 5);
+			_r = new RoundRectangle2D.Float(x,y,_tbwidth,_tbwidth, 5, 5);
 		}
 		public void draw() {
 			g.setColor(Color.BLACK);
@@ -169,12 +176,17 @@ public class Console2 {
 			String first = _name.substring(0, 1);
 			first.toUpperCase();
 			g.setFont(new Font("Helvetica", Font.BOLD, 20));
-			g.drawString(first, x+_width/4 +2, y + 25);
+			g.drawString(first, x+_tbwidth/4 +2, y + 25);
 			if (_highlight) {
 				g.setStroke(new BasicStroke(3));
 				g.setColor(Color.MAGENTA);
 				g.draw(_r);
 				g.setStroke(new BasicStroke(1));
+			}
+			g.setColor(Color.ORANGE);
+			if (exOutTower(_t)) {
+				g.drawLine((int) x, (int) y, (int) (x + _tbwidth), (int) (y + _tbwidth));
+				g.drawLine((int) x, (int) (y + _tbwidth), (int) (x + _tbwidth), (int) y);
 			}
 		}
 		public RoundRectangle2D getRect() {
@@ -236,7 +248,9 @@ public class Console2 {
 		private RoundRectangle2D _back;
 		private ControlButton _halfdelay;
 		private ControlButton _doubledamage;
-		public UpgradeInfo(float rightline, float y) {
+		private AbstractTower _t;
+		public UpgradeInfo(float rightline, float y, AbstractTower t) {
+			_t = t;
 			this.x = centerRect(_width, rightline);
 			this.y = y;
 			_back = new RoundRectangle2D.Float(x,y,_width,_width + 30, 5, 5);
@@ -252,6 +266,17 @@ public class Console2 {
 			g.draw(_back);
 			_halfdelay.draw(g, _background);
 			_doubledamage.draw(g, _background);
+			g.setColor(Color.ORANGE);
+			if (exOutUpgrade(1,_t)) {
+				RoundRectangle2D r = _halfdelay.getRoundRect();
+				g.drawLine((int) r.getX(), (int) r.getY(), (int) (r.getX() + r.getWidth()), (int) (r.getY() + r.getHeight()));
+				g.drawLine((int) r.getX(), (int) (r.getY() + r.getHeight()), (int) (r.getX() + r.getWidth()),(int) r.getY());
+			}
+			if (exOutUpgrade(2,_t)) {
+				RoundRectangle2D r = _doubledamage.getRoundRect();
+				g.drawLine((int) r.getX(), (int) r.getY(), (int) (r.getX() + r.getWidth()), (int) (r.getY() + r.getHeight()));
+				g.drawLine((int) r.getX(), (int) (r.getY() + r.getHeight()), (int) (r.getX() + r.getWidth()),(int) r.getY());
+			}
 		}
 		public void removeButtons() {
 			_cbs.remove(_halfdelay);
@@ -260,7 +285,6 @@ public class Console2 {
 			_doubledamage = null;
 		}
 	}
-	
 	
 	private class Text {
 		private String _name;
@@ -310,8 +334,8 @@ public class Console2 {
 		}
 	}
 	
-	public void showUpgrades() {
-		_ui = new UpgradeInfo(_cw, _tiheight);	}
+	public void showUpgrades(AbstractTower t) {
+		_ui = new UpgradeInfo(_cw, _tiheight, t);	}
 	
 	public void noUpgrades() {
 		if (_ui != null) {
@@ -333,6 +357,19 @@ public class Console2 {
 	private void getResources() {
 		int i = _ref.getResources();
 		_resources = new Text("Resources: " + i, _cw, _h/7 + 4*_textoffset);
+	}
+	
+	private boolean exOutTower(AbstractTower t) {
+		return (_ref.getResources() - t.getPrice() < 0);
+	}
+	
+	private boolean exOutUpgrade(int i, AbstractTower t) {
+		int z = t.getUpgradeCost(i); //1 indicates HD, 2 is DD
+		boolean y = t.isUpgraded(i);
+		if ((_ref.getResources() - z < 0) || (y)) {
+			return true;
+		}
+		return false;
 	}
 	
 	

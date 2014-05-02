@@ -33,8 +33,8 @@ public class Referee {
 	private List<AbstractTower> _towers;
 	private ZombieFactory _zFactory;
 	private int _money;
-	private static final int STARTING_MONEY = 300;
-	private static final int STARTING_HEALTH = 1;
+	private static final int STARTING_MONEY = 1000;
+	private static final int STARTING_HEALTH = 100;
 	private BufferedImage _basesprite;
 	private boolean _gameOver;
 	

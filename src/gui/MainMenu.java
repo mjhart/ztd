@@ -41,8 +41,8 @@ public class MainMenu {
 	public void draw(Graphics2D g) {
 		this.g = g;
 		if (_first) {
-			_go = new ControlButton("GO", _w/2, 3*_h/5, g);
 			int c = 30;
+			_go = new ControlButton("GO", _w/2, _h/5 + 3*c, g);
 			_addline1 = new EditableTextBox(_etbwidth, _w/2, _h/5 + c);
 			_addline2 = new EditableTextBox(_etbwidth, _w/2, _h/5 + 2*c);
 			_cbs.add(new ControlButton("Brown University", 3*_w/2, _h/5 + 2*c, g));

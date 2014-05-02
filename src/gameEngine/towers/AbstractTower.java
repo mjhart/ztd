@@ -26,6 +26,10 @@ public abstract class AbstractTower {
 	protected Referee _ref;
 	private Set<Projectile> _projectiles;
 	private BufferedImage _sprite;
+	private boolean _doubled = false;
+	private boolean _faster = false;
+	private final int HALF_DELAY_COST = 200;
+	private final int DOUBLE_DAMAGE_COST = 200;
 	
 	public AbstractTower(int damage, float radius, long delay, int price, Vec2f vec, Referee ref, BufferedImage sprite) {
 		_damage = damage;
@@ -109,10 +113,30 @@ public abstract class AbstractTower {
 	
 	public void doubleDamage() {
 		_damage = 2*_damage;
+		_doubled = true;
 	}
 	
 	public void halfDelay() {
 		_delay = _delay/2;
+		_faster = true;
+	}
+	
+	public int getUpgradeCost(int i) {
+		if (i == 1) {
+			return HALF_DELAY_COST;
+		}
+		else {
+			return DOUBLE_DAMAGE_COST;
+		}
+	}
+	
+	public boolean isUpgraded(int i) {
+		if (i == 1) {
+			return _faster;
+		}
+		else {
+			return _doubled;
+		}
 	}
 	
 	public void removeProjectile(Projectile p) {

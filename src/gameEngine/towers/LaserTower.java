@@ -19,7 +19,7 @@ public class LaserTower extends AbstractTower {
 	private boolean _animate = false;
 	
 	public LaserTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(30, 100, 2000000000, 180, vec, ref, sprite);
+		super(30, 250000, 2000000000, 180, vec, ref, sprite);
 	}
 
 	@Override

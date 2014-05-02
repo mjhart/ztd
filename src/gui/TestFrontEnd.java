@@ -131,7 +131,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 		}
 		if (_hasScreen) {
 			_screen.draw(g);
-			System.out.println("Drawing screen");
 		}
 
 	}
@@ -422,31 +421,81 @@ public class TestFrontEnd extends SwingFrontEnd {
 				String[] fw = command.split("\\s+");
 				_command = fw[0];
 			}
-			if (parseConsoleControlButton()) {
-				_command = null;
+
+
+			if (command != null) {
+				if (parseConsoleControlButton()) {
+					_command = null;
+				}
 			}
-			else if ((e.getX() > CONSOLE_WIDTH) && (_command != null)) {
-				if (_validPlace) {
-					_ref.addTower(parseConsoleTowerButton(e));
+			else {
+				if ((e.getX() > CONSOLE_WIDTH) && (_command != null)) {
+					if (_validPlace) {
+						_ref.addTower(parseConsoleTowerButton(e));
+						_c.unhighlight();
+						_command = null;
+						_candidate = null;
+					}
+				}
+				else if ((e.getX() > CONSOLE_WIDTH) && (_command == null)) {
+					for (AbstractTower t: _ref.towers()) {
+						if (t.contains(xToLon(e.getX()), yToLat(e.getY()))) {
+							_placedTower = t;
+							_c.showUpgrades(t);
+							break;
+						}
+					}
+				}
+				else {
 					_c.unhighlight();
+					_c.noUpgrades();
 					_command = null;
 					_candidate = null;
 				}
 			}
-			else if (command == null) {
-				_command = null;
-				_c.unhighlight();
-				_c.noUpgrades();
-				for (AbstractTower t: _ref.towers()) {
-					if (t.contains(xToLon(e.getX()), yToLat(e.getY()))) {
-						_placedTower = t;
-						_c.showUpgrades();
-						break;
-					}
-				}
-			}
 		}
-		else {
+		//		else if (_hasMap) {
+		//			String command = _c.contains(e.getX(), e.getY());
+		//			if (command != null) {
+		//				_c.noUpgrades();
+		//				System.out.println(command);
+		//				String[] fw = command.split("\\s+");
+		//				_command = fw[0];
+		//			}
+		//
+		//			
+		//			if (_command != null) {
+		//				if (parseConsoleControlButton()) {
+		//					_command = null;
+		//				}
+		//			}
+		//			else if ((e.getX() > CONSOLE_WIDTH) && (_command != null)) {
+		//				if (_validPlace) {
+		//					_ref.addTower(parseConsoleTowerButton(e));
+		//					_c.unhighlight();
+		//					_command = null;
+		//					_candidate = null;
+		//				}
+		//			}
+		//			else if ((e.getX() > CONSOLE_WIDTH) && (_command == null)) {
+		//				for (AbstractTower t: _ref.towers()) {
+		//					if (t.contains(xToLon(e.getX()), yToLat(e.getY()))) {
+		//						_placedTower = t;
+		//						_c.showUpgrades();
+		//						break;
+		//					}
+		//				}
+		//			}
+		//			
+		//			
+		//			//Should I really do this?
+		//			if (command == null) {
+		//				_command = null;
+		//				_c.unhighlight();
+		//				_c.noUpgrades();
+		//			}
+		//		}
+		else if (_hasScreen) {
 			String command = _screen.contains(e.getX(), e.getY(), true);
 			if (command != null) {
 				String[] fw = command.split("\\s+");
@@ -459,7 +508,15 @@ public class TestFrontEnd extends SwingFrontEnd {
 	}
 	
 	private boolean parseConsoleControlButton() {
-		if (_command.equals("Start")) {
+		if (_command.equals("Halve")) {
+			_placedTower.halfDelay();
+			return true;
+		}
+		else if (_command.equals("Double")) {
+			_placedTower.doubleDamage();
+			return true;
+		}
+		else if (_command.equals("Start")) {
 			_ref.startGame();
 			_c.unhighlight();
 			_c.noUpgrades();
@@ -521,6 +578,18 @@ public class TestFrontEnd extends SwingFrontEnd {
 		}
 		else if (_command.equals("Flame")) {
 			return _tf.makeFlame(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+		}
+		else if (_command.equals("Goo")) {
+			return _tf.makeGoo(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+		}
+		else if (_command.equals("Laser")) {
+			return _tf.makeLaser(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+		}
+		else if (_command.equals("Poison")) {
+			return _tf.makePoison(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+		}
+		else if (_command.equals("Stun")) {
+			return _tf.makeStun(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
 		}
 		else {
 			System.out.println("Bad tower button command. This should never happen");

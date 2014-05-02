@@ -65,13 +65,6 @@ public class TowerFactory {
 		_flamesprite = img.getSubimage(0, 0, 48, 64);		
 		int w = _flamesprite.getWidth();
 		int h = _flamesprite.getHeight();
-//		BufferedImage scaled = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-//		AffineTransform at = new AffineTransform();
-//		at.scale(.3, .3);
-//		AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-//		scaled = scaleOp.filter(_flamesprite, scaled);
-//		_flamesprite = scaled;
-		
 		BufferedImage scaled = new BufferedImage(5*w, 5*h, _flamesprite.getType());
 		Graphics2D g = scaled.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -103,7 +96,7 @@ public class TowerFactory {
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (flames.png)");
 		}
-		_electricsprite = img.getSubimage(0, 0, 118, 118);		
+		_electricsprite = img.getSubimage(20, 0, 68, 118);		
 		w = _electricsprite.getWidth();
 		h = _electricsprite.getHeight();
 		
@@ -115,9 +108,28 @@ public class TowerFactory {
 	    _electricsprite = scaled;
 		
 		
+		// read goo sprite
+		try {
+			img = ImageIO.read(new File("towerpics/gooTowerSheet.png"));
+		} catch (IOException e) {
+			System.out.println("ERROR: Could not get image (flames.png)");
+		}
+		_goosprite = img.getSubimage(0, 0, 118, 118);		
+		w = _goosprite.getWidth();
+		h = _goosprite.getHeight();
+		scaled = new BufferedImage(4*w, 4*h, _goosprite.getType());
+		g = scaled.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g.drawImage(_goosprite, 0, 0, 4*w, 4*h, 0, 0, w, h, null);
+	    g.dispose();
+	    _goosprite = scaled;
 		
-		
-		
+		// read laser sprite
+		try {
+			_lasersprite = ImageIO.read(new File("towerpics/lasertower.gif"));
+		} catch (IOException e) {
+			System.out.println("ERROR: Could not get image (cannonTower.png)");
+		}
 		
 		
 		// read electric projectile sprites
@@ -218,3 +230,13 @@ public class TowerFactory {
 	}
 	
 }
+
+//Scaling options
+/*
+//BufferedImage scaled = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+//AffineTransform at = new AffineTransform();
+//at.scale(.3, .3);
+//AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+//scaled = scaleOp.filter(_flamesprite, scaled);
+//_flamesprite = scaled;
+*/
