@@ -239,7 +239,7 @@ public class Console2 {
 			g.drawString(_name, centerX(_name, _rightline), y + c);
 			g.drawString("Price: " + _t.getPrice(), x + 2, y + 2*c);
 			g.drawString("Damage: " + _t.getDamage(), x + 2, y + 3*c);
-			g.drawString("Radius: " + (int) _t.getRadius(), x + 2, y + 4*c);
+			g.drawString("Radius: " + (int) Math.sqrt(_t.getRadius()/10000), x + 2, y + 4*c);
 			g.drawString("Delay: " + _t.getDelay() + " secs", x + 2, y + 5*c);
 			String blurb = _t.getBlurb();
 			FontMetrics fm = g.getFontMetrics();

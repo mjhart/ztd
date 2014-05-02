@@ -132,22 +132,21 @@ public class TowerFactory {
 	    _goosprite = scaled;
 	    
 	    
-	    //NOT DONE DO NO UNCOMMENT UNLESS FOR EDITING
-//		// read poison sprite
-//		try {
-//			img = ImageIO.read(new File("towerpics/poisonSheet.png"));
-//		} catch (IOException e) {
-//			System.out.println("ERROR: Could not get image (flames.png)");
-//		}
-//		_goosprite = img.getSubimage(0, 0, 118, 118);		
-//		w = _goosprite.getWidth();
-//		h = _goosprite.getHeight();
-//		scaled = new BufferedImage(4*w, 4*h, _goosprite.getType());
-//		g = scaled.createGraphics();
-//		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-//		g.drawImage(_goosprite, 0, 0, 4*w, 4*h, 0, 0, w, h, null);
-//	    g.dispose();
-//	    _goosprite = scaled;
+		// read poison sprite
+		try {
+			img = ImageIO.read(new File("towerpics/poisontower.png"));
+		} catch (IOException e) {
+			System.out.println("ERROR: Could not get image (flames.png)");
+		}
+		_poisonsprite = img.getSubimage(10, 10, 108, 98);		
+		w = _poisonsprite.getWidth();
+		h = _poisonsprite.getHeight();
+		scaled = new BufferedImage(4*w, 4*h, _poisonsprite.getType());
+		g = scaled.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g.drawImage(_poisonsprite, 0, 0, 4*w, 4*h, 0, 0, w, h, null);
+	    g.dispose();
+	    _poisonsprite = scaled;
 		
 //		// read laser sprite
 //		try {

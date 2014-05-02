@@ -283,7 +283,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	
 	public void checkGameOver() {
 		if (_ref.getGameOver()) {
-			_screen = new Screen("Game Over", _size.x, _size.y);
+			_screen = new Screen("Game Over", _size.x, _size.y, _ref);
 			_hasMap = false;
 			_showMap = true;
 			_hasScreen = true;
@@ -417,10 +417,12 @@ public class TestFrontEnd extends SwingFrontEnd {
 							_c.unhighlightTb();
 							_command = null;
 							_candidate = null;
+							_c.noUpgrades();
 						}
 					}
 				}
 				else if ((e.getX() > CONSOLE_WIDTH) && (_command == null)) {
+					_c.noUpgrades();
 					for (AbstractTower t: _ref.towers()) {
 						if (t.contains(xToLon(e.getX()), yToLat(e.getY()))) {
 							_c.unhighlightTb();
@@ -497,7 +499,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 			return true;
 		}
 		else if (_command.equals("Pause")) {
-			_screen = new Screen("Pause", _size.x, _size.y);
+			_screen = new Screen("Pause", _size.x, _size.y, _ref);
 			_hasMap = false;
 			_showMap = true;
 			_hasScreen = true;

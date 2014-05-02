@@ -8,6 +8,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+import gameEngine.Referee;
 
 
 public class Screen {
@@ -15,6 +16,7 @@ public class Screen {
 	private int _w; //Width of the whole frame
 	private int _h; //Height of the whole frame
 	private Graphics2D g;
+	private Referee _ref;
 	
 	private List<HugeButton> _cbs; //A list of control buttons. Needed to check for mouse clicks
 	private boolean _first;
@@ -22,9 +24,10 @@ public class Screen {
 	private Text _t;
 	private Color _background = Color.ORANGE;
 	
-	public Screen(String type, int w, int h) {
+	public Screen(String type, int w, int h, Referee ref) {
 		_w = w;
 		_h = h;
+		_ref = ref;
 		_cbs = new ArrayList<HugeButton>();
 		this.g = null;
 		_first = true;
@@ -59,6 +62,21 @@ public class Screen {
 			}
 			g.setFont(new Font("Helvetica", Font.PLAIN, 70));
 			_t = new Text("Game Over", _w, _h/5);
+		}
+		else if (_type.equals("Stats")) {
+			if (_first) {
+				g.setColor(Color.BLACK);
+				g.setFont(new Font("Helvetica", Font.PLAIN, 15));
+				_cbs.add(new HugeButton("Continue", _w, _h*2/3, g));
+				_first = false;
+			}
+			g.setFont(new Font("Helvetica", Font.PLAIN, 70));
+			_t = new Text("Stats", _w, _h/5);
+			int d = 30;
+			g.drawString("Zombies Killed: " + _ref.getZombiesKilled(), _w, _h/5 + d);
+			g.drawString("Interest Earned: " + _ref.getInterestEarned(), _w, _h/5 + 2*d);
+			
+
 		}
 		
 		java.awt.Color colorholder = g.getColor();

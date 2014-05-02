@@ -310,4 +310,14 @@ public class Referee {
 	public boolean getGameOver() {
 		return _gameOver;
 	}
+	
+	public int getZombiesKilled() {
+		//TODO
+		return 1;
+	}
+	
+	public int getInterestEarned() {
+		//TODO
+		return 1;
+	}
 }
