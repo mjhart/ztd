@@ -99,14 +99,21 @@ public class TowerFactory {
 		_electricsprite = img.getSubimage(20, 0, 68, 118);		
 		w = _electricsprite.getWidth();
 		h = _electricsprite.getHeight();
-		
 		scaled = new BufferedImage(5*w, 5*h, _electricsprite.getType());
 		g = scaled.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		g.drawImage(_electricsprite, 0, 0, 5*w, 5*h, 0, 0, w, h, null);
 	    g.dispose();
 	    _electricsprite = scaled;
+	    
+	    // TODO read goo sprite 
+	    _goosprite = _basicsprite;
+	    
+	    // TODO read poison sprite
+		_poisonsprite = _basicsprite;
 		
+		//TODO read laser sprite
+		_lasersprite = _basicsprite;
 		
 		// read goo sprite
 		try {
@@ -123,15 +130,45 @@ public class TowerFactory {
 		g.drawImage(_goosprite, 0, 0, 4*w, 4*h, 0, 0, w, h, null);
 	    g.dispose();
 	    _goosprite = scaled;
+	    
+	    
+	    //NOT DONE DO NO UNCOMMENT UNLESS FOR EDITING
+//		// read poison sprite
+//		try {
+//			img = ImageIO.read(new File("towerpics/poisonSheet.png"));
+//		} catch (IOException e) {
+//			System.out.println("ERROR: Could not get image (flames.png)");
+//		}
+//		_goosprite = img.getSubimage(0, 0, 118, 118);		
+//		w = _goosprite.getWidth();
+//		h = _goosprite.getHeight();
+//		scaled = new BufferedImage(4*w, 4*h, _goosprite.getType());
+//		g = scaled.createGraphics();
+//		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+//		g.drawImage(_goosprite, 0, 0, 4*w, 4*h, 0, 0, w, h, null);
+//	    g.dispose();
+//	    _goosprite = scaled;
 		
-		// read laser sprite
-		try {
-			_lasersprite = ImageIO.read(new File("towerpics/lasertower.gif"));
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (cannonTower.png)");
-		}
-		
-		
+//		// read laser sprite
+//		try {
+//			_lasersprite = ImageIO.read(new File("towerpics/lasertower.gif"));
+//		} catch (IOException e) {
+//			System.out.println("ERROR: Could not get image (cannonTower.png)");
+//		}
+//		_lasersprite = img.getSubimage(0, 0, 118, 118);		
+//		w = _lasersprite.getWidth();
+//		h = _lasersprite.getHeight();
+//		scaled = new BufferedImage(4*w, 4*h, _lasersprite.getType());
+//		g = scaled.createGraphics();
+//		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+//		g.drawImage(_lasersprite, 0, 0, 4*w, 4*h, 0, 0, w, h, null);
+//	    g.dispose();
+//	    _lasersprite = scaled;
+
+	    
+	    
+	    
+	    
 		// read electric projectile sprites
 		try {
 			img = ImageIO.read(new File("stuff/lightning.png"));

@@ -160,43 +160,43 @@ public class TestFrontEnd extends SwingFrontEnd {
 		
 		//DONT DELETE THIS
 		//Getting rid of overlap
-//		g.setColor(Color.BLACK);
-//		g.setFont(new Font("Helvetica", Font.BOLD, 110));
-//		for (Building b: _m.getBuildings()) {
-//			Rectangle2D r = b.getPolygon().getBounds();
-//			if (b.getName() != null) {
-//				String[] namearr = b.getName().split("\\s+");
-//				FontMetrics fm = g.getFontMetrics();
-//				boolean draw = true;
-//				for (int i = 0; i < namearr.length; i++) {
-//					if (fm.stringWidth(namearr[i]) > r.getWidth()) {
-//						draw = false;
-//						break;
-//					}
-//				}
-//				if ((namearr.length * fm.getHeight() < r.getHeight()) && (draw)) {
-//					for (int i = 0; i < namearr.length; i++) {
-//						g.drawString(namearr[i], (int) r.getX() + 100, (int) r.getCenterY() - 50 + 110*i);
-//					}
-//				}
-//			}
-//		}
-		//DONT DELETE THIS
-
-		
-		//DONT DELETE THIS
-		//All names
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Helvetica", Font.BOLD, 110));
 		for (Building b: _m.getBuildings()) {
 			Rectangle2D r = b.getPolygon().getBounds();
 			if (b.getName() != null) {
 				String[] namearr = b.getName().split("\\s+");
+				FontMetrics fm = g.getFontMetrics();
+				boolean draw = true;
 				for (int i = 0; i < namearr.length; i++) {
-					g.drawString(namearr[i], (int) r.getX() + 100, (int) r.getCenterY() - 50 + 110*i);
+					if (fm.stringWidth(namearr[i]) > r.getWidth()) {
+						draw = false;
+						break;
+					}
+				}
+				if ((namearr.length * fm.getHeight() < r.getHeight()) && (draw)) {
+					for (int i = 0; i < namearr.length; i++) {
+						g.drawString(namearr[i], (int) r.getX() + 100, (int) r.getCenterY() - 50 + 110*i);
+					}
 				}
 			}
 		}
+		//DONT DELETE THIS
+
+		
+		//DONT DELETE THIS
+		//All names
+//		g.setColor(Color.BLACK);
+//		g.setFont(new Font("Helvetica", Font.BOLD, 110));
+//		for (Building b: _m.getBuildings()) {
+//			Rectangle2D r = b.getPolygon().getBounds();
+//			if (b.getName() != null) {
+//				String[] namearr = b.getName().split("\\s+");
+//				for (int i = 0; i < namearr.length; i++) {
+//					g.drawString(namearr[i], (int) r.getX() + 100, (int) r.getCenterY() - 50 + 110*i);
+//				}
+//			}
+//		}
 		//DONT DELETE THIS
 		
 		//All highways, draw thin
@@ -369,37 +369,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 			}
 			_mm.keyTyped(s);
 		}
-		
-
-
-		if(e.getKeyCode()==39) {
-			wMax[0]+=0.0005;
-			wMin[0]+=0.0005;
-		}
-		if(e.getKeyCode()==37) {
-			wMax[0]-=0.0005;
-			wMin[0]-=0.0005;
-		}
-		if(e.getKeyCode()==38) {
-			wMax[1]+=0.0005;
-			wMin[1]+=0.0005;
-		}
-		if(e.getKeyCode()==40) {
-			wMax[1]-=0.0005;
-			wMin[1]-=0.0005;
-		}
-		if(e.getKeyCode()==81) {
-			wMax[0]-=0.0005;
-			wMin[0]+=0.0005;
-			wMax[1]-=0.0005;
-			wMin[1]+=0.0005;			
-		}
-		if(e.getKeyCode()==65) {
-			wMax[0]+=0.0005;
-			wMin[0]-=0.0005;
-			wMax[1]+=0.0005;
-			wMin[1]-=0.0005;			
-		}
 	}
 
 	@Override
@@ -454,48 +423,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 				}
 			}
 		}
-		//		else if (_hasMap) {
-		//			String command = _c.contains(e.getX(), e.getY());
-		//			if (command != null) {
-		//				_c.noUpgrades();
-		//				System.out.println(command);
-		//				String[] fw = command.split("\\s+");
-		//				_command = fw[0];
-		//			}
-		//
-		//			
-		//			if (_command != null) {
-		//				if (parseConsoleControlButton()) {
-		//					_command = null;
-		//				}
-		//			}
-		//			else if ((e.getX() > CONSOLE_WIDTH) && (_command != null)) {
-		//				if (_validPlace) {
-		//					_ref.addTower(parseConsoleTowerButton(e));
-		//					_c.unhighlight();
-		//					_command = null;
-		//					_candidate = null;
-		//				}
-		//			}
-		//			else if ((e.getX() > CONSOLE_WIDTH) && (_command == null)) {
-		//				for (AbstractTower t: _ref.towers()) {
-		//					if (t.contains(xToLon(e.getX()), yToLat(e.getY()))) {
-		//						_placedTower = t;
-		//						_c.showUpgrades();
-		//						break;
-		//					}
-		//				}
-		//			}
-		//			
-		//			
-		//			//Should I really do this?
-		//			if (command == null) {
-		//				_command = null;
-		//				_c.unhighlight();
-		//				_c.noUpgrades();
-		//			}
-		//		}
-		else if (_hasScreen) {
+		else if(_hasScreen) {
+
 			String command = _screen.contains(e.getX(), e.getY(), true);
 			if (command != null) {
 				String[] fw = command.split("\\s+");
@@ -568,7 +497,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	
 	private AbstractTower parseConsoleTowerButton(MouseEvent e) {
 		if (_command.equals("Basic")) {
-			return _tf.makeBasic(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+			return _tf.makeLaser(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
 		}
 		else if (_command.equals("Cannon")) {
 			return _tf.makeCannon(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);

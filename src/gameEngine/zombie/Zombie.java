@@ -2,6 +2,7 @@ package gameEngine.zombie;
 
 import gameEngine.Base;
 
+import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -12,10 +13,12 @@ import cs195n.Vec2i;
 
 public abstract class Zombie {
 	private Vec2f _coords;
+	private int _startHealth;
 	private int _health;
 	private int _strength;
 	private MapNode _target;
 	private float _speed;
+	private float _startSpeed;
 	private long _nanoSincePrevAttack;
 	private BufferedImage[] _sprites;
 	private BufferedImage[] _attack;
@@ -29,9 +32,11 @@ public abstract class Zombie {
 	public Zombie(Vec2f coords, int health, int strength, MapNode target, float speed, BufferedImage[] sprites, BufferedImage[] attack, Base base) {
 		_coords = coords;
 		_health = health;
+		_startHealth = health;
 		_strength = strength;
 		_target = target;
 		_speed = speed;
+		_startSpeed = _speed;
 		_sprites = sprites;
 		_dist = target.getDist();
 		_base = base;
@@ -103,11 +108,32 @@ public abstract class Zombie {
 		else {
 			g.drawImage(_sprites[_frame], af1, null);
 		}
+		
+		g.setColor(java.awt.Color.RED);
+		g.setStroke(new BasicStroke(20));
+		g.drawLine((int) _coords.x - 60, (int) _coords.y - 5, (int) _coords.x + 60, (int) _coords.y - 5);
+		g.setColor(java.awt.Color.GREEN);
+		g.drawLine((int) _coords.x - 60, (int) _coords.y - 5, (int) (_coords.x - 60 + ((float)_health)/((float) _startHealth) * 120), (int) _coords.y - 5);
 		//g.setTransform(af);
 	}
 	
 	public double getDist() {
 		return _dist;
+	}
+	
+	public void setSpeed(float speed) {
+		if(speed >= 0) {
+			_speed = speed;
+		}
+		System.out.println(_speed);
+	}
+	
+	public float getSpeed() {
+		return _speed;
+	}
+	
+	public int getHealth() {
+		return _health;
 	}
 	
 	
