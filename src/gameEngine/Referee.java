@@ -258,6 +258,17 @@ public class Referee {
 		_money = _money - t.getPrice();
 	}
 	
+	public void upgradeTower(AbstractTower t, int i) {
+		if (i == 1) {
+			t.halfDelay();
+			_money = _money - t.getUpgradeCost(1);
+		}
+		else {
+			t.doubleDamage();
+			_money = _money - t.getUpgradeCost(2);
+		}
+	}
+	
 	public void restart() {
 		_running = false;
 		_round = 0;

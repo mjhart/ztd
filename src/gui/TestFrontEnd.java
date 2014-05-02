@@ -284,6 +284,19 @@ public class TestFrontEnd extends SwingFrontEnd {
 			g.fill(e);
 			g.setColor(holder);
 		}
+		
+		if (_placedTower != null) {
+			Color holder = g.getColor();
+			g.setColor(new Color(0f, 1f, 0f, .5f));
+			Ellipse2D e = new Ellipse2D.Float(
+					_placedTower.getCoords().x - (float) Math.sqrt(_placedTower.getRadius()),
+					_placedTower.getCoords().y - (float) Math.sqrt(_placedTower.getRadius()),
+					(float) Math.sqrt(_placedTower.getRadius()) * 2,
+					(float) Math.sqrt(_placedTower.getRadius()) * 2);
+			g.fill(e);
+			g.setColor(holder);
+		}
+		
 	}
 	
 	public void checkGameOver() {
@@ -389,26 +402,38 @@ public class TestFrontEnd extends SwingFrontEnd {
 				System.out.println(command);
 				String[] fw = command.split("\\s+");
 				_command = fw[0];
+
 			}
+			
 
 
 			if (command != null) {
 				if (parseConsoleControlButton()) {
+					if ((!_command.equals("Halve")) && (!_command.equals("Double"))) {
+						_placedTower = null;
+						_c.noUpgrades();
+					}
+					else {
+						_c.showUpgrades(_placedTower);
+					}
 					_command = null;
 				}
 			}
 			else {
 				if ((e.getX() > CONSOLE_WIDTH) && (_command != null)) {
 					if (_validPlace) {
-						_ref.addTower(parseConsoleTowerButton(e));
-						_c.unhighlight();
-						_command = null;
-						_candidate = null;
+						if (_candidate != null) {
+							_ref.addTower(_candidate);
+							_c.unhighlightTb();
+							_command = null;
+							_candidate = null;
+						}
 					}
 				}
 				else if ((e.getX() > CONSOLE_WIDTH) && (_command == null)) {
 					for (AbstractTower t: _ref.towers()) {
 						if (t.contains(xToLon(e.getX()), yToLat(e.getY()))) {
+							_c.unhighlightTb();
 							_placedTower = t;
 							_c.showUpgrades(t);
 							break;
@@ -416,10 +441,11 @@ public class TestFrontEnd extends SwingFrontEnd {
 					}
 				}
 				else {
-					_c.unhighlight();
+					_c.unhighlightTb();
 					_c.noUpgrades();
 					_command = null;
 					_candidate = null;
+					_placedTower = null;
 				}
 			}
 		}
@@ -438,16 +464,22 @@ public class TestFrontEnd extends SwingFrontEnd {
 	
 	private boolean parseConsoleControlButton() {
 		if (_command.equals("Halve")) {
-			_placedTower.halfDelay();
+			if ((_ref.getResources() - _placedTower.getUpgradeCost(1) >= 0)
+					&& (!_placedTower.isUpgraded(1))) {
+				_ref.upgradeTower(_placedTower, 1);
+			}
 			return true;
 		}
 		else if (_command.equals("Double")) {
-			_placedTower.doubleDamage();
+			if ((_ref.getResources() - _placedTower.getUpgradeCost(1) >= 0)
+					&& (!_placedTower.isUpgraded(1))) {
+				_ref.upgradeTower(_placedTower, 2);
+			}
 			return true;
 		}
 		else if (_command.equals("Start")) {
 			_ref.startGame();
-			_c.unhighlight();
+			_c.unhighlightTb();
 			_c.noUpgrades();
 			return true;
 		}
@@ -458,6 +490,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 			_hasScreen = false;
 			_screen = null;
 			_highline2D.clear();
+			_zombieline2D.clear();
 			_c = null;
 			_m = null;
 			return true;
@@ -466,9 +499,11 @@ public class TestFrontEnd extends SwingFrontEnd {
 			_hasScreen = false;
 			_screen = null;
 			_ref.restart();
-			_c.unhighlight();
+			_c.unhighlightTb();
 			_c.noUpgrades();
 			_command = null;
+			_placedTower = null;
+			_candidate = null;
 			return true;
 		}
 		else if (_command.equals("Pause")) {
@@ -497,7 +532,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	
 	private AbstractTower parseConsoleTowerButton(MouseEvent e) {
 		if (_command.equals("Basic")) {
-			return _tf.makeLaser(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
+			return _tf.makeBasic(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
 		}
 		else if (_command.equals("Cannon")) {
 			return _tf.makeCannon(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
@@ -544,33 +579,34 @@ public class TestFrontEnd extends SwingFrontEnd {
 		else if (_hasMap) {
 			if ((e.getX() > CONSOLE_WIDTH) && (_command != null)) {
 				_candidate = parseConsoleTowerButton(e);
-				BufferedImage sprite = _candidate.getSprite();
-				int w = sprite.getWidth();
-				int h = sprite.getHeight();
-				Rectangle2D r = new Rectangle2D.Double(xToLon(e.getX() + 3) - w/2, yToLat(e.getY() + 3) - h/2, w - 8, h - 8);
-				for (Line2D l: _zombieline2D) {
-					if (l.intersects(r)) {
-						_validPlace = false;
-						break;
+				//if (_candidate != null) {
+					BufferedImage sprite = _candidate.getSprite();
+					int w = sprite.getWidth();
+					int h = sprite.getHeight();
+					Rectangle2D r = new Rectangle2D.Double(xToLon(e.getX() + 3) - w/2, yToLat(e.getY() + 3) - h/2, w - 8, h - 8);
+					for (Line2D l: _zombieline2D) {
+						if (l.intersects(r)) {
+							_validPlace = false;
+							break;
+						}
+						else {
+							_validPlace = true;
+						}
 					}
-					else {
-						_validPlace = true;
+					for (AbstractTower t: _ref.towers()) {
+						if (t.intersectRect(r)) {
+							_validPlace = false;
+							break;
+						}
 					}
-				}
-				for (AbstractTower t: _ref.towers()) {
-					if (t.intersectRect(r)) {
-						_validPlace = false;
-						break;
-					}
-				}
 
-				
-				if (_candidate != null) {
-					if (_ref.getResources() - _candidate.getPrice() < 0) {
-						_candidate = null;
-					}
-				}
 
+					if (_candidate != null) {
+						if (_ref.getResources() - _candidate.getPrice() < 0) {
+							_candidate = null;
+						}
+					}
+				//}
 			}
 			else {
 				_candidate = null;
@@ -613,5 +649,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private float xToLon(double x) {
 		return (float) ((x - CONSOLE_WIDTH) / (float) (_size.x - CONSOLE_WIDTH) * 10000f);
 	}
+	
 	
 }

@@ -40,7 +40,7 @@ public class Console2 {
 	private boolean _first;
 	private TowerFactory _tf;
 	private Referee _ref;
-	private Color _background = Color.RED;
+	private Color _background = Color.GRAY;
 	private float _tiheight;
 	private UpgradeInfo _ui;
 	private final float _tbwidth;
@@ -51,7 +51,6 @@ public class Console2 {
 
 	
 	public Console2(float x, float y, float w, float h, TowerFactory tf, Referee ref) {
-		System.out.println("making new console");
 		_cw = w;
 		_tbwidth = _cw/5;
 		_h = h;
@@ -103,14 +102,15 @@ public class Console2 {
 		
 		java.awt.Color colorholder = g.getColor();
 		
-		g.setColor(_background);
+		//g.setColor(_background);
+		g.setColor(Color.WHITE);
 		g.fill(new Rectangle2D.Float(_x,_y,_cw,_h));
 		
-		g.setColor(Color.WHITE);
+		g.setColor(Color.BLACK);
 		g.setFont(new Font("Helvetica", Font.BOLD, 15));
 		_titleline1.draw();
 		_titleline2.draw();
-		g.setColor(java.awt.Color.ORANGE);
+		g.setColor(java.awt.Color.BLACK);
 		_round.draw();
 		_basehealth.draw();
 		_resources.draw();
@@ -177,16 +177,18 @@ public class Console2 {
 			first.toUpperCase();
 			g.setFont(new Font("Helvetica", Font.BOLD, 20));
 			g.drawString(first, x+_tbwidth/4 +2, y + 25);
+			g.setColor(Color.BLACK);
+			g.setStroke(new BasicStroke(2));
+			if (exOutTower(_t)) {
+				g.drawLine((int) x + 3, (int) y, (int) (x + _tbwidth - 1), (int) (y + _tbwidth));
+				g.drawLine((int) x + 3, (int) (y + _tbwidth), (int) (x + _tbwidth - 1), (int) y);
+			}
+			g.setStroke(new BasicStroke(1));
 			if (_highlight) {
 				g.setStroke(new BasicStroke(3));
 				g.setColor(Color.MAGENTA);
 				g.draw(_r);
 				g.setStroke(new BasicStroke(1));
-			}
-			g.setColor(Color.ORANGE);
-			if (exOutTower(_t)) {
-				g.drawLine((int) x, (int) y, (int) (x + _tbwidth), (int) (y + _tbwidth));
-				g.drawLine((int) x, (int) (y + _tbwidth), (int) (x + _tbwidth), (int) y);
 			}
 		}
 		public RoundRectangle2D getRect() {
@@ -266,17 +268,29 @@ public class Console2 {
 			g.draw(_back);
 			_halfdelay.draw(g, _background);
 			_doubledamage.draw(g, _background);
-			g.setColor(Color.ORANGE);
+			g.setColor(Color.BLACK);
+			g.setStroke(new BasicStroke(2));
 			if (exOutUpgrade(1,_t)) {
 				RoundRectangle2D r = _halfdelay.getRoundRect();
-				g.drawLine((int) r.getX(), (int) r.getY(), (int) (r.getX() + r.getWidth()), (int) (r.getY() + r.getHeight()));
-				g.drawLine((int) r.getX(), (int) (r.getY() + r.getHeight()), (int) (r.getX() + r.getWidth()),(int) r.getY());
+				g.drawLine((int) r.getX() + 2, (int) r.getY(), (int) (r.getX() + r.getWidth() - 2), (int) (r.getY() + r.getHeight()));
+				g.drawLine((int) r.getX() + 2, (int) (r.getY() + r.getHeight()), (int) (r.getX() + r.getWidth() - 2),(int) r.getY());
 			}
 			if (exOutUpgrade(2,_t)) {
 				RoundRectangle2D r = _doubledamage.getRoundRect();
-				g.drawLine((int) r.getX(), (int) r.getY(), (int) (r.getX() + r.getWidth()), (int) (r.getY() + r.getHeight()));
-				g.drawLine((int) r.getX(), (int) (r.getY() + r.getHeight()), (int) (r.getX() + r.getWidth()),(int) r.getY());
+				g.drawLine((int) r.getX() + 2, (int) r.getY(), (int) (r.getX() + r.getWidth() - 2), (int) (r.getY() + r.getHeight()));
+				g.drawLine((int) r.getX() + 2, (int) (r.getY() + r.getHeight()), (int) (r.getX() + r.getWidth() - 2),(int) r.getY());
 			}
+			g.setColor(new Color(1f, 0f, 0f, .5f));
+			if (colorOutUpgrade(1,_t)) {
+				RoundRectangle2D r = _halfdelay.getRoundRect();
+				g.fill(r);
+			}
+			if (colorOutUpgrade(2,_t)) {
+				RoundRectangle2D r = _doubledamage.getRoundRect();
+				g.fill(r);
+			}
+			g.setColor(Color.BLACK);
+			g.setStroke(new BasicStroke(1));
 		}
 		public void removeButtons() {
 			_cbs.remove(_halfdelay);
@@ -319,8 +333,7 @@ public class Console2 {
 		}
 		for (TowerButton tb: _tbs) {
 			if (tb.getRect().contains(x, y)) {
-				System.out.println(tb.getName());
-				this.unhighlight();
+				this.unhighlightTb();
 				tb.highlight();
 				return tb.getName();
 			}
@@ -328,7 +341,7 @@ public class Console2 {
 		return null;
 	}
 	
-	public void unhighlight() {
+	public void unhighlightTb() {
 		for (TowerButton tb: _tbs) {
 			tb.unhighlight();
 		}
@@ -365,11 +378,11 @@ public class Console2 {
 	
 	private boolean exOutUpgrade(int i, AbstractTower t) {
 		int z = t.getUpgradeCost(i); //1 indicates HD, 2 is DD
-		boolean y = t.isUpgraded(i);
-		if ((_ref.getResources() - z < 0) || (y)) {
-			return true;
-		}
-		return false;
+		return _ref.getResources() - z < 0;
+	}
+	
+	private boolean colorOutUpgrade(int i, AbstractTower t) {
+		return t.isUpgraded(i);
 	}
 	
 	
