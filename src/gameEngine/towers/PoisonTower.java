@@ -1,5 +1,6 @@
 package gameEngine.towers;
 
+import gameEngine.Constants;
 import gameEngine.Referee;
 import gameEngine.projectile.BasicProjectile;
 import gameEngine.projectile.GooProjectile;
@@ -17,7 +18,7 @@ import cs195n.Vec2i;
 public class PoisonTower extends AbstractTower {
 
 	public PoisonTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(10, 1000000, 3000000000l, 250, vec, ref, sprite);
+		super(10, 1000000, 3000000000l, 250, Constants.POISON_BLURB, vec, ref, sprite);
 		
 	}
 	

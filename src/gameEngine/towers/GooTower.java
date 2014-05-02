@@ -1,5 +1,6 @@
 package gameEngine.towers;
 
+import gameEngine.Constants;
 import gameEngine.Referee;
 import gameEngine.projectile.BasicProjectile;
 import gameEngine.projectile.GooProjectile;
@@ -17,7 +18,7 @@ import cs195n.Vec2i;
 public class GooTower extends AbstractTower {
 
 	public GooTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(10, 1000000, 2000000000, 150, vec, ref, sprite);
+		super(10, 1000000, 2000000000, 150, Constants.GOO_BLURB, vec, ref, sprite);
 	}
 	
 	@Override

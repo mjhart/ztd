@@ -22,6 +22,7 @@ public abstract class AbstractTower {
 	protected float _radius;
 	protected long _delay;
 	private int _price;
+	private String _blurb;
 	protected Vec2f _vec;
 	protected Referee _ref;
 	private Set<Projectile> _projectiles;
@@ -31,11 +32,12 @@ public abstract class AbstractTower {
 	private final int HALF_DELAY_COST = 200;
 	private final int DOUBLE_DAMAGE_COST = 200;
 	
-	public AbstractTower(int damage, float radius, long delay, int price, Vec2f vec, Referee ref, BufferedImage sprite) {
+	public AbstractTower(int damage, float radius, long delay, int price, String blurb, Vec2f vec, Referee ref, BufferedImage sprite) {
 		_damage = damage;
 		_radius = radius;
 		_delay = delay;
 		_price = price;
+		_blurb = blurb;
 		_vec = vec;
 		_ref = ref;
 		_projectiles = new HashSet<Projectile>();
@@ -162,6 +164,9 @@ public abstract class AbstractTower {
 	}
 	public int getPrice() {
 		return _price;
+	}
+	public String getBlurb() {
+		return _blurb;
 	}
 	
 }

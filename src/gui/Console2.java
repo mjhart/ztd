@@ -89,11 +89,12 @@ public class Console2 {
 			_tbs.add(new TowerButton("Basic Tower", _cw/4, 2*_h/7, _tf.makeBasic(zero, _ref)));
 			_tbs.add(new TowerButton("Flame Tower", _cw*3/4, 2*_h/7, _tf.makeFlame(zero, _ref)));
 			_tbs.add(new TowerButton("Cannon Tower", _cw*5/4, 2*_h/7, _tf.makeCannon(zero, _ref)));
-			_tbs.add(new TowerButton("Electric Tower", _cw*7/4, 2*_h/7, _tf.makeElectric(zero, _ref)));
+			_tbs.add(new TowerButton("Goo Tower", _cw*7/4, 2*_h/7, _tf.makeGoo(zero, _ref)));
+
 			
-			_tbs.add(new TowerButton("Goo Tower", _cw/4, 2*_h/7 + _tbwidth + 5, _tf.makeGoo(zero, _ref)));
-			_tbs.add(new TowerButton("Laser Tower", _cw*3/4, 2*_h/7 + _tbwidth + 5, _tf.makeLaser(zero, _ref)));
-			_tbs.add(new TowerButton("Poison Tower", _cw*5/4, 2*_h/7 + _tbwidth + 5, _tf.makePoison(zero, _ref)));
+			_tbs.add(new TowerButton("Poison Tower", _cw/4, 2*_h/7 + _tbwidth + 5, _tf.makePoison(zero, _ref)));
+			_tbs.add(new TowerButton("Electric Tower", _cw*3/4, 2*_h/7 + _tbwidth + 5, _tf.makeElectric(zero, _ref)));
+			_tbs.add(new TowerButton("Laser Tower", _cw*5/4, 2*_h/7 + _tbwidth + 5, _tf.makeLaser(zero, _ref)));
 			//_tbs.add(new TowerButton("Stun Tower", _cw*7/4, 2*_h/7 + _tbwidth + 5, _tf.makeStun(zero, _ref)));
 
 
@@ -119,9 +120,7 @@ public class Console2 {
 			_info.draw();
 		}
 		
-		if (_ui != null) {
-			_ui.draw();
-		}
+
 		
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Helvetica", Font.BOLD, 15));
@@ -133,6 +132,10 @@ public class Console2 {
 		g.setFont(new Font("Helvetica", Font.BOLD, 15));
 		for (TowerButton tb: _tbs) {
 			tb.draw();
+		}
+		
+		if (_ui != null) {
+			_ui.draw();
 		}
 
 		g.setColor(colorholder);
@@ -223,7 +226,7 @@ public class Console2 {
 			_t = t;
 			this.x = centerRect(_width, rightline);
 			this.y = y;
-			_back = new RoundRectangle2D.Float(x,y,_width,_width + 30, 5, 5);
+			_back = new RoundRectangle2D.Float(x,y,_width,_width + 35, 5, 5);
 			_rightline = rightline;
 		}
 
@@ -231,43 +234,103 @@ public class Console2 {
 			g.setColor(Color.ORANGE);
 			g.draw(_back);
 			g.setColor(Color.BLACK);
-			g.setFont(new Font("Helvetica", Font.BOLD, 20));
-			int c = 30;
+			int c = 20;
 			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			g.drawString(_name, centerX(_name, _rightline), y + c);
 			g.drawString("Price: " + _t.getPrice(), x + 2, y + 2*c);
 			g.drawString("Damage: " + _t.getDamage(), x + 2, y + 3*c);
 			g.drawString("Radius: " + (int) _t.getRadius(), x + 2, y + 4*c);
 			g.drawString("Delay: " + _t.getDelay() + " secs", x + 2, y + 5*c);
+			String blurb = _t.getBlurb();
+			FontMetrics fm = g.getFontMetrics();
+			int d = fm.stringWidth(blurb);
+			if (d < _width) {
+				g.drawString(blurb, x + 2, y + 5*c);
+			}
+			else {
+				String[] strarr = blurb.split("\\s+");
+				String line1 = strarr[0];
+				int i = 1;
+				while (fm.stringWidth(line1) < _width) {
+					if (fm.stringWidth(line1 + " " + strarr[i]) < _width) {
+						line1 = line1 + " " + strarr[i];
+						i++;
+					}
+					else {
+						break;
+					}
+				}
+				String line2 = strarr[i];
+				i++;
+				while ((fm.stringWidth(line2) < _width) && (i < strarr.length)) {
+					if (fm.stringWidth(line2 + " " + strarr[i]) < _width) {
+						line2 = line2 + " " + strarr[i];
+						i++;
+					}
+					else {
+						break;
+					}
+				}
+				String line3 = "";
+				if (i < strarr.length) {
+					line3 = strarr[i];
+					for (int j = i+1; j < strarr.length; j++) {
+						line3 = line3 + " " + strarr[j];
+					}
+				}
+				g.drawString(line1,  x + 2, y + 7*c);
+				g.drawString(line2,  x + 2, y + 8*c);
+				g.drawString(line3,  x + 2, y + 9*c);
+
+			}
+
 		}
 	}
 	
 	
 	private class UpgradeInfo {
-		private final float _width = _cw - 20;
+		private final float _width = _cw - 16;
 		private float x;
 		private float y;
 		private RoundRectangle2D _back;
 		private ControlButton _halfdelay;
 		private ControlButton _doubledamage;
+		private Text _text1;
+		private Text _text2;
 		private AbstractTower _t;
 		public UpgradeInfo(float rightline, float y, AbstractTower t) {
 			_t = t;
 			this.x = centerRect(_width, rightline);
 			this.y = y;
 			_back = new RoundRectangle2D.Float(x,y,_width,_width + 30, 5, 5);
-			_halfdelay = new ControlButton("Halve Delay", rightline,  y + 30, g);
-			_doubledamage = new ControlButton("Double Damage", rightline,  y + 60, g);
+			g.setFont(new Font("Helvetica", Font.BOLD, 15));
+			_text1 = new Text("Upgrades cost 200", rightline, y + 50);
+			_text2 = new Text("resources each", rightline, y + 70);
+			_halfdelay = new ControlButton("Halve Delay", rightline,  y + 100, g);
+			_doubledamage = new ControlButton("Double Damage", rightline,  y + 130, g);
 			_cbs.add(_halfdelay);
 			_cbs.add(_doubledamage);
 
 		}
-
 		public void draw() {
 			g.setColor(Color.ORANGE);
 			g.draw(_back);
+			g.setColor(Color.BLACK);
+			g.setFont(new Font("Helvetica", Font.BOLD, 15));
+			_text1.draw();
+			_text2.draw();
+			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			_halfdelay.draw(g, _background);
 			_doubledamage.draw(g, _background);
+			g.setColor(new Color(1f, 0f, 0f, .5f));
+			if (colorOutUpgrade(1,_t)) {
+				RoundRectangle2D r = _halfdelay.getRoundRect();
+				g.fill(r);
+			}
+			if (colorOutUpgrade(2,_t)) {
+				RoundRectangle2D r = _doubledamage.getRoundRect();
+				g.fill(r);
+			}
 			g.setColor(Color.BLACK);
 			g.setStroke(new BasicStroke(2));
 			if (exOutUpgrade(1,_t)) {
@@ -280,15 +343,7 @@ public class Console2 {
 				g.drawLine((int) r.getX() + 2, (int) r.getY(), (int) (r.getX() + r.getWidth() - 2), (int) (r.getY() + r.getHeight()));
 				g.drawLine((int) r.getX() + 2, (int) (r.getY() + r.getHeight()), (int) (r.getX() + r.getWidth() - 2),(int) r.getY());
 			}
-			g.setColor(new Color(1f, 0f, 0f, .5f));
-			if (colorOutUpgrade(1,_t)) {
-				RoundRectangle2D r = _halfdelay.getRoundRect();
-				g.fill(r);
-			}
-			if (colorOutUpgrade(2,_t)) {
-				RoundRectangle2D r = _doubledamage.getRoundRect();
-				g.fill(r);
-			}
+
 			g.setColor(Color.BLACK);
 			g.setStroke(new BasicStroke(1));
 		}

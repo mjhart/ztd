@@ -3,6 +3,7 @@ package gameEngine.towers;
 import gameEngine.Referee;
 import gameEngine.projectile.BasicProjectile;
 import gameEngine.zombie.Zombie;
+import gameEngine.Constants;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
@@ -19,10 +20,10 @@ import cs195n.Vec2i;
 public class BasicTower extends AbstractTower {
 	
 	private BufferedImage _sprite;
+	//private static final String blurb = "A basic tower that shoots regular bullets";
 
 	public BasicTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(10, 1000000, 1000000000, 100, vec, ref, sprite);
-		//System.out.println("Basic Tower at " + vec);
+		super(10, 1000000, 1000000000, 100, Constants.BASIC_BLURB, vec, ref, sprite);
 	}
 	
 	@Override

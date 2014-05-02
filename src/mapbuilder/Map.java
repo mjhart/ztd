@@ -65,6 +65,7 @@ public class Map {
 		File stadd = Retriever.getFromAddress(address);
 		//File stadd = new File("stadd.xml");
 		XmlParser x = new XmlParser(this);
+		//TODO Catch if cent is null
 		Point2D.Double cent = x.parseAddress(stadd);
 		DistConverter dc = new DistConverter(cent.y, cent.x);
 		wMin[0] = dc.getLeft(cent.x);

@@ -267,9 +267,7 @@ public class XmlParser {
 			}
 		}
 		catch (Exception e) {
-			//Dialogue box needed
 			System.out.println("ERROR: Problem in parseAddress");
-			e.printStackTrace();
 		}
 		return null;
 		

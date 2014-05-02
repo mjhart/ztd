@@ -1,5 +1,6 @@
 package gameEngine.towers;
 
+import gameEngine.Constants;
 import gameEngine.Referee;
 import gameEngine.projectile.FireProjectile;
 import gameEngine.zombie.Zombie;
@@ -18,7 +19,7 @@ public class FlameTower extends AbstractTower {
 	private boolean _animate = false;
 	
 	public FlameTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(5, 250000, 500000000, 130, vec, ref, sprite);
+		super(8, 250000, 500000000, 130, Constants.FLAME_BLURB, vec, ref, sprite);
 	}
 
 	@Override

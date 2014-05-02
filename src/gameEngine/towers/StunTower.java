@@ -1,5 +1,6 @@
 package gameEngine.towers;
 
+import gameEngine.Constants;
 import gameEngine.Referee;
 import gameEngine.projectile.BasicProjectile;
 import gameEngine.zombie.Zombie;
@@ -15,7 +16,7 @@ import cs195n.Vec2i;
 public class StunTower extends AbstractTower {
 
 	public StunTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(10, 100, 1000000000, 120, vec, ref, sprite);
+		super(10, 100, 1000000000, 120, Constants.STUN_BLURB, vec, ref, sprite);
 		
 	}
 	
