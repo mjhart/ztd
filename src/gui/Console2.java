@@ -321,21 +321,25 @@ public class Console2 {
 	
 	
 
-	public String contains(int x, int y) {
+	public String contains(int x, int y, boolean click) {
 		for (ControlButton cb: _cbs) {
 			if (cb.getRoundRect().contains(x, y)) {
-				cb.highlight();
+				if (!click) {
+					cb.highlight();
+				}
 				return cb.getName();
 			}
 			else {
 				cb.unhighlight();
 			}
 		}
-		for (TowerButton tb: _tbs) {
-			if (tb.getRect().contains(x, y)) {
-				this.unhighlightTb();
-				tb.highlight();
-				return tb.getName();
+		if (click) {
+			for (TowerButton tb: _tbs) {
+				if (tb.getRect().contains(x, y)) {
+					this.unhighlightTb();
+					tb.highlight();
+					return tb.getName();
+				}
 			}
 		}
 		return null;

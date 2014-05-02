@@ -24,7 +24,6 @@ public class HugeButton {
 		_highlight = false;
 	}
 	public void draw(Graphics2D g, Color background) {
-		System.out.println("HB draw");
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Helvetica", Font.BOLD, 30));
 		FontMetrics fm = g.getFontMetrics();

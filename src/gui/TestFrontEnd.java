@@ -396,7 +396,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 			}
 		}
 		else if (_hasMap) {
-			String command = _c.contains(e.getX(), e.getY());
+			String command = _c.contains(e.getX(), e.getY(), true);
 			if (command != null) {
 				_c.noUpgrades();
 				System.out.println(command);
@@ -411,12 +411,20 @@ public class TestFrontEnd extends SwingFrontEnd {
 				if (parseConsoleControlButton()) {
 					if ((!_command.equals("Halve")) && (!_command.equals("Double"))) {
 						_placedTower = null;
-						_c.noUpgrades();
+						if (_c != null) {
+							_c.noUpgrades();
+						}
 					}
 					else {
-						_c.showUpgrades(_placedTower);
+						if (_c != null) {
+							_c.showUpgrades(_placedTower);
+						}
 					}
 					_command = null;
+				}
+				else {
+					_placedTower = null;
+					_c.noUpgrades();
 				}
 			}
 			else {
@@ -497,11 +505,11 @@ public class TestFrontEnd extends SwingFrontEnd {
 		}
 		else if (_command.equals("Restart")) {
 			_hasScreen = false;
+			_hasMap = true;
 			_screen = null;
 			_ref.restart();
 			_c.unhighlightTb();
 			_c.noUpgrades();
-			_command = null;
 			_placedTower = null;
 			_candidate = null;
 			return true;
@@ -577,6 +585,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		}
 		
 		else if (_hasMap) {
+			_c.contains(e.getX(), e.getY(), false);
 			if ((e.getX() > CONSOLE_WIDTH) && (_command != null)) {
 				_candidate = parseConsoleTowerButton(e);
 				//if (_candidate != null) {
