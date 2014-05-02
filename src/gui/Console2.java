@@ -95,7 +95,7 @@ public class Console2 {
 			_tbs.add(new TowerButton("Goo Tower", _cw/4, 2*_h/7 + _tbwidth + 5, _tf.makeGoo(zero, _ref)));
 			_tbs.add(new TowerButton("Laser Tower", _cw*3/4, 2*_h/7 + _tbwidth + 5, _tf.makeLaser(zero, _ref)));
 			_tbs.add(new TowerButton("Poison Tower", _cw*5/4, 2*_h/7 + _tbwidth + 5, _tf.makePoison(zero, _ref)));
-			_tbs.add(new TowerButton("Stun Tower", _cw*7/4, 2*_h/7 + _tbwidth + 5, _tf.makeStun(zero, _ref)));
+			//_tbs.add(new TowerButton("Stun Tower", _cw*7/4, 2*_h/7 + _tbwidth + 5, _tf.makeStun(zero, _ref)));
 
 
 			_first = false;

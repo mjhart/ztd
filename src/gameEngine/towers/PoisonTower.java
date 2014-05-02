@@ -17,7 +17,7 @@ import cs195n.Vec2i;
 public class PoisonTower extends AbstractTower {
 
 	public PoisonTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(10, 1000000, 30000000000l, 100, vec, ref, sprite);
+		super(10, 1000000, 3000000000l, 250, vec, ref, sprite);
 		
 	}
 	

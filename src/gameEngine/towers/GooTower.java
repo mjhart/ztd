@@ -17,7 +17,7 @@ import cs195n.Vec2i;
 public class GooTower extends AbstractTower {
 
 	public GooTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(10, 1000000, 2000000000, 100, vec, ref, sprite);
+		super(10, 1000000, 2000000000, 150, vec, ref, sprite);
 	}
 	
 	@Override

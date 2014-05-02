@@ -21,7 +21,7 @@ public class LaserTower extends AbstractTower {
 	
 	
 	public LaserTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(30, 1000000, 3000000000l, 100, vec, ref, sprite);
+		super(30, 1000000, 3000000000l, 500, vec, ref, sprite);
 	}
 
 	@Override
