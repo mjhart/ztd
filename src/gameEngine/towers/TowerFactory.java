@@ -121,7 +121,7 @@ public class TowerFactory {
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (flames.png)");
 		}
-		_goosprite = img.getSubimage(0, 0, 118, 118);		
+		_goosprite = img.getSubimage(20, 15, 98, 98);		
 		w = _goosprite.getWidth();
 		h = _goosprite.getHeight();
 		scaled = new BufferedImage(4*w, 4*h, _goosprite.getType());

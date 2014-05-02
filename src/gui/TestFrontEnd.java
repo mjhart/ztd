@@ -31,8 +31,8 @@ import cs195n.Vec2i;
 
 public class TestFrontEnd extends SwingFrontEnd {
 	
-	private final float CONSOLE_WIDTH = 170;
-	static final Vec2i DEFAULT_WINDOW_SIZE = new Vec2i(960, 810);
+	private final float CONSOLE_WIDTH = 180;
+	static final Vec2i DEFAULT_WINDOW_SIZE = new Vec2i(980, 800);
 
 	private List<MapNode> nodes;
 	private List<MapWay> ways;
@@ -152,14 +152,20 @@ public class TestFrontEnd extends SwingFrontEnd {
 			}
 		}
 		
+		//All highways, draw thin
+		g.setColor(new Color(255,222,173));
+		g.setStroke(new BasicStroke(defaultstroke));
+		for (Line2D l: _highline2D) {
+			g.draw(l);
+		}
+		
 		//Buildings
 		g.setColor(Color.GRAY.brighter());
 		for (Building b: _m.getBuildings()) {
 			g.fill(b.getPolygon());
 		}
 		
-		//DONT DELETE THIS
-		//Getting rid of overlap
+		//Getting rid of overlapping names
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Helvetica", Font.BOLD, 110));
 		for (Building b: _m.getBuildings()) {
@@ -180,30 +186,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 					}
 				}
 			}
-		}
-		//DONT DELETE THIS
-
-		
-		//DONT DELETE THIS
-		//All names
-//		g.setColor(Color.BLACK);
-//		g.setFont(new Font("Helvetica", Font.BOLD, 110));
-//		for (Building b: _m.getBuildings()) {
-//			Rectangle2D r = b.getPolygon().getBounds();
-//			if (b.getName() != null) {
-//				String[] namearr = b.getName().split("\\s+");
-//				for (int i = 0; i < namearr.length; i++) {
-//					g.drawString(namearr[i], (int) r.getX() + 100, (int) r.getCenterY() - 50 + 110*i);
-//				}
-//			}
-//		}
-		//DONT DELETE THIS
-		
-		//All highways, draw thin
-		g.setColor(new Color(255,222,173));
-		g.setStroke(new BasicStroke(defaultstroke));
-		for (Line2D l: _highline2D) {
-			g.draw(l);
 		}
 		
 		//Footways
