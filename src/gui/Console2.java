@@ -180,11 +180,11 @@ public class Console2 {
 			first.toUpperCase();
 			g.setFont(new Font("Helvetica", Font.BOLD, 20));
 			g.drawString(first, x+_tbwidth/4 +2, y + 25);
-			g.setColor(Color.BLACK);
-			g.setStroke(new BasicStroke(2));
+			g.setColor(Color.RED);
+			g.setStroke(new BasicStroke(3));
 			if (exOutTower(_t)) {
-				g.drawLine((int) x + 3, (int) y, (int) (x + _tbwidth - 1), (int) (y + _tbwidth));
-				g.drawLine((int) x + 3, (int) (y + _tbwidth), (int) (x + _tbwidth - 1), (int) y);
+				g.drawLine((int) x + 7, (int) y + 7, (int) (x + _tbwidth - 5), (int) (y + _tbwidth - 5));
+				g.drawLine((int) x + 7, (int) (y + _tbwidth - 5), (int) (x + _tbwidth - 5), (int) y + 7);
 			}
 			g.setStroke(new BasicStroke(1));
 			if (_highlight) {
@@ -193,6 +193,7 @@ public class Console2 {
 				g.draw(_r);
 				g.setStroke(new BasicStroke(1));
 			}
+			g.setColor(Color.BLACK);
 		}
 		public RoundRectangle2D getRect() {
 			return _r;

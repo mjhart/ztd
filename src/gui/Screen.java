@@ -35,8 +35,12 @@ public class Screen {
 	}
 	
 	public void draw(Graphics2D g) {
+		java.awt.Color colorholder = g.getColor();
+		g.setColor(new Color(_background.getRed(), _background.getGreen(), _background.getBlue(), 150));
+		g.fill(new Rectangle2D.Float(0,0,_w,_h));
 		this.g = g;
 		int c = 30;
+		g.setColor(Color.BLACK);
 		if (_type.equals("Pause")) {
 			if (_first) {
 				g.setColor(Color.BLACK);
@@ -98,9 +102,7 @@ public class Screen {
 
 		}
 		
-		java.awt.Color colorholder = g.getColor();
-		g.setColor(new Color(_background.getRed(), _background.getGreen(), _background.getBlue(), 150));
-		g.fill(new Rectangle2D.Float(0,0,_w,_h));
+
 		
 		for (HugeButton cb: _cbs) {
 			cb.draw(g, Color.GRAY);
