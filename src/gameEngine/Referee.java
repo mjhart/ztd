@@ -3,7 +3,6 @@ package gameEngine;
 import gameEngine.towers.AbstractTower;
 import gameEngine.zombie.Zombie;
 import gameEngine.zombie.ZombieFactory;
-import gui.Console2;
 import gui.TestFrontEnd;
 
 import java.awt.Graphics2D;
@@ -13,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,15 +35,19 @@ public class Referee {
 	private static final int STARTING_HEALTH = 100;
 	private BufferedImage _basesprite;
 	private boolean _gameOver;
+	private int _zombiesKilled;
+	private int _interestEarned;
+	private TestFrontEnd _fe;
 	
 	
-	public Referee(Map m) {
+	public Referee(Map m, TestFrontEnd fe) {
 		_m = m;
 		_zombies = new HashSet<Zombie>();
 		_towers = new LinkedList<AbstractTower>();
 		_money = STARTING_MONEY;
 		getBaseSprite();
 		_gameOver = false;
+		_fe = fe;
 	}
 	
 	private void getBaseSprite() {
@@ -70,13 +72,20 @@ public class Referee {
 			// add new zombies
 			if(_numZombies > 0) {
 				_nanoSinceSpawn+=nanosSincePreviousTick;
-				if(_nanoSinceSpawn > 1000000000) {
+				long delay;
+				if(_round > 9) {
+					delay = 100000000;
+				}
+				else {
+					delay = 1000000000 - (_round * 50000000);
+				}
+				if(_nanoSinceSpawn > delay) {
 					_nanoSinceSpawn = 0;
 					
 					
 					//TODO decide which is better
 					///*
-					for(int i=0; i<_round && _numZombies > 0 && i < 5; i++) {
+					for(int i=0; i<_round && _numZombies > 0 && i < _m.getSourceList().size(); i++) {
 						createZombie();
 					}
 					//*/
@@ -112,7 +121,9 @@ public class Referee {
 		if(_running && _numZombies == 0 && _zombies.size() == 0) {
 			System.out.println("Round Over");
 			_running = false;
-			startRound();
+			_interestEarned = _money/20;
+			_fe.roundEnded();
+			//startRound();
 			System.out.println("Starting round " + _round);
 		}
 	}
@@ -210,6 +221,7 @@ public class Referee {
 		if(z.takeDamage(d) != null) {
 			_money+=10;
 			_zombies.remove(z);
+			_zombiesKilled++;
 		}
 	}
 	
@@ -225,20 +237,17 @@ public class Referee {
 		return result;
 	}
 	
-	public void startGame() {
-		if(_round == 0) {
-			startRound();
-		}
-	}
 	
 	public void startRound() {
-		if(_round != 0) {
-			_money += _money/20;
+		if(!_running) {
+			if(_round != 0) {
+				_money += _money/20;
+			}
+			_round++;
+			_numZombies = _round * 5;
+			_nanoSinceSpawn = 0;
+			_running = true;
 		}
-		_round++;
-		_numZombies = _round * 5;
-		_nanoSinceSpawn = 0;
-		_running = true;
 	}
 	
 	public void setMap(Map m) {
@@ -278,6 +287,7 @@ public class Referee {
 		_money = STARTING_MONEY;
 		_towers.add(_b);
 		_gameOver = false;
+		_zombiesKilled = 0;
 	}
 	
 	public boolean pause() {
@@ -313,11 +323,11 @@ public class Referee {
 	
 	public int getZombiesKilled() {
 		//TODO
-		return 1;
+		return _zombiesKilled;
 	}
 	
 	public int getInterestEarned() {
 		//TODO
-		return 1;
+		return _interestEarned;
 	}
 }

@@ -62,8 +62,8 @@ public class Map {
 		wMin = new double[2];
 		wMax = new double[2];
 		
-		File stadd = Retriever.getFromAddress(address);
-		//File stadd = new File("stadd.xml");
+		//File stadd = Retriever.getFromAddress(address);
+		File stadd = new File("stadd.xml");
 		XmlParser x = new XmlParser(this);
 		//TODO Catch if cent is null
 		Point2D.Double cent = x.parseAddress(stadd);
@@ -72,8 +72,8 @@ public class Map {
 		wMin[1] = dc.getBott(cent.y);
 		wMax[0] = dc.getRight(cent.x);
 		wMax[1] = dc.getTop(cent.y);
-		File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
-		//File box = new File("box.xml");
+		//File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
+		File box = new File("box.xml");
 		x.parseBox(box);
 		_ways = x.getWays();
 		_nodes = x.getNodes();
@@ -103,6 +103,8 @@ public class Map {
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (SpriteImp)");
 		}
+		
+		_srcs = new LinkedList<MapNode>();
 		
 	}
 	
@@ -168,7 +170,7 @@ public class Map {
 		List<MapNode> results = new LinkedList<MapNode>();
 		for(MapWay w : _highways) {
 			for(MapNode n : w.getNodes()) {
-				if(n.getX() >= 10000 && n.getX() - 500 < 10000) {
+				if(n.getX() >= 10000 && n.getX() - 500 < 10000 && n.getY() < 10500 && n.getY() > -500) {
 					boolean farEnough = true;
 					for(MapNode n2 : results) {
 						if(n._coords.dist2(n2._coords) < MIN_DIST) {
@@ -181,7 +183,7 @@ public class Map {
 					}
 					continue;
 				}
-				if(n.getY() >= 10000 && n.getY() - 500 < 10000) {
+				if(n.getY() >= 10000 && n.getY() - 500 < 10000 && n.getX() < 10500 && n.getX() > -500) {
 					boolean farEnough = true;
 					for(MapNode n2 : results) {
 						if(n._coords.dist2(n2._coords) < MIN_DIST) {
@@ -194,7 +196,7 @@ public class Map {
 					}
 					continue;
 				}
-				if(n.getX() <= 0 && n.getX() + 500 > 0) {
+				if(n.getX() <= 0 && n.getX() + 500 > 0 && n.getY() < 10500 && n.getY() > -500) {
 					boolean farEnough = true;
 					for(MapNode n2 : results) {
 						if(n._coords.dist2(n2._coords) < MIN_DIST) {
@@ -207,7 +209,7 @@ public class Map {
 					}
 					continue;
 				}
-				if(n.getY() <= 0 && n.getY() + 500 > 0) {
+				if(n.getY() <= 0 && n.getY() + 500 > 0 && n.getX() < 10500 && n.getX() > -500) {
 					boolean farEnough = true;
 					for(MapNode n2 : results) {
 						if(n._coords.dist2(n2._coords) < MIN_DIST) {

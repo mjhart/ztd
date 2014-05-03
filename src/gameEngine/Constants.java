@@ -14,7 +14,7 @@ public class Constants {
 	public static String LASER_BLURB = "Shoots a laser that hits every zombie in its path";
 	public static String POISON_BLURB = "Poisons zombies it hits";
 	public static String STUN_BLURB = "Stuns zombies it hits";
-
+	public static float MIN_CONSOLE_WIDTH = 180;
 
 
 	
