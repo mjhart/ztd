@@ -56,13 +56,10 @@ public class Retriever {
 		}
 		catch (MalformedURLException e) {
 			System.out.println("ERROR: Bad URL, could not access OpenStreetMap");
-			e.printStackTrace();
 		}
 		catch (IOException e) {
 			System.out.println("ERROR: Bad connection, could not access OpenStreetMap");
-			e.printStackTrace();
 		}
-		//TODO Check for null whenever we call this
 		return null;
 	}
 	
@@ -104,13 +101,10 @@ public class Retriever {
 		}
 		catch (MalformedURLException e) {
 			System.out.println("ERROR: Bad URL, could not access Nomatim");
-			e.printStackTrace();
 		}
 		catch (IOException e) {
 			System.out.println("ERROR: Bad connection, could not access Nomatim");
-			e.printStackTrace();
 		}
-		//TODO Check if null when we call this
 		return null;
 	}
 	

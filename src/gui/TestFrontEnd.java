@@ -290,11 +290,16 @@ public class TestFrontEnd extends SwingFrontEnd {
 		}
 	}
 	
+	public void dataError() {
+		_screen = new Screen("Bad Connection", _size.x, _size.y, _ref);
+		_hasScreen = true;
+	}
+	
 	
 	public void makeMap(String add) {
 		_ref = new Referee(_m);
 		try {
-			_m = new Map(add, _ref);
+			_m = new Map(add, _ref, this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -642,6 +647,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private float xToLon(double x) {
 		return (float) ((x - CONSOLE_WIDTH) / (float) (_size.x - CONSOLE_WIDTH) * 10000f);
 	}
+	
+
 	
 	
 }
