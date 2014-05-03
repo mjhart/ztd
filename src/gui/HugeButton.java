@@ -35,7 +35,6 @@ public class HugeButton {
 			g.setColor(background.brighter());
 			g.setColor(Color.WHITE);
 			g.fill(_r);
-			System.out.println("Drawing highlight");
 		}
 		g.setColor(Color.BLACK);
 		g.draw(_r);
@@ -49,11 +48,9 @@ public class HugeButton {
 	}
 	public void highlight() {
 		_highlight = true;
-		System.out.println("HB highlighting");
 	}
 	public void unhighlight() {
 		_highlight = false;
-		System.out.println("HB unhing");
 	}
 	
 	private float centerX(String name, float rightline, Graphics2D g) {
