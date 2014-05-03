@@ -59,7 +59,7 @@ public class XmlParser {
 	 * This method parses the box info that OSM returns into MapNodes and MapWays
 	 * @param xmlfile All info contained in a box defined by lat and lon bounds
 	 */
-	public void parseBox(File xmlfile) {
+	public boolean parseBox(File xmlfile) {
 		try {
 			//Start up the DOM
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -162,7 +162,7 @@ public class XmlParser {
 				}
 			}
 
-			doneparsebox = true;
+			return true;
 		
 		}
 		catch (NumberFormatException nfe) {
@@ -171,7 +171,8 @@ public class XmlParser {
 		catch (Exception e) {
 			System.out.println("ERROR: Problem in parseBox");
 			e.printStackTrace();
-		}	
+		}
+		return false;
 	}
 	
 	
@@ -262,7 +263,6 @@ public class XmlParser {
 				return mn;
 			}
 			else {
-				//Dialogue box needed
 				System.out.println("ERROR: Could not find address");
 			}
 		}

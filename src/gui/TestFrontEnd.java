@@ -40,6 +40,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private MainMenu _mm;
 	private Console2 _c;
 	private boolean _hasMain;
+	private boolean _showMain;
 	private boolean _hasMap;
 	private boolean _showMap;
 	private AbstractTower _candidate;
@@ -56,6 +57,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private float _mapSize;
 	private float _consoleWidth;
 	private Rectangle _border;
+	private boolean _hasDataError = false;
 	
 	public TestFrontEnd(String title, boolean fullscreen) {
 		super(title, fullscreen);
@@ -70,6 +72,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 		_mm = new MainMenu(size.x, size.y);
 		_hasMain = true;
+		_showMain = true;
 		_hasMap = false;
 		_showMap = false;
 		_hasScreen = false;
@@ -93,7 +96,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onDraw(Graphics2D g) {
-		if (_hasMain) {
+		if (_showMain) {
 			_mm.draw(g);
 		}
 		else if (_showMap) {
@@ -289,39 +292,48 @@ public class TestFrontEnd extends SwingFrontEnd {
 		}
 	}
 	
+	public void dataError() {
+		_screen = new Screen("Bad Connection", _size.x, _size.y, _ref);
+		_hasScreen = true;
+		_hasDataError = true;
+		_hasMain = false;
+	}
+	
 	
 	public void makeMap(String add) {
 		_ref = new Referee(_m, this);
 		try {
-			_m = new Map(add, _ref);
+			_m = new Map(add, _ref, this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		_ref.setMap(_m);
 		_m.getSources();
 
 		_c = new Console2(0,0,Constants.MIN_CONSOLE_WIDTH,_size.y, _tf, _ref);
+			_hasMap = true;
+			_showMap = true;
+			_hasMain = false;
+			_showMain = false;
+			_mm.clear();
 
-		_hasMap = true;
-		_showMap = true;
-		_hasMain = false;
-		_mm.clear();
-		
-		for(MapWay h : _m.getHighways()) {
-			List<MapNode> nList = h.getNodes();
-			for(int i=1; i<nList.size(); i++) {
-				_highline2D.add(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
+			for(MapWay h : _m.getHighways()) {
+				List<MapNode> nList = h.getNodes();
+				for(int i=1; i<nList.size(); i++) {
+					_highline2D.add(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
+				}
 			}
-		}
-		
-		for(MapNode n : _m.getSourceList()) {
-			MapNode cur = n;
-			MapNode next = cur.getNext();
-			while(next!=null) {
-				Line2D l = new Line2D.Float(cur.getX(), cur.getY(), next.getX(), next.getY());
-				_zombieline2D.add(l);
-				cur = next;
-				next = next.getNext();
+
+			for(MapNode n : _m.getSourceList()) {
+				MapNode cur = n;
+				MapNode next = cur.getNext();
+				while(next!=null) {
+					Line2D l = new Line2D.Float(cur.getX(), cur.getY(), next.getX(), next.getY());
+					_zombieline2D.add(l);
+					cur = next;
+					next = next.getNext();
+				}
 			}
 		}
 		
@@ -474,6 +486,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		}
 		else if (_command.equals("Main")) {
 			_hasMain = true;
+			_showMain = true;
 			_hasMap = false;
 			_showMap = false;
 			_hasScreen = false;
@@ -512,6 +525,12 @@ public class TestFrontEnd extends SwingFrontEnd {
 				_ref.unpause();
 			}
 			return true;
+		}
+		else if (_command.equals("OK")) {
+			_screen = null;
+			_hasScreen = false;
+			_hasMain = true;
+			_showMain = true;
 		}
 		else if (_command.equals("Quit")) {
 			System.exit(0);
@@ -654,6 +673,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 		_wasRunning = false;
 		_screen = new Screen("Stats", _size.x, _size.y, _ref);
 	}
+	
+
 	
 	
 }

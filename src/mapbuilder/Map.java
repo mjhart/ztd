@@ -25,6 +25,7 @@ import java.util.PriorityQueue;
 import javax.imageio.ImageIO;
 
 import ztdpac.ImageRet;
+import gui.TestFrontEnd;
 
 import cs195n.Vec2f;
 import cs195n.Vec2i;
@@ -50,62 +51,72 @@ public class Map {
 	private Vec2i _size;
 	//private PathFinder _pf;
 	private MapNode _baseNode;
-	private BufferedImage _baseSprite;
 	private List<MapNode> _srcs;
 	private Referee _ref;
 	private BufferedImage _img;
+	private TestFrontEnd _tf;
 	
-	public Map(String address, Referee ref) {
+	public Map(String address, Referee ref, TestFrontEnd tf) {
 		
+		_tf = tf;
 		_ref = ref;
 		
 		wMin = new double[2];
 		wMax = new double[2];
 		
-		//File stadd = Retriever.getFromAddress(address);
-		File stadd = new File("stadd.xml");
-		XmlParser x = new XmlParser(this);
-		//TODO Catch if cent is null
-		Point2D.Double cent = x.parseAddress(stadd);
-		DistConverter dc = new DistConverter(cent.y, cent.x);
-		wMin[0] = dc.getLeft(cent.x);
-		wMin[1] = dc.getBott(cent.y);
-		wMax[0] = dc.getRight(cent.x);
-		wMax[1] = dc.getTop(cent.y);
-		//File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
-		File box = new File("box.xml");
-		x.parseBox(box);
-		_ways = x.getWays();
-		_nodes = x.getNodes();
-		_highways = x.getHighs();
-		_buildings = x.getBuildings();
-		_landuse = x.getLanduse();
-		_waterways = x.getWaterways();
-		_footways = x.getFootways();
-		_residential = x.getResidential();
-		_secondary = x.getSecondary();
-		_tertiary = x.getTertiary();
-		
-		// find closest highway node to center
-		double dist = Double.MAX_VALUE;
-		for(MapWay w : _highways) {
-			for(MapNode n : w.getNodes()) {
-				double d2 = (n.getX()-5000)*(n.getX()-5000) + (n.getY()-5000)*(n.getY()-5000);
-				if(d2 < dist) {
-					dist = d2;
-					_baseNode = n;
+		File stadd = Retriever.getFromAddress(address);
+		//File stadd = new File("stadd.xml");
+		if (stadd == null) {
+			_tf.dataError();
+		}
+		else {
+			XmlParser x = new XmlParser(this);
+			Point2D.Double cent = x.parseAddress(stadd);
+			if (cent == null) {
+				_tf.dataError();
+			}
+			else {
+				DistConverter dc = new DistConverter(cent.y, cent.x);
+				wMin[0] = dc.getLeft(cent.x);
+				wMin[1] = dc.getBott(cent.y);
+				wMax[0] = dc.getRight(cent.x);
+				wMax[1] = dc.getTop(cent.y);
+				File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
+				//File box = new File("box.xml");
+				if (box == null) {
+					_tf.dataError();
+				}
+				else {
+					if (!x.parseBox(box)) {
+						_tf.dataError();
+					}
+					else {
+						_ways = x.getWays();
+						_nodes = x.getNodes();
+						_highways = x.getHighs();
+						_buildings = x.getBuildings();
+						_landuse = x.getLanduse();
+						_waterways = x.getWaterways();
+						_footways = x.getFootways();
+						_residential = x.getResidential();
+						_secondary = x.getSecondary();
+						_tertiary = x.getTertiary();
+
+						// find closest highway node to center
+						double dist = Double.MAX_VALUE;
+						for(MapWay w : _highways) {
+							for(MapNode n : w.getNodes()) {
+								double d2 = (n.getX()-5000)*(n.getX()-5000) + (n.getY()-5000)*(n.getY()-5000);
+								if(d2 < dist) {
+									dist = d2;
+									_baseNode = n;
+								}
+							}
+						}
+					}
 				}
 			}
 		}
-		
-		try {
-			_baseSprite = ImageIO.read(new File("stuff/bldgsprite.png"));
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (SpriteImp)");
-		}
-		
-		_srcs = new LinkedList<MapNode>();
-		
 	}
 	
 	

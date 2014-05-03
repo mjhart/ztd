@@ -73,8 +73,27 @@ public class Screen {
 			g.setFont(new Font("Helvetica", Font.PLAIN, 70));
 			_t = new Text("Stats", _w, _h/5);
 			int d = 30;
+			g.setFont(new Font("Helvetica", Font.PLAIN, 20));
 			g.drawString("Zombies Killed: " + _ref.getZombiesKilled(), _w, _h/5 + d);
 			g.drawString("Interest Earned: " + _ref.getInterestEarned(), _w, _h/5 + 2*d);
+		}
+		else if (_type.equals("Bad Connection")) {
+			if (_first) {
+				g.setColor(Color.BLACK);
+				g.setFont(new Font("Helvetica", Font.PLAIN, 15));
+				_cbs.add(new HugeButton("OK", _w, _h*2/3, g));
+				_first = false;
+			}
+			g.setFont(new Font("Helvetica", Font.PLAIN, 70));
+			_t = new Text("Bad Connection", _w, _h/5);
+			g.setFont(new Font("Helvetica", Font.PLAIN, 40));
+			int d = 30;
+			String msg1 = "There is a problem with your connection. Please fix the error";
+			String msg2 = "or use one of our pre-loaded locations.";
+			float x1 = centerX(msg1, _w);
+			float x2 = centerX(msg2, _w);
+			g.drawString(msg1, x1, _h/5 + 100 + d);
+			g.drawString(msg2, x2, _h/5 + 100 + 2*d);
 			
 
 		}
