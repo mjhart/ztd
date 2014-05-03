@@ -1,5 +1,6 @@
 package gui;
 
+import gameEngine.Constants;
 import gameEngine.Referee;
 import gameEngine.towers.AbstractTower;
 import gameEngine.towers.TowerFactory;
@@ -10,6 +11,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -31,17 +33,10 @@ import cs195n.Vec2i;
 
 public class TestFrontEnd extends SwingFrontEnd {
 	
-	private final float CONSOLE_WIDTH = 180;
 	static final Vec2i DEFAULT_WINDOW_SIZE = new Vec2i(980, 800);
-
-	private List<MapNode> nodes;
-	private List<MapWay> ways;
-	private List<MapWay> highs;
-	private List<MapNode> srcs;
+	
 	private List<Line2D> _highline2D;
 	private List<Line2D> _zombieline2D;
-	private AffineTransform _at;
-	
 	private MainMenu _mm;
 	private Console2 _c;
 	private boolean _hasMain;
@@ -51,10 +46,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private AbstractTower _candidate;
 	private boolean _validPlace;
 	private AbstractTower _placedTower;
-		
 	private Vec2i _size;
-	private double[] wMin = {0,0};
-	private double[] wMax = {0,0};
 	private Map _m;
 	private Referee _ref;
 	private String _command;
@@ -62,6 +54,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private Screen _screen;
 	private boolean _hasScreen;
 	private boolean _wasRunning;
+	private float _mapSize;
+	private float _consoleWidth;
+	private Rectangle _border;
 	private boolean _hasDataError = false;
 	
 	public TestFrontEnd(String title, boolean fullscreen) {
@@ -88,7 +83,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 		_validPlace = false;
 		_candidate = null;
-		_at = new AffineTransform(1, 0, 0, 1, 0, 0);
 		
 		super.startup();
 	}
@@ -106,8 +100,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 			_mm.draw(g);
 		}
 		else if (_showMap) {
-			g.translate(CONSOLE_WIDTH, 0);
-			g.scale((_size.x - CONSOLE_WIDTH) / 10000, (float) _size.y / 10000);
+			g.translate(_consoleWidth, 0);
+			g.scale((float) _mapSize / 10000, (float) _mapSize / 10000);
 			float defaultstroke = 10000 / DEFAULT_WINDOW_SIZE.x;
 			g.setStroke(new BasicStroke(defaultstroke));
 
@@ -129,6 +123,11 @@ public class TestFrontEnd extends SwingFrontEnd {
 			g.setStroke(new BasicStroke());
 			g.setTransform(new AffineTransform());
 			_c.draw(g);
+			
+			if(_border != null) {
+				g.setColor(java.awt.Color.WHITE);
+				g.fill(_border);
+			}
 			
 			this.checkGameOver();
 		}
@@ -302,7 +301,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	
 	
 	public void makeMap(String add) {
-		_ref = new Referee(_m);
+		_ref = new Referee(_m, this);
 		try {
 			_m = new Map(add, _ref, this);
 		} catch (Exception e) {
@@ -310,12 +309,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 		}
 		if (!_hasDataError) {
 			_ref.setMap(_m);
-			wMax = _m.getwMax();
-			wMin = _m.getwMin();
-			srcs = _m.getSources();
+			_m.getSources();
 
-			_c = new Console2(0,0,CONSOLE_WIDTH,_size.y, _tf, _ref);
-
+			_c = new Console2(0,0,Constants.MIN_CONSOLE_WIDTH,_size.y, _tf, _ref);
 			_hasMap = true;
 			_showMap = true;
 			_hasMain = false;
@@ -423,7 +419,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 				}
 			}
 			else {
-				if ((e.getX() > CONSOLE_WIDTH) && (_command != null)) {
+				if ((e.getX() > _consoleWidth) && (_command != null)) {
 					if (_validPlace) {
 						if (_candidate != null) {
 							_ref.addTower(_candidate);
@@ -434,7 +430,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 						}
 					}
 				}
-				else if ((e.getX() > CONSOLE_WIDTH) && (_command == null)) {
+				else if ((e.getX() > _consoleWidth) && (_command == null)) {
 					_c.noUpgrades();
 					for (AbstractTower t: _ref.towers()) {
 						if (t.contains(xToLon(e.getX()), yToLat(e.getY()))) {
@@ -483,7 +479,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 			return true;
 		}
 		else if (_command.equals("Start")) {
-			_ref.startGame();
+			_ref.startRound();
 			_c.unhighlightTb();
 			_c.noUpgrades();
 			return true;
@@ -590,7 +586,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		
 		else if (_hasMap) {
 			_c.contains(e.getX(), e.getY(), false);
-			if ((e.getX() > CONSOLE_WIDTH) && (_command != null)) {
+			if ((e.getX() > _consoleWidth) && (_command != null)) {
 				_candidate = parseConsoleTowerButton(e);
 				//if (_candidate != null) {
 					BufferedImage sprite = _candidate.getSprite();
@@ -637,9 +633,17 @@ public class TestFrontEnd extends SwingFrontEnd {
 	@Override
 	protected void onResize(Vec2i newSize) {
 		_size = newSize;
-		
-		if (_hasMap) {
-			_m.setSize(newSize);
+		if(newSize.x - Constants.MIN_CONSOLE_WIDTH > newSize.y) {
+			_mapSize = newSize.y;
+			_consoleWidth = newSize.x - newSize.y;
+			_c = new Console2(0,0,_consoleWidth,_size.y, _tf, _ref);
+			_border = null;
+		}
+		else {
+			_mapSize = newSize.x - Constants.MIN_CONSOLE_WIDTH;
+			_consoleWidth = Constants.MIN_CONSOLE_WIDTH;
+			_c = new Console2(0,0,_consoleWidth,_size.y, _tf, _ref);
+			_border = new Rectangle((int) _consoleWidth, (int) _mapSize, (int) _mapSize, (int) (newSize.x - _consoleWidth));
 		}
 	}
 	
@@ -653,14 +657,21 @@ public class TestFrontEnd extends SwingFrontEnd {
 	}
 	
 	public int lonToX(double lon) {
-		return (int) (lon / 10000 * (float) _size.x + CONSOLE_WIDTH);
+		return (int) (lon / 10000 * (float) _size.x + Constants.MIN_CONSOLE_WIDTH);
 	}
 	
 	private float yToLat(double y) {
 		return (float) (y / _size.y * 10000);
 	}
 	private float xToLon(double x) {
-		return (float) ((x - CONSOLE_WIDTH) / (float) (_size.x - CONSOLE_WIDTH) * 10000f);
+		return (float) ((x - _consoleWidth) / (float) (_size.x - _consoleWidth) * 10000f);
+	}
+	
+	public void roundEnded() {
+		_hasScreen = true;
+		_hasMap = false;
+		_wasRunning = false;
+		_screen = new Screen("Stats", _size.x, _size.y, _ref);
 	}
 	
 

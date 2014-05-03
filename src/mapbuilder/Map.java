@@ -117,7 +117,6 @@ public class Map {
 				}
 			}
 		}
-		
 	}
 	
 	
@@ -182,7 +181,7 @@ public class Map {
 		List<MapNode> results = new LinkedList<MapNode>();
 		for(MapWay w : _highways) {
 			for(MapNode n : w.getNodes()) {
-				if(n.getX() >= 10000 && n.getX() - 500 < 10000) {
+				if(n.getX() >= 10000 && n.getX() - 500 < 10000 && n.getY() < 10500 && n.getY() > -500) {
 					boolean farEnough = true;
 					for(MapNode n2 : results) {
 						if(n._coords.dist2(n2._coords) < MIN_DIST) {
@@ -195,7 +194,7 @@ public class Map {
 					}
 					continue;
 				}
-				if(n.getY() >= 10000 && n.getY() - 500 < 10000) {
+				if(n.getY() >= 10000 && n.getY() - 500 < 10000 && n.getX() < 10500 && n.getX() > -500) {
 					boolean farEnough = true;
 					for(MapNode n2 : results) {
 						if(n._coords.dist2(n2._coords) < MIN_DIST) {
@@ -208,7 +207,7 @@ public class Map {
 					}
 					continue;
 				}
-				if(n.getX() <= 0 && n.getX() + 500 > 0) {
+				if(n.getX() <= 0 && n.getX() + 500 > 0 && n.getY() < 10500 && n.getY() > -500) {
 					boolean farEnough = true;
 					for(MapNode n2 : results) {
 						if(n._coords.dist2(n2._coords) < MIN_DIST) {
@@ -221,7 +220,7 @@ public class Map {
 					}
 					continue;
 				}
-				if(n.getY() <= 0 && n.getY() + 500 > 0) {
+				if(n.getY() <= 0 && n.getY() + 500 > 0 && n.getX() < 10500 && n.getX() > -500) {
 					boolean farEnough = true;
 					for(MapNode n2 : results) {
 						if(n._coords.dist2(n2._coords) < MIN_DIST) {
