@@ -90,7 +90,7 @@ public class Screen {
 			}
 			g.setFont(new Font("Helvetica", Font.PLAIN, 70));
 			_t = new Text("Bad Connection", _w, _h/5);
-			g.setFont(new Font("Helvetica", Font.PLAIN, 40));
+			g.setFont(new Font("Helvetica", Font.PLAIN, 35));
 			int d = 30;
 			String msg1 = "There is a problem with your connection. Please fix the error";
 			String msg2 = "or use one of our pre-loaded locations.";
