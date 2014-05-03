@@ -68,8 +68,8 @@ public class Screen {
 			_t = new Text("Game Over", _w, _h/5);
 		}
 		else if (_type.equals("Stats")) {
+			g.setColor(Color.BLACK);
 			if (_first) {
-				g.setColor(Color.BLACK);
 				g.setFont(new Font("Helvetica", Font.PLAIN, 15));
 				_cbs.add(new HugeButton("Continue", _w, _h*2/3, g));
 				_first = false;
@@ -77,9 +77,17 @@ public class Screen {
 			g.setFont(new Font("Helvetica", Font.PLAIN, 70));
 			_t = new Text("Stats", _w, _h/5);
 			int d = 30;
+			int f = 70;
 			g.setFont(new Font("Helvetica", Font.PLAIN, 20));
-			g.drawString("Zombies Killed: " + _ref.getZombiesKilled(), _w, _h/5 + d);
-			g.drawString("Interest Earned: " + _ref.getInterestEarned(), _w, _h/5 + 2*d);
+			g.drawString("Zombies Killed This Round: " + _ref.getRoundZombiesKilled(), _w/3, _h/5 + f + d);
+			g.drawString("Total Zombies Killed: " + _ref.getTotalZombiesKilled(), _w/3, _h/5 + f + 2*d);
+			g.drawString("Interest Earned This Round: " + _ref.getRoundInterestEarned(), _w/3, _h/5 + f + 3*d);
+			g.drawString("Total Interest Earned: " + _ref.getTotalInterestEarned(), _w/3, _h/5 + f + 4*d);
+			g.drawString("Money Earned This Round: " + _ref.getRoundMoneyEarned(), _w/3, _h/5 + f + 5*d);
+			g.drawString("Total Money Earned: " + _ref.getTotalMoneyEarned(), _w/3, _h/5 + f + 6*d);
+			g.drawString("Money Spent This Round: " + _ref.getRoundMoneySpent(), _w/3, _h/5 + f + 7*d);
+			g.drawString("Total Money Spent: " + _ref.getTotalMoneySpent(), _w/3, _h/5 + f + 8*d);
+
 		}
 		else if (_type.equals("Bad Connection")) {
 			if (_first) {

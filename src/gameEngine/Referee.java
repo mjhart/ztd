@@ -35,9 +35,16 @@ public class Referee {
 	private static final int STARTING_HEALTH = 100;
 	private BufferedImage _basesprite;
 	private boolean _gameOver;
-	private int _zombiesKilled;
-	private int _interestEarned;
 	private TestFrontEnd _fe;
+	
+	private int _roundZombiesKilled;
+	private int _totalZombiesKilled;
+	private int _roundInterestEarned;
+	private int _totalInterestEarned;
+	private int _roundMoneyEarned;
+	private int _totalMoneyEarned;
+	private int _roundMoneySpent;
+	private int _totalMoneySpent;
 	
 	
 	public Referee(Map m, TestFrontEnd fe) {
@@ -68,7 +75,7 @@ public class Referee {
 	
 	public void tick(long nanosSincePreviousTick) {
 		if(_running) {
-			
+			System.out.println(_roundMoneySpent);
 			// add new zombies
 			if(_numZombies > 0) {
 				_nanoSinceSpawn+=nanosSincePreviousTick;
@@ -121,7 +128,8 @@ public class Referee {
 		if(_running && _numZombies == 0 && _zombies.size() == 0) {
 			System.out.println("Round Over");
 			_running = false;
-			_interestEarned = _money/20;
+			_roundInterestEarned = _money/20;
+			_totalInterestEarned = _totalInterestEarned + _roundInterestEarned;
 			_fe.roundEnded();
 			//startRound();
 			System.out.println("Starting round " + _round);
@@ -220,8 +228,11 @@ public class Referee {
 	public void dealDamage(Zombie z, Integer d) {
 		if(z.takeDamage(d) != null) {
 			_money+=10;
+			_roundMoneyEarned+=10;
+			_totalMoneyEarned+=10;
 			_zombies.remove(z);
-			_zombiesKilled++;
+			_roundZombiesKilled++;
+			_totalZombiesKilled++;
 		}
 	}
 	
@@ -242,11 +253,15 @@ public class Referee {
 		if(!_running) {
 			if(_round != 0) {
 				_money += _money/20;
+				_roundMoneySpent = 0;
 			}
 			_round++;
 			_numZombies = _round * 5;
 			_nanoSinceSpawn = 0;
 			_running = true;
+			_roundZombiesKilled = 0;
+			_roundInterestEarned = 0;
+			_roundMoneyEarned = 0;
 		}
 	}
 	
@@ -265,16 +280,22 @@ public class Referee {
 	public void addTower(AbstractTower t) {
 		_towers.add(t);
 		_money = _money - t.getPrice();
+		_roundMoneySpent += t.getPrice();
+		_totalMoneySpent += t.getPrice();
 	}
 	
 	public void upgradeTower(AbstractTower t, int i) {
 		if (i == 1) {
 			t.halfDelay();
 			_money = _money - t.getUpgradeCost(1);
+			_roundMoneySpent += t.getUpgradeCost(1);
+			_totalMoneySpent += t.getUpgradeCost(1);
 		}
 		else {
 			t.doubleDamage();
 			_money = _money - t.getUpgradeCost(2);
+			_roundMoneySpent += t.getUpgradeCost(2);
+			_totalMoneySpent += t.getUpgradeCost(2);
 		}
 	}
 	
@@ -287,7 +308,14 @@ public class Referee {
 		_money = STARTING_MONEY;
 		_towers.add(_b);
 		_gameOver = false;
-		_zombiesKilled = 0;
+		_roundZombiesKilled = 0;
+		_roundInterestEarned = 0;
+		_roundMoneyEarned = 0;
+		_roundMoneySpent = 0;
+		_totalZombiesKilled = 0;
+		_totalInterestEarned = 0;
+		_totalMoneyEarned = 0;
+		_totalMoneySpent = 0;
 	}
 	
 	public boolean pause() {
@@ -321,13 +349,32 @@ public class Referee {
 		return _gameOver;
 	}
 	
-	public int getZombiesKilled() {
-		//TODO
-		return _zombiesKilled;
+	public int getRoundZombiesKilled() {
+		return _roundZombiesKilled;
+	}
+	public int getTotalZombiesKilled() {
+		return _totalZombiesKilled;
+	}
+	public int getRoundInterestEarned() {
+		return _roundInterestEarned;
+	}
+	public int getTotalInterestEarned() {
+		return _totalInterestEarned;
 	}
 	
-	public int getInterestEarned() {
-		//TODO
-		return _interestEarned;
+	public int getRoundMoneyEarned() {
+		return _roundMoneyEarned;
 	}
+	public int getTotalMoneyEarned() {
+		return _totalMoneyEarned;
+	}
+	
+	public int getRoundMoneySpent() {
+		return _roundMoneySpent;
+	}
+	public int getTotalMoneySpent() {
+		return _totalMoneySpent;
+	}
+	
+
 }

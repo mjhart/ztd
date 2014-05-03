@@ -65,11 +65,11 @@ public class PoisonProjectile implements Projectile {
 	public void draw(Graphics2D g) {
 		//System.out.println("Drawing projectile at " + _coords.smult(5));
 		if(_onZombie) {
-			g.setColor(java.awt.Color.GREEN);
+			g.setColor(java.awt.Color.GREEN.darker());
 			g.fillOval((int) _zombie.getCoords().x - 50, (int) _zombie.getCoords().y - 50, 100, 100);
 		}
 		else {
-			g.setColor(java.awt.Color.GREEN);
+			g.setColor(java.awt.Color.GREEN.darker());
 			g.fillOval((int) _coords.x - 25, (int) _coords.y - 25, 50, 50);
 		}
 	}
