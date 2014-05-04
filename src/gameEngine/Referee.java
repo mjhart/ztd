@@ -284,6 +284,11 @@ public class Referee {
 	}
 	
 	public void setMap(Map m) {
+		System.out.println("Map " + m);
+		System.out.println(m.getBaseNode());
+		System.out.println(m.getBaseNode()._coords);
+		System.out.println(this);
+		System.out.println(_basesprite);
 		_m = m;
 		_b  = new Base(_m.getBaseNode(), _m.getBaseNode()._coords, this, _basesprite);
 		_b.setHealth(STARTING_HEALTH);

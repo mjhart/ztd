@@ -98,7 +98,7 @@ public class Screen {
 			}
 			g.setFont(new Font("Helvetica", Font.PLAIN, 70));
 			_t = new Text("Bad Connection", _w, _h/5);
-			g.setFont(new Font("Helvetica", Font.PLAIN, 35));
+			g.setFont(new Font("Helvetica", Font.PLAIN, 30));
 			int d = 30;
 			String msg1 = "There is a problem with your connection. Please fix the error";
 			String msg2 = "or use one of our pre-loaded locations.";
@@ -106,8 +106,51 @@ public class Screen {
 			float x2 = centerX(msg2, _w);
 			g.drawString(msg1, x1, _h/5 + 100 + d);
 			g.drawString(msg2, x2, _h/5 + 100 + 2*d);
-			
-
+		}
+		else if (_type.equals("No Location")) {
+			if (_first) {
+				g.setColor(Color.BLACK);
+				g.setFont(new Font("Helvetica", Font.PLAIN, 15));
+				_cbs.add(new HugeButton("OK", _w, _h*2/3, g));
+				_first = false;
+			}
+			g.setFont(new Font("Helvetica", Font.PLAIN, 70));
+			_t = new Text("Unsupported Location", _w, _h/5);
+			g.setFont(new Font("Helvetica", Font.PLAIN, 30));
+			int d = 30;
+			String msg1 = "The selected location is unsupported.";
+			String msg2 = "Please select a new location,";
+			String msg3 = "or use one of our pre-loaded locations.";
+			float x1 = centerX(msg1, _w);
+			float x2 = centerX(msg2, _w);
+			float x3 = centerX(msg3, _w);
+			g.drawString(msg1, x1, _h/5 + 100 + d);
+			g.drawString(msg2, x2, _h/5 + 100 + 2*d);
+			g.drawString(msg3, x3, _h/5 + 100 + 3*d);
+		}
+		else if (_type.equals("Bad Location")) {
+			if (_first) {
+				g.setColor(Color.BLACK);
+				g.setFont(new Font("Helvetica", Font.PLAIN, 15));
+				_cbs.add(new HugeButton("OK", _w, _h*2/3, g));
+				_first = false;
+			}
+			g.setFont(new Font("Helvetica", Font.PLAIN, 70));
+			_t = new Text("Bad Location", _w, _h/5);
+			g.setFont(new Font("Helvetica", Font.PLAIN, 30));
+			int d = 30;
+			String msg1 = "The selected location does not have";
+			String msg2 = "enough roads to create a map.";
+			String msg3 = "Please select a new location,";
+			String msg4 = "or use one of our pre-loaded locations.";
+			float x1 = centerX(msg1, _w);
+			float x2 = centerX(msg2, _w);
+			float x3 = centerX(msg3, _w);
+			float x4 = centerX(msg4, _w);
+			g.drawString(msg1, x1, _h/5 + 100 + d);
+			g.drawString(msg2, x2, _h/5 + 100 + 2*d);
+			g.drawString(msg3, x3, _h/5 + 100 + 3*d);
+			g.drawString(msg4, x4, _h/5 + 100 + 4*d);
 		}
 		
 
