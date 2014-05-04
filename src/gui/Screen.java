@@ -54,7 +54,7 @@ public class Screen {
 		else if (_type.equals("Loading")) {
 			g.setColor(Color.WHITE);
 			g.setFont(new Font("Helvetica", Font.PLAIN, 30));
-			new Text("LOADING...", centerX("PAUSE", _w), _h/10);
+			_t = new Text("LOADING...", centerX("LOADING...", _w), _h/10);
 		}
 		else if (_type.equals("Game Over")) {
 			if (_first) {
@@ -183,7 +183,7 @@ public class Screen {
 			this.x = centerX(name, rightline);
 			this.y = y;
 			_name = name;
-			g.drawString(name, x, y);
+			//g.drawString(name, x, y);
 		}
 		public void draw() {
 			g.drawString(_name, x, y);
