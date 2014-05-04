@@ -93,26 +93,27 @@ public class MainMenu {
 		g.fillRect(0, 3*_h/5 + 10, _w, _h);
 		g.setColor(Color.BLACK);
 		g.drawLine(0, 3*_h/5 + 10, _w, 3*_h/5 + 10);
-		int f = 17;
+		int f = 16;
 		int s = 30;
 		g.setFont(new Font("Helvetica", Font.BOLD, 13));
 		g.setColor(Color.BLACK);
 		new CenText("Tutorial", _w, r + f);
 		new CenText("Zombie Tower Defense is a tower defense game based on real world maps. By typing in an address or by selecting", _w, r + 2*f);
 		new CenText("a location at right you can generate a map of your choosing to play the game on. The object of the game is prevent", _w, r + 3*f);
-		new CenText("the zombies from destroying your base. A few specifics:", _w, r + 4*f);
-		new Text("Basic Towers shoot regular bullets", s, r + 6*f);
-		new Text("Flame Towers create a circle of flame around themselves", s, r + 7*f);
-		new Text("Cannon Towers shoot bombs that cause splash damage on impact", s, r + 8*f);
-		new Text("Goo Towers shoot goo that will slow zombies down", s, r + 9*f);
-		new Text("Poison Towers poison zombies so that they will continuously lose health", s, r + 10*f);
-		new Text("Electric Towers shoot electric shocks that can jump from zombie to zombie", s, r + 11*f);
-		new Text("Laser Towers shoot lasers that damage all zombies in their path", s, r + 12*f);
+		new CenText("the zombies from destroying your base by building towers, since your base is very weak. At the end of each round", _w, r + 4*f);
+		new CenText("you will receive 5% interest on whatever money you have left. A few specifics:", _w, r + 5*f);
+		new Text("Basic Towers shoot regular bullets", s, r + 7*f);
+		new Text("Flame Towers create a circle of flame around themselves", s, r + 8*f);
+		new Text("Cannon Towers shoot bombs that cause splash damage on impact", s, r + 9*f);
+		new Text("Goo Towers shoot goo that will slow zombies down", s, r + 10*f);
+		new Text("Poison Towers poison zombies so that they will continuously lose health", s, r + 11*f);
+		new Text("Electric Towers shoot electric shocks that can jump from zombie to zombie", s, r + 12*f);
+		new Text("Laser Towers shoot lasers that damage all zombies in their path", s, r + 13*f);
 
-		new Text("At round 5 sprint zombies that move twice as fast as regular zombies will arrive", s, r + 14*f);
-		new Text("At round 10 bruiser zombies that have twice the health as regular zombies will arrive and are quite a bit stronger", s, r + 15*f);
-		new Text("At round 15 range zombie that can attack the base from a distance will arrive", s, r + 16*f);
-		new Text("At round 20 super zombies will arrive....good luck", s, r + 17*f);
+		new Text("At round 5 sprint zombies that move twice as fast as regular zombies will arrive", s, r + 15*f);
+		new Text("At round 10 bruiser zombies that have twice the health as regular zombies will arrive and are quite a bit stronger", s, r + 16*f);
+		new Text("At round 15 range zombie that can attack the base from a distance will arrive", s, r + 17*f);
+		new Text("At round 20 super zombies will arrive....good luck", s, r + 18*f);
 
 
 		g.setColor(colorholder);

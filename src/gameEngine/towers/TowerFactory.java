@@ -130,9 +130,6 @@ public class TowerFactory {
 		_lasersprite = img.getSubimage(0, 0, 1024, 1024);		
 		w = _lasersprite.getWidth();
 		h = _lasersprite.getHeight();
-		System.out.println("LS w " + w);
-		System.out.println("LS h " + h);
-
 		scaled = new BufferedImage(w/3, h/3, _lasersprite.getType());
 		g = scaled.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);

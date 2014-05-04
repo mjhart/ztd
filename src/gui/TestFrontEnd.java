@@ -157,7 +157,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		}
 		
 		//All highways, draw thin
-		g.setColor(new Color(255,222,173));
+		g.setColor(new Color(255,222,173).darker());
 		g.setStroke(new BasicStroke(defaultstroke));
 		for (Line2D l: _highline2D) {
 			g.draw(l);
