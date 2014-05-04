@@ -22,6 +22,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import mapbuilder.Building;
 import mapbuilder.Map;
@@ -58,7 +59,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private float _consoleWidth;
 	private Rectangle _border;
 	private boolean _hasDataError = false;
-	private boolean _loading;
+	private AtomicBoolean _loading;
+	private Screen _lScreen;
 	
 	public TestFrontEnd(String title, boolean fullscreen) {
 		super(title, fullscreen);
@@ -84,57 +86,64 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 		_validPlace = false;
 		_candidate = null;
-		_loading = false;
+		_loading = new AtomicBoolean(false);
 		
 		super.startup();
 	}
 
 	@Override
 	protected void onTick(long nanosSincePreviousTick) {
-		if(_ref != null) {
-			_ref.tick(nanosSincePreviousTick);
+		if(!_loading.get()) {
+			if(_ref != null) {
+				_ref.tick(nanosSincePreviousTick);
+			}
 		}
 	}
 
 	@Override
 	protected void onDraw(Graphics2D g) {
-		if (_showMain) {
-			_mm.draw(g);
+		if(_loading.get()) {
+			_lScreen.draw(g);
 		}
-		else if (_showMap) {
-			g.translate(_consoleWidth, 0);
-			g.scale((float) _mapSize / 10000, (float) _mapSize / 10000);
-			float defaultstroke = 10000 / DEFAULT_WINDOW_SIZE.x;
-			g.setStroke(new BasicStroke(defaultstroke));
+		else {
+			if (_showMain) {
+				_mm.draw(g);
+			}
+			else if (_showMap) {
+				g.translate(_consoleWidth, 0);
+				g.scale((float) _mapSize / 10000, (float) _mapSize / 10000);
+				float defaultstroke = 10000 / DEFAULT_WINDOW_SIZE.x;
+				g.setStroke(new BasicStroke(defaultstroke));
 
-			this.drawMap(g, defaultstroke);
+				this.drawMap(g, defaultstroke);
 
-			for(AbstractTower t : _ref.towers()) {
-				t.draw2(g);
+				for(AbstractTower t : _ref.towers()) {
+					t.draw2(g);
+				}
+
+				g.setColor(java.awt.Color.RED);
+				for(Zombie z : _ref.getZombies()) {
+					//g.drawOval(lonToX(z.getCoords().x), latToY(z.getCoords().y), 3, 3);
+					//z.draw(g, new Vec2i(lonToX(z.getCoords().x), latToY(z.getCoords().y)));
+					z.draw(g);
+				}
+
+				this.drawCandidate(g);
+
+				g.setStroke(new BasicStroke());
+				g.setTransform(new AffineTransform());
+				_c.draw(g);
+
+				if(_border != null) {
+					g.setColor(java.awt.Color.WHITE);
+					g.fill(_border);
+				}
+
+				this.checkGameOver();
 			}
-			
-			g.setColor(java.awt.Color.RED);
-			for(Zombie z : _ref.getZombies()) {
-				//g.drawOval(lonToX(z.getCoords().x), latToY(z.getCoords().y), 3, 3);
-				//z.draw(g, new Vec2i(lonToX(z.getCoords().x), latToY(z.getCoords().y)));
-				z.draw(g);
+			if (_hasScreen) {
+				_screen.draw(g);
 			}
-			
-			this.drawCandidate(g);
-			
-			g.setStroke(new BasicStroke());
-			g.setTransform(new AffineTransform());
-			_c.draw(g);
-			
-			if(_border != null) {
-				g.setColor(java.awt.Color.WHITE);
-				g.fill(_border);
-			}
-			
-			this.checkGameOver();
-		}
-		if (_hasScreen) {
-			_screen.draw(g);
 		}
 
 	}
@@ -313,10 +322,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 	
 	public void makeMap(String add) {
 		_ref = new Referee(_m, this);
-		_screen = new Screen("Loading", _size.x, _size.y, _ref);
-		_hasScreen = true;
-		_hasMain = false;
-		_hasMap = false;
 		_m = new Map(add, _ref, this);
 		if (!_hasDataError) {
 			if (_m.getBaseNode() == null) {
@@ -365,33 +370,35 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onKeyPressed(KeyEvent e) {
-		String s = Character.toString(e.getKeyChar());
-		if (_hasMain) {
-			if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-				s = "backspace";
+		if(!_loading.get()) {
+			String s = Character.toString(e.getKeyChar());
+			if (_hasMain) {
+				if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+					s = "backspace";
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					s = "enter";
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_TAB) {
+					s = "tab";
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+					s = ""; //Don't print shift
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_UP) {
+					s = ""; //Don't print up
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+					s = ""; //Don't print left
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+					s = ""; //Don't print down
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+					s = ""; //Don't print right
+				}
+				_mm.keyTyped(s);
 			}
-			else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-				s = "enter";
-			}
-			else if (e.getKeyCode() == KeyEvent.VK_TAB) {
-				s = "tab";
-			}
-			else if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
-				s = ""; //Don't print shift
-			}
-			else if (e.getKeyCode() == KeyEvent.VK_UP) {
-				s = ""; //Don't print up
-			}
-			else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-				s = ""; //Don't print left
-			}
-			else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-				s = ""; //Don't print down
-			}
-			else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-				s = ""; //Don't print right
-			}
-			_mm.keyTyped(s);
 		}
 	}
 
@@ -400,85 +407,90 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onMouseClicked(MouseEvent e) {
-		if (_hasMain) {
-			String add = _mm.contains(e.getX(), e.getY(), true);
-			if (add != null) {
-				this.makeMap(add);
+		if(!_loading.get()) {
+			if (_hasMain) {
+				String add = _mm.contains(e.getX(), e.getY(), true);
+				if (add != null) {
+					_loading.set(true);
+					_lScreen = new Screen("Loading", _size.x, _size.y, _ref);
+					Thread t = new MapImportThread(add, this);
+					t.start();
+				}
 			}
-		}
-		else if (_hasMap) {
-			String command = _c.contains(e.getX(), e.getY(), true);
-			if (command != null) {
-				_c.noUpgrades();
-				System.out.println(command);
-				String[] fw = command.split("\\s+");
-				_command = fw[0];
+			else if (_hasMap) {
+				String command = _c.contains(e.getX(), e.getY(), true);
+				if (command != null) {
+					_c.noUpgrades();
+					System.out.println(command);
+					String[] fw = command.split("\\s+");
+					_command = fw[0];
 
-			}
-			
+				}
 
 
-			if (command != null) {
-				if (parseConsoleControlButton()) {
-					if ((!_command.equals("Halve")) && (!_command.equals("Double"))) {
+
+				if (command != null) {
+					if (parseConsoleControlButton()) {
+						if ((!_command.equals("Halve")) && (!_command.equals("Double"))) {
+							_placedTower = null;
+							if (_c != null) {
+								_c.noUpgrades();
+							}
+						}
+						else {
+							if (_c != null) {
+								_c.showUpgrades(_placedTower);
+							}
+						}
+						_command = null;
+					}
+					else {
 						_placedTower = null;
-						if (_c != null) {
-							_c.noUpgrades();
+						_c.noUpgrades();
+					}
+				}
+				else {
+					if ((e.getX() > _consoleWidth) && (_command != null)) {
+						if (_validPlace) {
+							if (_candidate != null) {
+								_ref.addTower(_candidate);
+								_c.unhighlightTb();
+								_command = null;
+								_candidate = null;
+								_c.noUpgrades();
+							}
+						}
+					}
+					else if ((e.getX() > _consoleWidth) && (_command == null)) {
+						_c.noUpgrades();
+						for (AbstractTower t: _ref.towers()) {
+							if (t.contains(xToLon(e.getX()), yToLat(e.getY()))) {
+								_c.unhighlightTb();
+								_placedTower = t;
+								_c.showUpgrades(t);
+								break;
+							}
 						}
 					}
 					else {
-						if (_c != null) {
-							_c.showUpgrades(_placedTower);
-						}
+						_c.unhighlightTb();
+						_c.noUpgrades();
+						_command = null;
+						_candidate = null;
+						_placedTower = null;
 					}
-					_command = null;
-				}
-				else {
-					_placedTower = null;
-					_c.noUpgrades();
 				}
 			}
-			else {
-				if ((e.getX() > _consoleWidth) && (_command != null)) {
-					if (_validPlace) {
-						if (_candidate != null) {
-							_ref.addTower(_candidate);
-							_c.unhighlightTb();
-							_command = null;
-							_candidate = null;
-							_c.noUpgrades();
-						}
-					}
-				}
-				else if ((e.getX() > _consoleWidth) && (_command == null)) {
-					_c.noUpgrades();
-					for (AbstractTower t: _ref.towers()) {
-						if (t.contains(xToLon(e.getX()), yToLat(e.getY()))) {
-							_c.unhighlightTb();
-							_placedTower = t;
-							_c.showUpgrades(t);
-							break;
-						}
-					}
-				}
-				else {
-					_c.unhighlightTb();
-					_c.noUpgrades();
-					_command = null;
-					_candidate = null;
-					_placedTower = null;
-				}
-			}
-		}
-		else if(_hasScreen) {
+			else if(_hasScreen) {
 
-			String command = _screen.contains(e.getX(), e.getY(), true);
-			if (command != null) {
-				String[] fw = command.split("\\s+");
-				_command = fw[0];
-				parseConsoleControlButton();
+				String command = _screen.contains(e.getX(), e.getY(), true);
+				if (command != null) {
+					String[] fw = command.split("\\s+");
+					_command = fw[0];
+					parseConsoleControlButton();
+				}
+				_command = null;
 			}
-			_command = null;
 		}
 
 	}
@@ -601,15 +613,16 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onMouseMoved(MouseEvent e) {
-		if (_hasMain) {
-			_mm.contains(e.getX(), e.getY(), false);
-		}
-		
-		else if (_hasMap) {
-			_c.contains(e.getX(), e.getY(), false);
-			if ((e.getX() > _consoleWidth) && (_command != null)) {
-				_candidate = parseConsoleTowerButton(e);
-				//if (_candidate != null) {
+		if(!_loading.get()) {
+			if (_hasMain) {
+				_mm.contains(e.getX(), e.getY(), false);
+			}
+
+			else if (_hasMap) {
+				_c.contains(e.getX(), e.getY(), false);
+				if ((e.getX() > _consoleWidth) && (_command != null)) {
+					_candidate = parseConsoleTowerButton(e);
+					//if (_candidate != null) {
 					BufferedImage sprite = _candidate.getSprite();
 					int w = sprite.getWidth();
 					int h = sprite.getHeight();
@@ -636,16 +649,16 @@ public class TestFrontEnd extends SwingFrontEnd {
 							_candidate = null;
 						}
 					}
-				//}
+					//}
+				}
+				else {
+					_candidate = null;
+				}
 			}
-			else {
-				_candidate = null;
+			else if (_hasScreen) {
+				_screen.contains(e.getX(), e.getY(), false);
 			}
 		}
-		else if (_hasScreen) {
-			_screen.contains(e.getX(), e.getY(), false);
-		}
-
 	}
 
 	@Override
@@ -654,6 +667,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	@Override
 	protected void onResize(Vec2i newSize) {
 		_size = newSize;
+
 		if(newSize.x - Constants.MIN_CONSOLE_WIDTH > newSize.y) {
 			_mapSize = newSize.y;
 			_consoleWidth = newSize.x - newSize.y;
@@ -665,6 +679,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 			_consoleWidth = Constants.MIN_CONSOLE_WIDTH;
 			_c = new Console2(0,0,_consoleWidth,_size.y, _tf, _ref);
 			_border = new Rectangle((int) _consoleWidth, (int) _mapSize, (int) _mapSize, (int) (newSize.x - _consoleWidth));
+		}
+		if(_loading.get()) {
+			_lScreen = new Screen("Loading", _size.x, _size.y, _ref);
 		}
 	}
 	
@@ -696,6 +713,21 @@ public class TestFrontEnd extends SwingFrontEnd {
 	}
 	
 
+	private class MapImportThread extends Thread {
+		
+		private TestFrontEnd _fe;
+		private String _add;
+		public MapImportThread(String add, TestFrontEnd fe) {
+			_fe = fe;
+			_add = add;
+		}
+		
+		@Override
+		public void run() {
+			_fe.makeMap(_add);
+			_loading.set(false);
+		}
+	}
 	
 	
 }
