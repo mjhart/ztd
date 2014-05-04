@@ -40,22 +40,6 @@ public class TowerFactory {
 			System.out.println("ERROR: Could not get image (tower.png)");
 		}
 		
-		// read cannon sprite
-		try {
-			_cannonsprite = ImageIO.read(new File("towerpics/cannonTower.png"));
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (cannonTower.png)");
-		}
-		
-
-		
-		// read electric tower sprite
-		try {
-			_electricsprite = ImageIO.read(new File("towerpics/cannonTower.png"));
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (cannonTower.png)");
-		}
-		
 		// read flame sprite
 		try {
 			img = ImageIO.read(new File("towerpics/flames.png"));
@@ -89,7 +73,6 @@ public class TowerFactory {
 	    _cannonsprite = scaled;
 	    
 	    
-	    
 		// read electric sprite
 		try {
 			img = ImageIO.read(new File("towerpics/stuntowersheet.png"));
@@ -99,27 +82,18 @@ public class TowerFactory {
 		_electricsprite = img.getSubimage(20, 0, 68, 118);		
 		w = _electricsprite.getWidth();
 		h = _electricsprite.getHeight();
-		scaled = new BufferedImage(5*w, 5*h, _electricsprite.getType());
+		scaled = new BufferedImage(4*w, 4*h, _electricsprite.getType());
 		g = scaled.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		g.drawImage(_electricsprite, 0, 0, 5*w, 5*h, 0, 0, w, h, null);
+		g.drawImage(_electricsprite, 0, 0, 4*w, 4*h, 0, 0, w, h, null);
 	    g.dispose();
 	    _electricsprite = scaled;
-	    
-	    // TODO read goo sprite 
-	    _goosprite = _basicsprite;
-	    
-	    // TODO read poison sprite
-		_poisonsprite = _basicsprite;
-		
-		//TODO read laser sprite
-		_lasersprite = _basicsprite;
 		
 		// read goo sprite
 		try {
 			img = ImageIO.read(new File("towerpics/gooTowerSheet.png"));
 		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (flames.png)");
+			System.out.println("ERROR: Could not get image (gooTowerSheet.png)");
 		}
 		_goosprite = img.getSubimage(20, 15, 98, 98);		
 		w = _goosprite.getWidth();
@@ -130,7 +104,6 @@ public class TowerFactory {
 		g.drawImage(_goosprite, 0, 0, 4*w, 4*h, 0, 0, w, h, null);
 	    g.dispose();
 	    _goosprite = scaled;
-	    
 	    
 		// read poison sprite
 		try {
@@ -148,25 +121,26 @@ public class TowerFactory {
 	    g.dispose();
 	    _poisonsprite = scaled;
 		
-//		// read laser sprite
-//		try {
-//			_lasersprite = ImageIO.read(new File("towerpics/lasertower.gif"));
-//		} catch (IOException e) {
-//			System.out.println("ERROR: Could not get image (cannonTower.png)");
-//		}
-//		_lasersprite = img.getSubimage(0, 0, 118, 118);		
-//		w = _lasersprite.getWidth();
-//		h = _lasersprite.getHeight();
-//		scaled = new BufferedImage(4*w, 4*h, _lasersprite.getType());
-//		g = scaled.createGraphics();
-//		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-//		g.drawImage(_lasersprite, 0, 0, 4*w, 4*h, 0, 0, w, h, null);
-//	    g.dispose();
-//	    _lasersprite = scaled;
+		// read laser sprite
+		try {
+			img = ImageIO.read(new File("towerpics/laserTowerReal.png"));
+		} catch (IOException e) {
+			System.out.println("ERROR: Could not get image (laserTowerReal.png)");
+		}
+		_lasersprite = img.getSubimage(0, 0, 1024, 1024);		
+		w = _lasersprite.getWidth();
+		h = _lasersprite.getHeight();
+		System.out.println("LS w " + w);
+		System.out.println("LS h " + h);
 
-	    
-	    
-	    
+		scaled = new BufferedImage(w/3, h/3, _lasersprite.getType());
+		g = scaled.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g.drawImage(_lasersprite, 0, 0, w/3, h/3, 0, 0, w, h, null);
+	    g.dispose();
+	    _lasersprite = scaled;
+
+
 	    
 		// read electric projectile sprites
 		try {

@@ -607,7 +607,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 					BufferedImage sprite = _candidate.getSprite();
 					int w = sprite.getWidth();
 					int h = sprite.getHeight();
-					Rectangle2D r = new Rectangle2D.Double(xToLon(e.getX() + 3) - w/2, yToLat(e.getY() + 3) - h/2, w - 8, h - 8);
+					Rectangle2D r = new Rectangle2D.Double(xToLon(e.getX() + 3) - w/2, yToLat(e.getY() + 2) - h/2, w - 8, h - 10);
 					for (Line2D l: _zombieline2D) {
 						if (l.intersects(r)) {
 							_validPlace = false;

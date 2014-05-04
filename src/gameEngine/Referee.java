@@ -31,7 +31,7 @@ public class Referee {
 	private List<AbstractTower> _towers;
 	private ZombieFactory _zFactory;
 	private int _money;
-	private static final int STARTING_MONEY = 350;
+	private static final int STARTING_MONEY = 10000;
 	private static final int STARTING_HEALTH = 100;
 	private BufferedImage _basesprite;
 	private boolean _gameOver;
@@ -58,11 +58,13 @@ public class Referee {
 	}
 	
 	private void getBaseSprite() {
+		BufferedImage img = null;
 		try {
-			_basesprite = ImageIO.read(new File("towerpics/house.png"));
+			img = ImageIO.read(new File("towerpics/house.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (house.png)");
-		}
+		}	
+		_basesprite = img.getSubimage(60, 18, 200, 180);
 		int w = _basesprite.getWidth();
 		int h = _basesprite.getHeight();
 		BufferedImage scaled = new BufferedImage(3*w, 3*h, _basesprite.getType());
@@ -265,11 +267,6 @@ public class Referee {
 	}
 	
 	public void setMap(Map m) {
-		System.out.println("Map " + m);
-		System.out.println(m.getBaseNode());
-		System.out.println(m.getBaseNode()._coords);
-		System.out.println(this);
-		System.out.println(_basesprite);
 		_m = m;
 		_b  = new Base(_m.getBaseNode(), _m.getBaseNode()._coords, this, _basesprite);
 		_b.setHealth(STARTING_HEALTH);

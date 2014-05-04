@@ -27,7 +27,7 @@ public class MainMenu {
 	private ControlButton _go;
 	private int _etbwidth = 25;
 	private boolean _first;
-	private final Color _background = Color.GRAY;
+	private final Color _background = new Color(119,136,153);
 	
 	public MainMenu(int w, int h) {
 		_w = w;
@@ -73,7 +73,7 @@ public class MainMenu {
 		new Text("Or choose from one", centerX("Or choose from one", 3*_w/2), _h/5);
 		new Text("of our locations", centerX("of our locations", 3*_w/2), _h/5 + c - 10);
 		
-		g.drawLine((int) (_w/2), (int) (_h/5), (int) (_w/2), (int) (3*_h/5));
+		g.drawLine((int) (_w/2), (int) (_h/6), (int) (_w/2), (int) (3*_h/5 - 30));
 		
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Helvetica", Font.BOLD, 15));
@@ -87,11 +87,17 @@ public class MainMenu {
 			cb.draw(g, _background);
 		}
 		
-		g.setFont(new Font("Helvetica", Font.BOLD, 13));
+
 		int r = 3*_h/5 + 10;
+		g.setColor(_background);
+		g.fillRect(0, 3*_h/5 + 10, _w, _h);
+		g.setColor(Color.BLACK);
+		g.drawLine(0, 3*_h/5 + 10, _w, 3*_h/5 + 10);
 		int f = 17;
 		int s = 30;
-		g.drawString("Tutorial", centerX("Tutorial", _w), r + f);
+		g.setFont(new Font("Helvetica", Font.BOLD, 13));
+		g.setColor(Color.BLACK);
+		new CenText("Tutorial", _w, r + f);
 		new CenText("Zombie Tower Defense is a tower defense game based on real world maps. By typing in an address or by selecting", _w, r + 2*f);
 		new CenText("a location at right you can generate a map of your choosing to play the game on. The object of the game is prevent", _w, r + 3*f);
 		new CenText("the zombies from reaching your base. A few specifics:", _w, r + 4*f);
