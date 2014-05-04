@@ -49,6 +49,12 @@ public class MainMenu {
 			_cbs.add(new ControlButton("Wall Street", 3*_w/2, _h/5 + 3*c, g));
 			_cbs.add(new ControlButton("The White House", 3*_w/2, _h/5 + 4*c, g));
 			_cbs.add(new ControlButton("Eiffel Tower", 3*_w/2, _h/5 + 5*c, g));
+			_cbs.add(new ControlButton("San Francisco", 3*_w/2, _h/5 + 6*c, g));
+			_cbs.add(new ControlButton("Philadelphia Museum of Art", 3*_w/2, _h/5 + 7*c, g));
+			_cbs.add(new ControlButton("London", 3*_w/2, _h/5 + 8*c, g));
+			_cbs.add(new ControlButton("Statue of Liberty", 3*_w/2, _h/5 + 9*c, g));
+			_cbs.add(new ControlButton("Statue of Liberty", 3*_w/2, _h/5 + 10*c, g));
+			_cbs.add(new ControlButton("Statue of Liberty", 3*_w/2, _h/5 + 6*c, g));
 			_cbs.add(new ControlButton("Statue of Liberty", 3*_w/2, _h/5 + 6*c, g));
 			_first = false;
 		}
@@ -213,7 +219,6 @@ public class MainMenu {
 			_addline2.select();
 			_addline1.unselect();
 		}
-		System.out.println("Choose: " + _toggle);
 	}
 	
 	

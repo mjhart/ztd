@@ -161,34 +161,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 			g.draw(l);
 		}
 		
-		//Buildings
-		g.setColor(Color.GRAY.brighter());
-		for (Building b: _m.getBuildings()) {
-			g.fill(b.getPolygon());
-		}
-		
-		//Getting rid of overlapping names
-		g.setColor(Color.BLACK);
-		g.setFont(new Font("Helvetica", Font.BOLD, 110));
-		for (Building b: _m.getBuildings()) {
-			Rectangle2D r = b.getPolygon().getBounds();
-			if (b.getName() != null) {
-				String[] namearr = b.getName().split("\\s+");
-				FontMetrics fm = g.getFontMetrics();
-				boolean draw = true;
-				for (int i = 0; i < namearr.length; i++) {
-					if (fm.stringWidth(namearr[i]) > r.getWidth()) {
-						draw = false;
-						break;
-					}
-				}
-				if ((namearr.length * fm.getHeight() < r.getHeight()) && (draw)) {
-					for (int i = 0; i < namearr.length; i++) {
-						g.drawString(namearr[i], (int) r.getX() + 100, (int) r.getCenterY() - 50 + 110*i);
-					}
-				}
-			}
-		}
+
 		
 		//Footways
 		g.setColor(new Color(178,34,34));
@@ -237,12 +210,41 @@ public class TestFrontEnd extends SwingFrontEnd {
 				}
 			}
 		}
+		
+		//Buildings
+		g.setColor(Color.GRAY.brighter());
+		for (Building b: _m.getBuildings()) {
+			g.fill(b.getPolygon());
+		}
 
 		//Zombie highways
 		g.setColor(java.awt.Color.BLUE);
 		g.setStroke(new BasicStroke(6*defaultstroke));
 		for (Line2D l: _zombieline2D) {
 			g.draw(l);
+		}
+		
+		//Building names
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Helvetica", Font.BOLD, 110));
+		for (Building b: _m.getBuildings()) {
+			Rectangle2D r = b.getPolygon().getBounds();
+			if (b.getName() != null) {
+				String[] namearr = b.getName().split("\\s+");
+				FontMetrics fm = g.getFontMetrics();
+				boolean draw = true;
+				for (int i = 0; i < namearr.length; i++) {
+					if (fm.stringWidth(namearr[i]) > r.getWidth()) {
+						draw = false;
+						break;
+					}
+				}
+				if ((namearr.length * fm.getHeight() < r.getHeight()) && (draw)) {
+					for (int i = 0; i < namearr.length; i++) {
+						g.drawString(namearr[i], (int) r.getX() + 100, (int) r.getCenterY() - 50 + 110*i);
+					}
+				}
+			}
 		}
 		
 		/*
@@ -292,8 +294,16 @@ public class TestFrontEnd extends SwingFrontEnd {
 		}
 	}
 	
-	public void dataError() {
-		_screen = new Screen("Bad Connection", _size.x, _size.y, _ref);
+	public void dataError(int i) {
+		if (i == 1) {
+			_screen = new Screen("Bad Connection", _size.x, _size.y, _ref);
+		}
+		else if (i == 2) {
+			_screen = new Screen("No Location", _size.x, _size.y, _ref);
+		}
+		else if (i == 3) {
+			_screen = new Screen("Bad Location", _size.x, _size.y, _ref);
+		}
 		_hasScreen = true;
 		_hasDataError = true;
 		_hasMain = false;
@@ -302,37 +312,41 @@ public class TestFrontEnd extends SwingFrontEnd {
 	
 	public void makeMap(String add) {
 		_ref = new Referee(_m, this);
-		try {
-			_m = new Map(add, _ref, this);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		_m = new Map(add, _ref, this);
 		if (!_hasDataError) {
-			_ref.setMap(_m);
-			_m.getSources();
-
-			_c = new Console2(0,0,Constants.MIN_CONSOLE_WIDTH,_size.y, _tf, _ref);
-			_hasMap = true;
-			_showMap = true;
-			_hasMain = false;
-			_showMain = false;
-			_mm.clear();
-
-			for(MapWay h : _m.getHighways()) {
-				List<MapNode> nList = h.getNodes();
-				for(int i=1; i<nList.size(); i++) {
-					_highline2D.add(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
-				}
+			if (_m.getBaseNode() == null) {
+				dataError(2);
 			}
+			else {
+				_ref.setMap(_m);
+				if (_m.calculatePath().isEmpty()) {
+					dataError(3);
+				}
+				else {
+					_c = new Console2(0,0,Constants.MIN_CONSOLE_WIDTH,_size.y, _tf, _ref);
+					_hasMap = true;
+					_showMap = true;
+					_hasMain = false;
+					_showMain = false;
+					_mm.clear();
 
-			for(MapNode n : _m.getSourceList()) {
-				MapNode cur = n;
-				MapNode next = cur.getNext();
-				while(next!=null) {
-					Line2D l = new Line2D.Float(cur.getX(), cur.getY(), next.getX(), next.getY());
-					_zombieline2D.add(l);
-					cur = next;
-					next = next.getNext();
+					for(MapWay h : _m.getHighways()) {
+						List<MapNode> nList = h.getNodes();
+						for(int i=1; i<nList.size(); i++) {
+							_highline2D.add(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
+						}
+					}
+
+					for(MapNode n : _m.getSourceList()) {
+						MapNode cur = n;
+						MapNode next = cur.getNext();
+						while(next!=null) {
+							Line2D l = new Line2D.Float(cur.getX(), cur.getY(), next.getX(), next.getY());
+							_zombieline2D.add(l);
+							cur = next;
+							next = next.getNext();
+						}
+					}
 				}
 			}
 		}
@@ -531,6 +545,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 			_hasScreen = false;
 			_hasMain = true;
 			_showMain = true;
+			_hasDataError = false;
 		}
 		else if (_command.equals("Quit")) {
 			System.exit(0);

@@ -55,6 +55,7 @@ public class Map {
 	private Referee _ref;
 	private BufferedImage _img;
 	private TestFrontEnd _tf;
+	private boolean _sentDataError = false;
 	
 	public Map(String address, Referee ref, TestFrontEnd tf) {
 		
@@ -67,13 +68,15 @@ public class Map {
 		File stadd = Retriever.getFromAddress(address);
 		//File stadd = new File("stadd.xml");
 		if (stadd == null) {
-			_tf.dataError();
+			_tf.dataError(1);
+			_sentDataError = true;
 		}
 		else {
 			XmlParser x = new XmlParser(this);
 			Point2D.Double cent = x.parseAddress(stadd);
-			if (cent == null) {
-				_tf.dataError();
+			if ((cent == null) && (!_sentDataError)) {
+				_tf.dataError(2);
+				_sentDataError = true;
 			}
 			else {
 				DistConverter dc = new DistConverter(cent.y, cent.x);
@@ -83,12 +86,14 @@ public class Map {
 				wMax[1] = dc.getTop(cent.y);
 				File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
 				//File box = new File("box.xml");
-				if (box == null) {
-					_tf.dataError();
+				if ((box == null) && (!_sentDataError)) {
+					_tf.dataError(1);
+					_sentDataError = true;
 				}
 				else {
-					if (!x.parseBox(box)) {
-						_tf.dataError();
+					if ((!x.parseBox(box)) && (!_sentDataError)) {
+						_tf.dataError(2);
+						_sentDataError = true;
 					}
 					else {
 						_ways = x.getWays();
@@ -435,7 +440,7 @@ public class Map {
 		
 	}
 	
-	public List<MapNode> getSources() {
+	public List<MapNode> calculatePath() {
 		System.out.println(_baseNode);
 		List<MapNode> srcs = potentialSrcs();
 		System.out.println(srcs);
