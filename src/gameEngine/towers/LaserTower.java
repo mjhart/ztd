@@ -6,16 +6,12 @@ import gameEngine.projectile.LaserProjectile;
 import gameEngine.zombie.Zombie;
 
 import java.awt.Graphics2D;
-import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 import cs195n.Vec2f;
-import cs195n.Vec2i;
 
 
 public class LaserTower extends AbstractTower {
@@ -23,12 +19,6 @@ public class LaserTower extends AbstractTower {
 	
 	public LaserTower(Vec2f vec, Referee ref, BufferedImage sprite) {
 		super(30, 1000000, 3000000000l, 500, Constants.LASER_BLURB, vec, ref, sprite);
-	}
-
-	@Override
-	public void draw(Graphics2D g, Vec2i coords) {
-		g.setColor(java.awt.Color.ORANGE);
-		g.fill(new Rectangle2D.Float(coords.x, coords.y, 10, 10));
 	}
 	
 	@Override

@@ -51,7 +51,10 @@ public class Referee {
 		_m = m;
 		_zombies = new HashSet<Zombie>();
 		_towers = new LinkedList<AbstractTower>();
-		_money = STARTING_MONEY;
+		//_money = STARTING_MONEY;
+		
+		_money = 10000;
+		_round = 30;
 		getBaseSprite();
 		_gameOver = false;
 		_fe = fe;
@@ -77,6 +80,7 @@ public class Referee {
 	
 	public void tick(long nanosSincePreviousTick) {
 		if(_running) {
+			
 			// add new zombies
 			if(_numZombies > 0) {
 				_nanoSinceSpawn+=nanosSincePreviousTick;
@@ -108,7 +112,7 @@ public class Referee {
 			
 			// move zombies
 			for(Zombie z : _zombies) {
-				z.move();
+				z.move(nanosSincePreviousTick);
 			}
 			
 			// attack base
@@ -144,7 +148,7 @@ public class Referee {
 		double max = Math.random()*10;
 		
 		// sprint zombie
-		if(_round > 5) {
+		if(_round > 4) {
 			double sprint = Math.random() * 7;
 			if(sprint > max) {
 				type = 1;
@@ -153,7 +157,7 @@ public class Referee {
 		}
 		
 		// bruiser
-		if(_round > 10) {
+		if(_round > 9) {
 			double bruise = Math.random() * 5;
 			if(bruise > max) {
 				type = 2;
@@ -162,11 +166,20 @@ public class Referee {
 		}
 		
 		// range
-		if(_round > 15) {
-			double range = Math.random() * 5;
+		if(_round > 14) {
+			double range = Math.random() * (Math.max(_round, 20) - 15);
 			if(range > max) {
 				type = 3;
 				max = range;
+			}
+		}
+		
+		// super
+		if(_round > 20) {
+			double superz = Math.random() * (Math.max(_round, 25) - 20);
+			if(superz > max) {
+				type = 4;
+				max = superz;
 			}
 		}
 		
@@ -178,9 +191,15 @@ public class Referee {
 				
 			case 2:
 				_zombies.add(_zFactory.makeBruiserZombie(_m.getSourceList().get(rnd)));
+				break;
 				
 			case 3:
 				_zombies.add(_zFactory.makeRangeZombie(_m.getSourceList().get(rnd)));
+				break;
+				
+			case 4:
+				_zombies.add(_zFactory.makeSuperZombie(_m.getSourceList().get(rnd)));
+				break;
 	
 			default:
 				_zombies.add(_zFactory.makeBasicZombie(_m.getSourceList().get(rnd)));

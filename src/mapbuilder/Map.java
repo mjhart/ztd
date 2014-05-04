@@ -240,66 +240,66 @@ public class Map {
 				}
 			}
 		}
-		return results;
-	}
-	//*/
-	/*
-	private List<MapNode> potentialSrcs() {
-		List<MapNode> results = new LinkedList<MapNode>();
-		for(MapNode n : _nodes) {
-			if(n.getX() >= 10000 && n.getX() - 500 < 10000) {
-				boolean farEnough = true;
-				for(MapNode n2 : results) {
-					if(n._coords.dist2(n2._coords) < MIN_DIST) {
-						farEnough = false;
+		if(results.size() == 0) {
+			for(MapWay w : _highways) {
+				for(MapNode n : w.getNodes()) {
+					if(n.getX() >= 10000 && n.getX() - 1000 < 10000 && n.getY() < 11000 && n.getY() > -1000) {
+						boolean farEnough = true;
+						for(MapNode n2 : results) {
+							if(n._coords.dist2(n2._coords) < MIN_DIST) {
+								farEnough = false;
+								break;
+							}
+						}
+						if(farEnough) {
+							results.add(n);
+						}
+						continue;
 					}
-				}
-				if(farEnough) {
-					results.add(n);
-					continue;
-				}
-			}
-			if(n.getY() >= 10000 && n.getY() - 500 < 10000) {
-				boolean farEnough = true;
-				for(MapNode n2 : results) {
-					if(n._coords.dist2(n2._coords) < MIN_DIST) {
-						farEnough = false;
+					if(n.getY() >= 10000 && n.getY() - 1000 < 10000 && n.getX() < 11000 && n.getX() > -1000) {
+						boolean farEnough = true;
+						for(MapNode n2 : results) {
+							if(n._coords.dist2(n2._coords) < MIN_DIST) {
+								farEnough = false;
+								break;
+							}
+						}
+						if(farEnough) {
+							results.add(n);
+						}
+						continue;
 					}
-				}
-				if(farEnough) {
-					results.add(n);
-					continue;
-				}
-			}
-			if(n.getX() <= 0 && n.getX() + 500 > 0) {
-				boolean farEnough = true;
-				for(MapNode n2 : results) {
-					if(n._coords.dist2(n2._coords) < MIN_DIST) {
-						farEnough = false;
+					if(n.getX() <= 0 && n.getX() + 1000 > 0 && n.getY() < 11000 && n.getY() > -1000) {
+						boolean farEnough = true;
+						for(MapNode n2 : results) {
+							if(n._coords.dist2(n2._coords) < MIN_DIST) {
+								farEnough = false;
+								break;
+							}
+						}
+						if(farEnough) {
+							results.add(n);
+						}
+						continue;
 					}
-				}
-				if(farEnough) {
-					results.add(n);
-					continue;
-				}
-			}
-			if(n.getY() <= 0 && n.getY() + 500 > 0) {
-				boolean farEnough = true;
-				for(MapNode n2 : results) {
-					if(n._coords.dist2(n2._coords) < MIN_DIST) {
-						farEnough = false;
+					if(n.getY() <= 0 && n.getY() + 1000 > 0 && n.getX() < 11000 && n.getX() > -1000) {
+						boolean farEnough = true;
+						for(MapNode n2 : results) {
+							if(n._coords.dist2(n2._coords) < MIN_DIST) {
+								farEnough = false;
+								break;
+							}
+						}
+						if(farEnough) {
+							results.add(n);
+						}
+						continue;
 					}
-				}
-				if(farEnough) {
-					results.add(n);
-					continue;
 				}
 			}
 		}
-		//System.out.println(results);
 		return results;
 	}
-	*/
 	
 	private List<MapNode> findPaths(List<MapNode> srcList, MapNode base) {
 		LinkedList<MapNode> spawns = new LinkedList<MapNode>();
@@ -321,41 +321,12 @@ public class Map {
 		
 		pq.add(base);
 		
-		/*
-		MapNode node;
-		while(!pq.isEmpty()) {
-			node = pq.poll();
-			System.out.println(node);
-			Vec2f nv = new Vec2f((float)node.lon,(float) node.lat);
-			visited.add(node);
-			
-			if(srcList.contains(node)) {
-				spawns.add(node);
-				srcList.remove(node);
-			}
-			
-			for(MapNode nbor : getAdjacentNodes(node)) {
-				if(!visited.contains(nbor)) {
-					
-					Vec2f nv2 = new Vec2f((float)nbor.lon,(float) nbor.lat);
-					float d = nv.dist2(nv2);
-					
-					if(dist.get(node) + d < dist.get(nbor)) {
-						dist.put(nbor, (int) (dist.get(nbor)+d));
-						pq.remove(nbor);
-						pq.add(nbor);
-						nbor.setNext(node);
-					}
-				}
-			}
-		}
-		*/
 		
 		///*
 		MapNode node;
 		while(!pq.isEmpty()) {
 			node = pq.poll();
-			//System.out.println("Popped: " + node);
+			System.out.println("Popped: " + node);
 			//System.out.println("Popped dist: " + dist.get(node));
 			Vec2f nv = node._coords;
 			visited.add(node);

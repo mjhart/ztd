@@ -58,6 +58,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private float _consoleWidth;
 	private Rectangle _border;
 	private boolean _hasDataError = false;
+	private boolean _loading;
 	
 	public TestFrontEnd(String title, boolean fullscreen) {
 		super(title, fullscreen);
@@ -83,6 +84,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 		_validPlace = false;
 		_candidate = null;
+		_loading = false;
 		
 		super.startup();
 	}
@@ -309,9 +311,12 @@ public class TestFrontEnd extends SwingFrontEnd {
 		_hasMain = false;
 	}
 	
-	
 	public void makeMap(String add) {
 		_ref = new Referee(_m, this);
+		_screen = new Screen("Loading", _size.x, _size.y, _ref);
+		_hasScreen = true;
+		_hasMain = false;
+		_hasMap = false;
 		_m = new Map(add, _ref, this);
 		if (!_hasDataError) {
 			if (_m.getBaseNode() == null) {
@@ -328,6 +333,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 					_showMap = true;
 					_hasMain = false;
 					_showMain = false;
+					_hasScreen = false;
 					_mm.clear();
 
 					for(MapWay h : _m.getHighways()) {

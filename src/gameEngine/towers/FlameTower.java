@@ -6,12 +6,10 @@ import gameEngine.projectile.FireProjectile;
 import gameEngine.zombie.Zombie;
 
 import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
 import cs195n.Vec2f;
-import cs195n.Vec2i;
 
 
 public class FlameTower extends AbstractTower {
@@ -19,12 +17,6 @@ public class FlameTower extends AbstractTower {
 	
 	public FlameTower(Vec2f vec, Referee ref, BufferedImage sprite) {
 		super(8, 250000, 500000000, 130, Constants.FLAME_BLURB, vec, ref, sprite);
-	}
-
-	@Override
-	public void draw(Graphics2D g, Vec2i coords) {
-		g.setColor(java.awt.Color.ORANGE);
-		g.fill(new Rectangle2D.Float(coords.x, coords.y, 10, 10));
 	}
 	
 	@Override

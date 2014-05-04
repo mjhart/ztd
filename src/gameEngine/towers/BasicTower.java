@@ -25,12 +25,6 @@ public class BasicTower extends AbstractTower {
 	public BasicTower(Vec2f vec, Referee ref, BufferedImage sprite) {
 		super(10, 1000000, 1000000000, 100, Constants.BASIC_BLURB, vec, ref, sprite);
 	}
-	
-	@Override
-	public void draw(Graphics2D g, Vec2i coords) {
-		g.setColor(java.awt.Color.BLUE);
-		g.fill(new Rectangle2D.Float(coords.x, coords.y, 10, 10));
-	}
 
 	@Override
 	public void drawSimple(Graphics2D g) {
@@ -41,7 +35,7 @@ public class BasicTower extends AbstractTower {
 	public boolean action() {
 		Zombie z = _ref.getFarthest(_vec, _radius);
 		if (z != null) {
-			super.addProjectile(new BasicProjectile(super._vec, z.getCoords(), this));
+			super.addProjectile(new BasicProjectile(super._vec, z.getCoords()));
 			_ref.dealDamage(z, _damage);
 			System.out.println("Basic Tower Firing");
 			return true;

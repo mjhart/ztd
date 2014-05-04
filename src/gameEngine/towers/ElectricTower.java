@@ -7,14 +7,11 @@ import gameEngine.projectile.ElectricProjectile;
 import gameEngine.zombie.Zombie;
 
 import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 import cs195n.Vec2f;
-import cs195n.Vec2i;
 
 
 public class ElectricTower extends AbstractTower {
@@ -25,23 +22,10 @@ public class ElectricTower extends AbstractTower {
 		super(30, 500000, 1000000000, 300, Constants.ELECTRIC_BLURB, vec, ref, sprite);
 		_lightningSprites = lightningSprites;
 	}
-
-	@Override
-	public void draw(Graphics2D g, Vec2i coords) {
-		g.setColor(java.awt.Color.ORANGE);
-		g.fill(new Rectangle2D.Float(coords.x, coords.y, 10, 10));
-	}
 	
 	@Override
 	public void drawSimple(Graphics2D g) {
 		super.drawSimple(g, java.awt.Color.ORANGE);
-		
-//		//This is just for fun, the drawn oval is not accurate at allgh
-//		if (_animate) {
-//			g.setColor(java.awt.Color.ORANGE);
-//			g.fillOval((int) coords.x - 50, (int) coords.y - 50, 100, 100);
-//			_animate = false;
-//		}
 	}
 	
 	
