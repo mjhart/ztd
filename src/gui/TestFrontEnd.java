@@ -302,11 +302,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	
 	public void makeMap(String add) {
 		_ref = new Referee(_m, this);
-		try {
-			_m = new Map(add, _ref, this);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		_m = new Map(add, _ref, this);
 		if (!_hasDataError) {
 			_ref.setMap(_m);
 			_m.getSources();

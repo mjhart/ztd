@@ -26,11 +26,6 @@ public class CannonTower extends AbstractTower {
 		_explosionSprites = explosionSprites;
 	}
 	
-	@Override
-	public void draw(Graphics2D g, Vec2i coords) {
-		g.setColor(java.awt.Color.BLACK);
-		g.fill(new Rectangle2D.Float(coords.x, coords.y, 10, 10));
-	}
 
 	@Override
 	public void drawSimple(Graphics2D g) {

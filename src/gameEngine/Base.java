@@ -2,6 +2,7 @@ package gameEngine;
 
 import gameEngine.towers.BasicTower;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -21,11 +22,13 @@ public class Base extends BasicTower {
 	}
 	
 	public boolean dealDamage(int damage) {
-		_health-=damage;
-		if(_health <= 0) {
+		if(_health - damage <= 0) {
+			_health = 0;
 			System.out.println("Base Destroyed!!");
 			return true;
 		}
+		_health-=damage;
+		
 		return false;
 	}
 	
@@ -42,14 +45,8 @@ public class Base extends BasicTower {
 	}
 
 	@Override
-	public void draw(Graphics2D g, Vec2i coords) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void drawSimple(Graphics2D g) {
-		// TODO Auto-generated method stub
+		super.drawSimple(g, java.awt.Color.BLUE);
 		
 	}
 

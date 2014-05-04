@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import cs195n.Vec2f;
-import cs195n.Vec2i;
 
 
 public abstract class AbstractTower {
@@ -62,9 +61,6 @@ public abstract class AbstractTower {
 	}
 	
 	public abstract boolean action();
-	
-	public abstract void draw(Graphics2D g, Vec2i coords);
-	
 	
 	protected void drawSimple(Graphics2D g, java.awt.Color c) {
 		for(Projectile p : _projectiles) {

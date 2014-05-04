@@ -9,7 +9,6 @@ import java.awt.image.BufferedImage;
 
 import mapbuilder.MapNode;
 import cs195n.Vec2f;
-import cs195n.Vec2i;
 
 public abstract class Zombie {
 	private Vec2f _coords;
@@ -18,16 +17,16 @@ public abstract class Zombie {
 	private int _strength;
 	private MapNode _target;
 	private float _speed;
-	private float _startSpeed;
 	private long _nanoSincePrevAttack;
 	private BufferedImage[] _sprites;
 	private BufferedImage[] _attack;
-	private int  _frame;
+	private int  _spriteFrame;
+	private int _attackFrame;
 	private long _nanoSincePrevAnimation;
 	private float _angle;
 	private double _dist;
 	private Base _base;
-	private boolean _atBase;
+	protected boolean _atBase;
 	
 	public Zombie(Vec2f coords, int health, int strength, MapNode target, float speed, BufferedImage[] sprites, BufferedImage[] attack, Base base) {
 		_coords = coords;
@@ -36,7 +35,6 @@ public abstract class Zombie {
 		_strength = strength;
 		_target = target;
 		_speed = speed;
-		_startSpeed = _speed;
 		_sprites = sprites;
 		_dist = target.getDist();
 		_base = base;
@@ -45,11 +43,12 @@ public abstract class Zombie {
 		_attack = attack;
 	}
 
-	public void move() {
+	public void move(long nanosSincePrevTick) {
 		if(!_atBase) {
 			if(_coords.dist2(_target._coords) < 1000) {
 				if(_target.getNext() == null) {
 					_atBase = true;
+					_attackFrame = 0;
 					return;
 				}
 				_target = _target.getNext();
@@ -90,7 +89,8 @@ public abstract class Zombie {
 		_nanoSincePrevAnimation+=nanosSincePrevTick;
 		if(_nanoSincePrevAnimation > 1000000000 / _speed) {
 			_nanoSincePrevAnimation = 0;
-			_frame = (_frame+1)%_sprites.length;
+			_spriteFrame = (_spriteFrame+1)%_sprites.length;
+			_attackFrame = (_attackFrame+1)%_sprites.length;
 			return;
 		}
 		//System.out.println("Not updating image");
@@ -103,10 +103,10 @@ public abstract class Zombie {
 		af1.scale(5, 5);
 		af1.rotate(_angle, 64, 64);
 		if(_atBase) {
-			g.drawImage(_attack[_frame], af1, null);
+			g.drawImage(_attack[_attackFrame], af1, null);
 		}
 		else {
-			g.drawImage(_sprites[_frame], af1, null);
+			g.drawImage(_sprites[_spriteFrame], af1, null);
 		}
 		
 		g.setColor(java.awt.Color.RED);
@@ -125,7 +125,6 @@ public abstract class Zombie {
 		if(speed >= 0) {
 			_speed = speed;
 		}
-		System.out.println(_speed);
 	}
 	
 	public float getSpeed() {
