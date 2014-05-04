@@ -36,6 +36,7 @@ public class Referee {
 	private BufferedImage _basesprite;
 	private boolean _gameOver;
 	private TestFrontEnd _fe;
+	private boolean _inRound;
 	
 	private int _roundZombiesKilled;
 	private int _totalZombiesKilled;
@@ -51,13 +52,14 @@ public class Referee {
 		_m = m;
 		_zombies = new HashSet<Zombie>();
 		_towers = new LinkedList<AbstractTower>();
-		//_money = STARTING_MONEY;
+		_money = STARTING_MONEY;
 		
-		_money = 10000;
-		_round = 30;
+		//_money = 10000;
+		_round = 0;
 		getBaseSprite();
 		_gameOver = false;
 		_fe = fe;
+		_inRound = false;
 	}
 	
 	private void getBaseSprite() {
@@ -93,14 +95,10 @@ public class Referee {
 				}
 				if(_nanoSinceSpawn > delay) {
 					_nanoSinceSpawn = 0;
-					
-					
-					//TODO decide which is better
-					///*
+
 					for(int i=0; i<_round && _numZombies > 0 && i < _m.getSourceList().size(); i++) {
 						createZombie();
 					}
-					//*/
 				}
 			}
 			
@@ -130,9 +128,10 @@ public class Referee {
 			}
 		}
 		
-		if(_running && _numZombies == 0 && _zombies.size() == 0) {
+		if(_inRound && _running && _numZombies == 0 && _zombies.size() == 0) {
 			System.out.println("Round Over");
-			_running = false;
+			_inRound = false;
+			//_running = false;
 			_roundInterestEarned = _money/20;
 			_totalInterestEarned = _totalInterestEarned + _roundInterestEarned;
 			_fe.roundEnded();
@@ -270,7 +269,7 @@ public class Referee {
 	
 	
 	public void startRound() {
-		if(!_running) {
+		if(!_inRound) {
 			if(_round != 0) {
 				_money += _money/20;
 				_roundMoneySpent = 0;
@@ -279,6 +278,7 @@ public class Referee {
 			_numZombies = _round * 5;
 			_nanoSinceSpawn = 0;
 			_running = true;
+			_inRound = true;
 			_roundZombiesKilled = 0;
 			_roundInterestEarned = 0;
 			_roundMoneyEarned = 0;
@@ -321,6 +321,7 @@ public class Referee {
 	
 	public void restart() {
 		_running = false;
+		_inRound = false;
 		_round = 0;
 		_b.setHealth(STARTING_HEALTH);
 		_zombies.clear();
