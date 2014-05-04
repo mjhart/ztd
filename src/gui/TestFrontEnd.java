@@ -60,7 +60,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private Rectangle _border;
 	private boolean _hasDataError = false;
 	private AtomicBoolean _loading;
-	private Vec2i _lSize;
 	private Screen _lScreen;
 	
 	public TestFrontEnd(String title, boolean fullscreen) {
@@ -88,7 +87,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 		_validPlace = false;
 		_candidate = null;
 		_loading = new AtomicBoolean(false);
-		_lSize = new Vec2i(0, 0);
 		
 		super.startup();
 	}
@@ -414,9 +412,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 				String add = _mm.contains(e.getX(), e.getY(), true);
 				if (add != null) {
 					_loading.set(true);
-					_lSize = _size;
-					System.out.println(_lSize);
-					_lScreen = new Screen("Loading", _lSize.x, _lSize.y, _ref);
+					_lScreen = new Screen("Loading", _size.x, _size.y, _ref);
 					Thread t = new MapImportThread(add, this);
 					t.start();
 				}
@@ -670,26 +666,22 @@ public class TestFrontEnd extends SwingFrontEnd {
 
 	@Override
 	protected void onResize(Vec2i newSize) {
-		if(!_loading.get()) {
-			_size = newSize;
-			if(newSize.x - Constants.MIN_CONSOLE_WIDTH > newSize.y) {
-				_mapSize = newSize.y;
-				_consoleWidth = newSize.x - newSize.y;
-				_c = new Console2(0,0,_consoleWidth,_size.y, _tf, _ref);
-				_border = null;
-			}
-			else {
-				_mapSize = newSize.x - Constants.MIN_CONSOLE_WIDTH;
-				_consoleWidth = Constants.MIN_CONSOLE_WIDTH;
-				_c = new Console2(0,0,_consoleWidth,_size.y, _tf, _ref);
-				_border = new Rectangle((int) _consoleWidth, (int) _mapSize, (int) _mapSize, (int) (newSize.x - _consoleWidth));
-			}
+		_size = newSize;
+
+		if(newSize.x - Constants.MIN_CONSOLE_WIDTH > newSize.y) {
+			_mapSize = newSize.y;
+			_consoleWidth = newSize.x - newSize.y;
+			_c = new Console2(0,0,_consoleWidth,_size.y, _tf, _ref);
+			_border = null;
 		}
 		else {
-			synchronized (_lSize) {
-				_lSize = newSize;
-				_lScreen = new Screen("Loading", _lSize.x, _lSize.y, _ref);
-			}
+			_mapSize = newSize.x - Constants.MIN_CONSOLE_WIDTH;
+			_consoleWidth = Constants.MIN_CONSOLE_WIDTH;
+			_c = new Console2(0,0,_consoleWidth,_size.y, _tf, _ref);
+			_border = new Rectangle((int) _consoleWidth, (int) _mapSize, (int) _mapSize, (int) (newSize.x - _consoleWidth));
+		}
+		if(_loading.get()) {
+			_lScreen = new Screen("Loading", _size.x, _size.y, _ref);
 		}
 	}
 	
@@ -732,7 +724,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 		
 		@Override
 		public void run() {
-			_lScreen = new Screen("Loading", _size.x, _size.y, _ref);
 			_fe.makeMap(_add);
 			_loading.set(false);
 		}

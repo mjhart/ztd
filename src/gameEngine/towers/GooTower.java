@@ -37,13 +37,13 @@ public class GooTower extends AbstractTower {
 					z = z1;
 				}
 				else if(z1.getSpeed() == maxSpeed && z1.getDist() < minDist) {
-					System.out.println("in here");
 					maxSpeed = z1.getSpeed();
 					minDist = z1.getDist();
 					z = z1;
 				}
 			}
 			super.addProjectile(new GooProjectile(super._vec, z));
+			_ref.dealDamage(z, _damage);
 			System.out.println("Goo Tower Firing");
 			return true;
 		}
