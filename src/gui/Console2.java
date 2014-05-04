@@ -52,7 +52,7 @@ public class Console2 {
 	
 	public Console2(float x, float y, float w, float h, TowerFactory tf, Referee ref) {
 		_cw = w;
-		_tbwidth = _cw/5;
+		_tbwidth = 36;
 		_h = h;
 		_x = x;
 		_y = y;
@@ -86,15 +86,17 @@ public class Console2 {
 			_cbs.add(new ControlButton("Quit", _cw,  5*_h/7 + 4*_cboffset, g));
 			
 			Vec2f zero = new Vec2f(0,0);
-			_tbs.add(new TowerButton("Basic Tower", _cw/4, 2*_h/7, _tf.makeBasic(zero, _ref)));
-			_tbs.add(new TowerButton("Flame Tower", _cw*3/4, 2*_h/7, _tf.makeFlame(zero, _ref)));
-			_tbs.add(new TowerButton("Cannon Tower", _cw*5/4, 2*_h/7, _tf.makeCannon(zero, _ref)));
-			_tbs.add(new TowerButton("Goo Tower", _cw*7/4, 2*_h/7, _tf.makeGoo(zero, _ref)));
+			int towerspace = 5;
+			float leftstart = centerRect(_tbwidth*4 + towerspace*3, _cw);
+			_tbs.add(new TowerButton("Basic Tower", leftstart, 2*_h/7, _tf.makeBasic(zero, _ref)));
+			_tbs.add(new TowerButton("Flame Tower", leftstart+_tbwidth+towerspace, 2*_h/7, _tf.makeFlame(zero, _ref)));
+			_tbs.add(new TowerButton("Cannon Tower", leftstart+2*_tbwidth+2*towerspace, 2*_h/7, _tf.makeCannon(zero, _ref)));
+			_tbs.add(new TowerButton("Goo Tower", leftstart+3*_tbwidth+3*towerspace, 2*_h/7, _tf.makeGoo(zero, _ref)));
 
 			
-			_tbs.add(new TowerButton("Poison Tower", _cw/4, 2*_h/7 + _tbwidth + 5, _tf.makePoison(zero, _ref)));
-			_tbs.add(new TowerButton("Electric Tower", _cw*3/4, 2*_h/7 + _tbwidth + 5, _tf.makeElectric(zero, _ref)));
-			_tbs.add(new TowerButton("Laser Tower", _cw*5/4, 2*_h/7 + _tbwidth + 5, _tf.makeLaser(zero, _ref)));
+			_tbs.add(new TowerButton("Poison Tower", leftstart, 2*_h/7 + _tbwidth + 5, _tf.makePoison(zero, _ref)));
+			_tbs.add(new TowerButton("Electric Tower", leftstart+_tbwidth+towerspace, 2*_h/7 + _tbwidth + 5, _tf.makeElectric(zero, _ref)));
+			_tbs.add(new TowerButton("Laser Tower", leftstart+2*_tbwidth+2*towerspace, 2*_h/7 + _tbwidth + 5, _tf.makeLaser(zero, _ref)));
 			//_tbs.add(new TowerButton("Stun Tower", _cw*7/4, 2*_h/7 + _tbwidth + 5, _tf.makeStun(zero, _ref)));
 
 
@@ -163,11 +165,12 @@ public class Console2 {
 		private boolean _highlight;
 		private BufferedImage _sprite;
 		private AbstractTower _t;
-		public TowerButton(String name, float rightline, float y, AbstractTower t) {
+		public TowerButton(String name, float x, float y, AbstractTower t) {
 			_t = t;
 			_sprite = t.getSprite();
 			_name = name;
-			this.x = centerRect(_tbwidth, rightline);
+			//this.x = centerRect(_tbwidth, rightline);
+			this.x = x;
 			this.y = y;
 			_r = new RoundRectangle2D.Float(x,y,_tbwidth,_tbwidth, 5, 5);
 		}
@@ -216,7 +219,7 @@ public class Console2 {
 
 	private class TowerInfo {
 		private String _name;
-		private final float _width = _cw - 20;
+		private final float _width = 160;
 		private float x;
 		private float y;
 		private RoundRectangle2D _back;

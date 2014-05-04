@@ -100,7 +100,7 @@ public class MainMenu {
 		new CenText("Tutorial", _w, r + f);
 		new CenText("Zombie Tower Defense is a tower defense game based on real world maps. By typing in an address or by selecting", _w, r + 2*f);
 		new CenText("a location at right you can generate a map of your choosing to play the game on. The object of the game is prevent", _w, r + 3*f);
-		new CenText("the zombies from reaching your base. A few specifics:", _w, r + 4*f);
+		new CenText("the zombies from destroying your base. A few specifics:", _w, r + 4*f);
 		new Text("Basic Towers shoot regular bullets", s, r + 6*f);
 		new Text("Flame Towers create a circle of flame around themselves", s, r + 7*f);
 		new Text("Cannon Towers shoot bombs that cause splash damage on impact", s, r + 8*f);
