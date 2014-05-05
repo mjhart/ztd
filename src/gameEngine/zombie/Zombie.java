@@ -49,6 +49,7 @@ public abstract class Zombie {
 				if(_target.getNext() == null) {
 					_atBase = true;
 					_attackFrame = 0;
+					System.out.println(_dist);
 					return;
 				}
 				_target = _target.getNext();

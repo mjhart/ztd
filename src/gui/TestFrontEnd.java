@@ -62,7 +62,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private Rectangle _border;
 	private boolean _hasDataError = false;
 	private AtomicBoolean _loading;
-	private Screen _lScreen;
+	private LoadingScreen _lScreen;
 	private boolean _doreset = false;
 	
 	public TestFrontEnd(String title, boolean fullscreen) {
