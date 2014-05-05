@@ -241,7 +241,12 @@ public class MainMenu {
 		if (_go != null) {
 			if (_go.getRoundRect().contains(x, y)) {
 				_go.highlight();
-				return (_addline1.getText() + " " + _addline2.getText());
+				if (_addline2.getText().equals("")) {
+					return _addline1.getText();
+				}
+				else {
+					return (_addline1.getText() + " " + _addline2.getText());
+				}
 			}
 			else {
 				_go.unhighlight();
