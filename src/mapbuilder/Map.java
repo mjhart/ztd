@@ -74,9 +74,12 @@ public class Map {
 			XmlParser x = new XmlParser(this);
 			if(isStored(address)) {
 				System.out.println("found file");
-				String formatted = address.replace(' ', '_');
+				String formatted = address.replace(" ", "_");
 				box = new File("assets/maps/" + formatted + ".xml");
+				setW(address);
+				//box = new File("assets/maps/box.xml");
 				System.out.println(box);
+				System.out.println(box.exists());
 			}
 			else {
 				File stadd = Retriever.getFromAddress(address);
@@ -96,6 +99,11 @@ public class Map {
 				wMin[1] = dc.getBott(cent.y);
 				wMax[0] = dc.getRight(cent.x);
 				wMax[1] = dc.getTop(cent.y);
+				System.out.println(wMin[0]);
+				System.out.println(wMin[1]);
+				System.out.println(wMax[0]);
+				System.out.println(wMax[1]);
+
 			
 				box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
 			}
@@ -110,6 +118,7 @@ public class Map {
 				return;
 			}
 			_ways = x.getWays();
+			System.out.println(_ways);
 			_nodes = x.getNodes();
 			_highways = x.getHighs();
 			_buildings = x.getBuildings();
@@ -470,5 +479,55 @@ public class Map {
 			addr.equalsIgnoreCase("London") ||
 			addr.equalsIgnoreCase("Amsterdam");
 	}
+	
+	public void setW(String word1) {
+		if (word1.equals("Brown University")) {
+			setWBrown();
+		}
+		if (word1.equals("Wall Street")) {
+			setWWall();
+		}
+		if (word1.equals("White House")) {
+			setWWhite();
+		}
+		if (word1.equals("Eiffel Tower")) {
+			setWEiffel();
+		}
+		if (word1.equals("San Francisco")) {
+			setWSan();
+		}
+		if (word1.equals("Philadelphia Museum of Art")) {
+			setWPhiladelphia();
+		}
+		if (word1.equals("London")) {
+			setWLondon();
+		}
+		if (word1.equals("Amsterdam")) {
+			setWAmsterdam();
+		}
+	}
+	
+	public void setWBrown() {
+		wMin[0] = -71.40492698993405;
+		wMin[1] = 41.824158135182245;
+		wMax[0] = -71.39768572051334;
+		wMax[1] = 41.829554064817756;
+	}
+	
+	public void setWWall() {
+		wMin[0] = -74.01239001118442;
+		wMin[1] = 40.70331963518225;
+		wMax[0] = -74.00527198881558;
+		wMax[1] = 40.70871556481776;
+	}
+	
+	public void setWWhite() {
+		wMin[0] = -77.04001980797291;
+		wMin[1] = 38.89500243518224;
+		wMax[0] = -77.03308655721868;
+		wMax[1] = 38.900398364817754;
+	}
+	
+	
 	
 }
