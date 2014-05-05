@@ -346,7 +346,7 @@ public class Map {
 				if(!visited.contains(nbor)) {
 					
 					Vec2f nv2 = nbor._coords;
-					float d = nv.dist2(nv2);
+					float d = nv.dist(nv2);
 					//System.out.println(nbor.id);
 					//System.out.println("distance to: " + Double.toString((dist.get(node) + d)));
 					///*
