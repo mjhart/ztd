@@ -42,6 +42,9 @@ public class Map {
 	private List<MapWay> _residential;
 	private List<MapWay> _secondary;
 	private List<MapWay> _tertiary;
+	private List<Relation> _waterrels;
+	private List<MapWay> _streams;
+
 	
 	private static final int MIN_DIST = 400000;
 
@@ -105,6 +108,8 @@ public class Map {
 							_residential = x.getResidential();
 							_secondary = x.getSecondary();
 							_tertiary = x.getTertiary();
+							_waterrels = x.getWaterrels();
+							_streams = x.getStreams();
 
 							// find closest highway node to center
 							double dist = Double.MAX_VALUE;
@@ -180,6 +185,14 @@ public class Map {
 	
 	public List<MapWay> getTertiary() {
 		return Collections.unmodifiableList(_tertiary);
+	}
+	
+	public List<Relation> getWaterrels() {
+		return Collections.unmodifiableList(_waterrels);
+	}
+	
+	public List<MapWay> getStreams() {
+		return Collections.unmodifiableList(_streams);
 	}
 	
 	

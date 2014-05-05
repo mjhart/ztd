@@ -272,7 +272,6 @@ public class Referee {
 		if(!_inRound) {
 			if(_round != 0) {
 				_money += _money/20;
-				_roundMoneySpent = 0;
 			}
 			_round++;
 			_numZombies = _round * 5;
@@ -393,6 +392,11 @@ public class Referee {
 	public int getRoundMoneySpent() {
 		return _roundMoneySpent;
 	}
+	
+	public void resetRoundMoneySpent() {
+		_roundMoneySpent = 0;
+	}
+	
 	public int getTotalMoneySpent() {
 		return _totalMoneySpent;
 	}

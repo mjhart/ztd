@@ -27,6 +27,7 @@ public class TowerFactory {
 	private BufferedImage _lasersprite;
 	private BufferedImage _poisonsprite;
 	private BufferedImage _stunsprite;
+	private BufferedImage _flamecircle;
 	private BufferedImage[] _explosionSprites;
 	private BufferedImage[] _lightningSprites;
 
@@ -114,10 +115,10 @@ public class TowerFactory {
 		_poisonsprite = img.getSubimage(10, 10, 108, 98);		
 		w = _poisonsprite.getWidth();
 		h = _poisonsprite.getHeight();
-		scaled = new BufferedImage(4*w, 4*h, _poisonsprite.getType());
+		scaled = new BufferedImage((int) (3.5*w), (int) (3.5*h), _poisonsprite.getType());
 		g = scaled.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		g.drawImage(_poisonsprite, 0, 0, 4*w, 4*h, 0, 0, w, h, null);
+		g.drawImage(_poisonsprite, 0, 0, (int) (3.5*w), (int) (3.5*h), 0, 0, w, h, null);
 	    g.dispose();
 	    _poisonsprite = scaled;
 		
@@ -130,9 +131,6 @@ public class TowerFactory {
 		_lasersprite = img.getSubimage(0, 0, 1024, 1024);		
 		w = _lasersprite.getWidth();
 		h = _lasersprite.getHeight();
-		System.out.println("LS w " + w);
-		System.out.println("LS h " + h);
-
 		scaled = new BufferedImage(w/3, h/3, _lasersprite.getType());
 		g = scaled.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -146,12 +144,19 @@ public class TowerFactory {
 		try {
 			img = ImageIO.read(new File("stuff/lightning.png"));
 		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (explosion.png)");
+			System.out.println("ERROR: Could not get image (lightning.png)");
 		}
 		_lightningSprites = new BufferedImage[3];
 		_lightningSprites[0] = img.getSubimage(0, 0, 135, 90);
 		_lightningSprites[1] = img.getSubimage(135, 0, 250, 90);
 		_lightningSprites[2] = img.getSubimage(385, 0, 405, 90);
+		
+		// read electric projectile sprites
+		try {
+			_flamecircle = ImageIO.read(new File("stuff/flames4.png"));
+		} catch (IOException e) {
+			System.out.println("ERROR: Could not get image (flamecircle.png)");
+		}
 		
 		
 		
@@ -186,7 +191,7 @@ public class TowerFactory {
 	}
 	
 	public FlameTower makeFlame(Vec2f vec, Referee ref) {
-		return new FlameTower(vec, ref, _flamesprite);
+		return new FlameTower(vec, ref, _flamesprite, _flamecircle);
 	}
 	
 	public GooTower makeGoo(Vec2f vec, Referee ref) {

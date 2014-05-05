@@ -14,9 +14,12 @@ import cs195n.Vec2f;
 
 public class FlameTower extends AbstractTower {
 	
+	public BufferedImage _flamecircle;
 	
-	public FlameTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(8, 250000, 500000000, 130, Constants.FLAME_BLURB, vec, ref, sprite);
+	
+	public FlameTower(Vec2f vec, Referee ref, BufferedImage sprite, BufferedImage flamecircle) {
+		super(6, 250000, 500000000, 140, Constants.FLAME_BLURB, vec, ref, sprite);
+		_flamecircle = flamecircle;
 	}
 	
 	@Override
@@ -32,8 +35,7 @@ public class FlameTower extends AbstractTower {
 		if (!zombies.isEmpty()) {
 			for (Zombie z: zombies) {
 				_ref.dealDamage(z, _damage);
-				addProjectile(new FireProjectile(getCoords()));
-				System.out.println("Flame Tower Firing");
+				addProjectile(new FireProjectile(getCoords(), _flamecircle));
 			}
 			return true;
 		}

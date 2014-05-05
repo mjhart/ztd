@@ -52,9 +52,8 @@ public class Screen {
 			_t = new Text("PAUSE", _w, _h/5);
 		}
 		else if (_type.equals("Loading")) {
-			g.setColor(Color.WHITE);
-			g.setFont(new Font("Helvetica", Font.PLAIN, 30));
-			_t = new Text("LOADING...", centerX("LOADING...", _w), _h/10);
+			g.setFont(new Font("Helvetica", Font.PLAIN, 70));
+			_t = new Text("LOADING...", _w, _h/5);
 		}
 		else if (_type.equals("Game Over")) {
 			if (_first) {
@@ -140,7 +139,7 @@ public class Screen {
 			g.setFont(new Font("Helvetica", Font.PLAIN, 30));
 			int d = 30;
 			String msg1 = "The selected location does not have";
-			String msg2 = "enough roads to create a map.";
+			String msg2 = "enough information to create a map.";
 			String msg3 = "Please select a new location,";
 			String msg4 = "or use one of our pre-loaded locations.";
 			float x1 = centerX(msg1, _w);
@@ -201,6 +200,10 @@ public class Screen {
 			}
 		}
 		return null;
+	}
+	
+	public String getType() {
+		return _type;
 	}
 
 }

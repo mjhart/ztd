@@ -22,5 +22,6 @@ public class MapWay {
 		return Collections.unmodifiableList(mapnodes);
 	}
 	
+	
 
 }

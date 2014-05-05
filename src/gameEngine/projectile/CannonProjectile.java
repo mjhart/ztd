@@ -26,7 +26,6 @@ public class CannonProjectile implements Projectile {
 	private int _frame;
 
 	public CannonProjectile(Vec2f coords, Vec2f target, CannonTower t, Referee ref, int damage, BufferedImage[] sprites) {
-		System.out.println("Projectile created");
 		_coords = coords;
 		_path =  target.minus(_coords);
 		_target = target;

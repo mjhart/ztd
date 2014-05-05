@@ -28,13 +28,16 @@ public class XmlParser {
 	private List<MapWay> highways;
 	private List<Building> buildings;
 	private List<Building> landuse;
-	private List<Building> waterways;
+	private List<Building> bigwaterways;
+	private List<MapWay> streams;
 	private List<MapWay> footways;
 	private List<MapWay> residential;
 	private List<MapWay> secondary;
 	private List<MapWay> tertiary;
+	private List<Relation> waterrels;
 
 	private HashMap<String, MapNode> mnhash;
+	private HashMap<String, MapWay> mwhash;
 	private boolean doneparsebox;
 	private Map _m;
 	
@@ -42,15 +45,17 @@ public class XmlParser {
 		mapnodes = new ArrayList<MapNode>(0);
 		mapways = new ArrayList<MapWay>(0);
 		mnhash = new HashMap<String, MapNode>();
+		mwhash = new HashMap<String, MapWay>();
 		highways = new ArrayList<MapWay>(0);
 		buildings = new ArrayList<>(0);
 		landuse = new ArrayList<>(0);
-		waterways = new ArrayList<>(0);
+		bigwaterways = new ArrayList<>(0);
 		footways = new ArrayList<MapWay>(0);
 		residential = new ArrayList<MapWay>(0);
 		secondary = new ArrayList<MapWay>(0);
 		tertiary = new ArrayList<MapWay>(0);
-
+		waterrels = new ArrayList<Relation>(0);
+		streams = new ArrayList<MapWay>(0);
 		doneparsebox = false;
 		_m = m;
 	}
@@ -91,14 +96,13 @@ public class XmlParser {
 					
 					Element el = (Element) node;
 					MapWay mw = new MapWay(el.getAttribute("id"));
+					mwhash.put(mw.id, mw);
 					
 					boolean isHighway = false;
 					if (XmlParser.isBlank("tag", el, "highway") == true) {
 						isHighway = true;
 						highways.add(mw);
 					}
-					
-
 
 					List<String> mapnodeids = XmlParser.getMapNodes("nd", el); //Get the nodes on this way
 					for (String id: mapnodeids) {
@@ -124,9 +128,14 @@ public class XmlParser {
 						buildings.add(b);
 					}
 					if (XmlParser.isBlank("tag", el, "waterway") == true) {
-						Building b = new Building(mw);
-						b.setName(XmlParser.getVFromK("tag", el, "name"));
-						waterways.add(b);
+						if (XmlParser.getVFromK("tag", el, "waterway").equals("riverbank")) {
+							Building b = new Building(mw);
+							b.setName(XmlParser.getVFromK("tag", el, "name"));
+							bigwaterways.add(b);
+						}
+						else {
+							streams.add(mw);
+						}
 					}
 					if (XmlParser.isBlank("tag", el, "landuse") == true) {
 						if (XmlParser.getVFromK("tag", el, "landuse").equals("grass")) {
@@ -156,9 +165,29 @@ public class XmlParser {
 							tertiary.add(mw);
 						}
 					}
-
-					
-					
+				}
+			}
+			
+			NodeList rnodes = doc.getElementsByTagName("relation");  //Make a list of all elements marked "relation"
+			//For each xml relation
+			for (int i = 0; i < rnodes.getLength(); i++) {
+				Node node = rnodes.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					Element el = (Element) node;
+					if (XmlParser.isBlank("tag", el, "waterway") == true) {
+						List<String> mapwayids = XmlParser.getMapWays("member", el); //Get the nodes on this way
+						List<MapWay> mapways = new ArrayList<>(0);
+						for (String id: mapwayids) {
+							MapWay mw = mwhash.get(id);
+							if (mw == null) {
+								System.out.println("ERROR: Ways and nodes do not match in input file");
+							}
+							else {
+								mapways.add(mw);
+							}
+						}
+						waterrels.add(new Relation(mapways));
+					}
 				}
 			}
 
@@ -190,6 +219,21 @@ public class XmlParser {
 			if (n.getNodeType() == Node.ELEMENT_NODE) {
 				Element el = (Element) n;
 				res.add(el.getAttribute("ref"));
+			}
+		}
+		return res;
+	}
+	
+	private static List<String> getMapWays(String tag, Element e) {
+		List<String> res = new ArrayList<String>(0);
+		NodeList nl = e.getElementsByTagName(tag);
+		for (int i = 0; i < nl.getLength(); i++) {
+			Node n = nl.item(i);
+			if (n.getNodeType() == Node.ELEMENT_NODE) {
+				Element el = (Element) n;
+				if (el.getAttribute("type").equals("way")) {
+					res.add(el.getAttribute("ref"));
+				}
 			}
 		}
 		return res;
@@ -321,7 +365,7 @@ public class XmlParser {
 	}
 	
 	public List<Building> getWaterways() {
-		return waterways;
+		return bigwaterways;
 	}
 	
 	public List<MapWay> getFootways() {
@@ -338,6 +382,14 @@ public class XmlParser {
 	
 	public List<MapWay> getTertiary() {
 		return tertiary;
+	}
+	
+	public List<Relation> getWaterrels() {
+		return waterrels;
+	}
+	
+	public List<MapWay> getStreams() {
+		return streams;
 	}
 
 }
