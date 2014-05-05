@@ -10,16 +10,12 @@ public class DistConverter {
 	private double top;
 	private double latrat;
 	private double lonrat;
-//	public final double DLAT = .0030039; //Paris
-//	public final double DLAT = .0021739; //Providence
-//	public final double DLAT = .0019739; //NYC
 	public final double DLAT;
 	public final double DLON;
 	public final double EARTH_RADIUS = 6371;
 
 	
 	public DistConverter(double centlat, double centlon) {
-		//DLON = Math.abs((.1)/(Math.cos(centlat)*(69.172)));
 		DLON = Math.toDegrees(.3/EARTH_RADIUS/Math.cos(Math.toRadians(centlat)));
 		DLAT = Math.toDegrees(.3/EARTH_RADIUS);
 		

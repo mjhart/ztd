@@ -699,6 +699,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 	protected void onResize(Vec2i newSize) {
 		_size = newSize;
 		_candidate = null;
+		_command = null;
+		_placedTower = null;
 		if(newSize.x - Constants.MIN_CONSOLE_WIDTH > newSize.y) {
 			_mapSize = newSize.y;
 			_consoleWidth = newSize.x - newSize.y;

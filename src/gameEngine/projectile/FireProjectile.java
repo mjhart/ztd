@@ -28,10 +28,8 @@ public class FireProjectile implements Projectile {
 
 	@Override
 	public void draw(Graphics2D g) {
-//		g.setColor(java.awt.Color.ORANGE);
-//		g.fillOval((int) _coords.x - 500, (int) _coords.y - 500, 1000, 1000);
 		AffineTransform af = new AffineTransform();
-		af.translate(_coords.x - 144 * 3.2, _coords.y - 144 * 3.2);
+		af.translate(_coords.x - 130 * 3.2, _coords.y - 130 * 3.2);
 		af.scale(3, 3);
 		g.drawImage(_flamecircle, af, null);
 	}
