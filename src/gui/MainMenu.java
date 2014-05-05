@@ -23,17 +23,21 @@ public class MainMenu {
 	private List<ControlButton> _cbs; //A list of control buttons. Needed to check for mouse clicks
 	private EditableTextBox _addline1;
 	private EditableTextBox _addline2;
+	private String _line1;
+	private String _line2;
 	private int _toggle;
 	private ControlButton _go;
 	private int _etbwidth = 25;
 	private boolean _first;
 	private final Color _background = new Color(119,136,153);
 	
-	public MainMenu(int w, int h) {
+	public MainMenu(int w, int h, String line1, String line2, int toggle) {
 		_w = w;
 		_h = h;
+		_line1 = line1;
+		_line2 = line2;
 		_cbs = new ArrayList<ControlButton>();
-		_toggle = 0;
+		_toggle = toggle;
 		this.g = null;
 		_first = true;
 	}
@@ -43,8 +47,8 @@ public class MainMenu {
 		if (_first) {
 			int c = 30;
 			_go = new ControlButton("GO", _w/2, _h/5 + 3*c, g);
-			_addline1 = new EditableTextBox(_etbwidth, _w/2, _h/5 + c);
-			_addline2 = new EditableTextBox(_etbwidth, _w/2, _h/5 + 2*c);
+			_addline1 = new EditableTextBox(_etbwidth, _w/2, _h/5 + c, _line1);
+			_addline2 = new EditableTextBox(_etbwidth, _w/2, _h/5 + 2*c, _line2);
 			_cbs.add(new ControlButton("Brown University", 3*_w/2, _h/5 + 2*c, g));
 			_cbs.add(new ControlButton("Wall Street", 3*_w/2, _h/5 + 3*c, g));
 			_cbs.add(new ControlButton("The White House", 3*_w/2, _h/5 + 4*c, g));
@@ -54,6 +58,15 @@ public class MainMenu {
 			_cbs.add(new ControlButton("London", 3*_w/2, _h/5 + 8*c, g));
 			_cbs.add(new ControlButton("Amsterdam", 3*_w/2, _h/5 + 9*c, g));
 			_first = false;
+		}
+		
+		if (_toggle == 1) {
+			_addline1.select();
+			_addline2.unselect();
+		}
+		else if (_toggle == 2) {
+			_addline2.select();
+			_addline1.unselect();
 		}
 		
 		java.awt.Color colorholder = g.getColor();
@@ -137,7 +150,7 @@ public class MainMenu {
 		private float y;
 		private int blink = 0;
 		private boolean _selected = false;
-		public EditableTextBox(float textwidth, float rightline, float y) {
+		public EditableTextBox(float textwidth, float rightline, float y, String line) {
 			_widthholder = "";
 			for (int i = 0; i < textwidth; i++) {
 				_widthholder = _widthholder + "d";
@@ -146,7 +159,7 @@ public class MainMenu {
 			float x = centerX(_widthholder, rightline);
 			this.x = x;
 			this.y = y;
-			_text = "";
+			_text = line;
 			_bb = null;
 			_r = null;
 		}
@@ -225,12 +238,14 @@ public class MainMenu {
 				cb.unhighlight();
 			}
 		}
-		if (_go.getRoundRect().contains(x, y)) {
-			_go.highlight();
-			return (_addline1.getText() + " " + _addline2.getText());
-		}
-		else {
-			_go.unhighlight();
+		if (_go != null) {
+			if (_go.getRoundRect().contains(x, y)) {
+				_go.highlight();
+				return (_addline1.getText() + " " + _addline2.getText());
+			}
+			else {
+				_go.unhighlight();
+			}
 		}
 		if (click) {
 			this.chooseAddline(x,y);
@@ -256,7 +271,6 @@ public class MainMenu {
 	
 	//Right now this is set up so that if neither addline in in focus nothing happens
 	public void keyTyped(String letter) {
-		System.out.println(_toggle);
 		EditableTextBox holder = null;
 		boolean focus = true;
 		if (_toggle == 1) {
@@ -287,11 +301,34 @@ public class MainMenu {
 	}
 	
 
+	public String getLine1() {
+		if (_addline1 != null) {
+			return _addline1.getText();
+		}
+		else {
+			return "";
+		}
+	}
 	
+	public String getLine2() {
+		if (_addline1 != null) {
+			return _addline2.getText();
+		}
+		else {
+			return "";
+		}
+	}
+	
+	public int getToggle() {
+		return _toggle;
+	}
 	
 	public void clear() {
+		if (_addline1 != null) {
 		_addline1.clear();
 		_addline2.clear();
+		}
+		
 	}
 	
 }

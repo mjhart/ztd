@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import mapbuilder.Building;
+import mapbuilder.Relation;
 import mapbuilder.Map;
 import mapbuilder.MapNode;
 import mapbuilder.MapWay;
@@ -61,6 +62,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	private boolean _hasDataError = false;
 	private AtomicBoolean _loading;
 	private Screen _lScreen;
+	private boolean _doreset = false;
 	
 	public TestFrontEnd(String title, boolean fullscreen) {
 		super(title, fullscreen);
@@ -69,11 +71,11 @@ public class TestFrontEnd extends SwingFrontEnd {
 	
 	public TestFrontEnd(String title, boolean fullscreen, Vec2i size) {
 		super(title, fullscreen, size);
-		super.setDebugMode(true);
+		super.setDebugMode(false);
 		
 		_tf = new TowerFactory();
 
-		_mm = new MainMenu(size.x, size.y);
+		_mm = new MainMenu(size.x, size.y, "", "", 0);
 		_hasMain = true;
 		_showMain = true;
 		_hasMap = false;
@@ -157,13 +159,32 @@ public class TestFrontEnd extends SwingFrontEnd {
 			}
 		}
 		
-		//Waterways
+		//Waterways ways
 		if (_m.getWaterways() != null) {
 			g.setColor(new Color(173,216,230));
 			for (Building b: _m.getWaterways()) {
 				g.fill(b.getPolygon());
 			}
 		}
+		
+		//Streams
+		g.setStroke(new BasicStroke(8*defaultstroke));
+		if (_m.getStreams() != null) {
+			for(MapWay h : _m.getStreams()) {
+				List<MapNode> nList = h.getNodes();
+				for(int i=1; i<nList.size(); i++) {
+					g.draw(new Line2D.Float(nList.get(i-1).getX(), nList.get(i-1).getY(), nList.get(i).getX(), nList.get(i).getY()));
+				}
+			}
+		}
+		
+//		//Waterways relations
+//		if (_m.getWaterrels() != null) {
+//			g.setColor(new Color(173,216,230));
+//			for (Relation r: _m.getWaterrels()) {
+//				g.fill(r.getPolygon());
+//			}
+//		}
 		
 		//All highways, draw thin
 		g.setColor(new Color(255,222,173).darker());
@@ -333,13 +354,13 @@ public class TestFrontEnd extends SwingFrontEnd {
 					dataError(3);
 				}
 				else {
-					_c = new Console2(0,0,Constants.MIN_CONSOLE_WIDTH,_size.y, _tf, _ref);
+					_c = new Console2(0,0,_consoleWidth,_size.y, _tf, _ref);
 					_hasMap = true;
 					_showMap = true;
 					_hasMain = false;
 					_showMain = false;
 					_hasScreen = false;
-					_mm.clear();
+
 
 					for(MapWay h : _m.getHighways()) {
 						List<MapNode> nList = h.getNodes();
@@ -421,7 +442,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 				String command = _c.contains(e.getX(), e.getY(), true);
 				if (command != null) {
 					_c.noUpgrades();
-					System.out.println(command);
 					String[] fw = command.split("\\s+");
 					_command = fw[0];
 
@@ -463,6 +483,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 					}
 					else if ((e.getX() > _consoleWidth) && (_command == null)) {
 						_c.noUpgrades();
+						_placedTower = null;
 						for (AbstractTower t: _ref.towers()) {
 							if (t.contains(xToLon(e.getX()), yToLat(e.getY()))) {
 								_c.unhighlightTb();
@@ -504,8 +525,8 @@ public class TestFrontEnd extends SwingFrontEnd {
 			return true;
 		}
 		else if (_command.equals("Double")) {
-			if ((_ref.getResources() - _placedTower.getUpgradeCost(1) >= 0)
-					&& (!_placedTower.isUpgraded(1))) {
+			if ((_ref.getResources() - _placedTower.getUpgradeCost(2) >= 0)
+					&& (!_placedTower.isUpgraded(2))) {
 				_ref.upgradeTower(_placedTower, 2);
 			}
 			return true;
@@ -517,6 +538,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 			return true;
 		}
 		else if (_command.equals("Main")) {
+			_mm.clear();
 			_hasMain = true;
 			_showMain = true;
 			_hasMap = false;
@@ -553,8 +575,13 @@ public class TestFrontEnd extends SwingFrontEnd {
 			_hasMap = true;
 			_showMap = true;
 			_hasScreen = false;
+			_c.unhighlightTb();
 			if (_wasRunning) {
 				_ref.unpause();
+			}
+			if (_doreset) {
+				_ref.resetRoundMoneySpent();
+				_doreset = false;
 			}
 			return true;
 		}
@@ -667,7 +694,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 	@Override
 	protected void onResize(Vec2i newSize) {
 		_size = newSize;
-
+		_candidate = null;
 		if(newSize.x - Constants.MIN_CONSOLE_WIDTH > newSize.y) {
 			_mapSize = newSize.y;
 			_consoleWidth = newSize.x - newSize.y;
@@ -683,6 +710,14 @@ public class TestFrontEnd extends SwingFrontEnd {
 		if(_loading.get()) {
 			_lScreen = new Screen("Loading", _size.x, _size.y, _ref);
 		}
+		if(_hasScreen) {
+			_screen = new Screen(_screen.getType(), _size.x, _size.y, _ref);
+		}
+		
+		String line1 = _mm.getLine1();
+		String line2 = _mm.getLine2();
+		int toggle = _mm.getToggle();
+		_mm = new MainMenu(_size.x, _size.y, line1, line2, toggle);
 	}
 	
 	public static void main(String[] args) {
@@ -710,6 +745,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 		_hasMap = false;
 		_wasRunning = false;
 		_screen = new Screen("Stats", _size.x, _size.y, _ref);
+		_doreset = true;
 	}
 	
 

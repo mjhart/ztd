@@ -16,7 +16,7 @@ public class FlameTower extends AbstractTower {
 	
 	
 	public FlameTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(8, 250000, 500000000, 130, Constants.FLAME_BLURB, vec, ref, sprite);
+		super(6, 250000, 500000000, 140, Constants.FLAME_BLURB, vec, ref, sprite);
 	}
 	
 	@Override

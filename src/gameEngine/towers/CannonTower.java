@@ -22,7 +22,7 @@ public class CannonTower extends AbstractTower {
 	
 	private BufferedImage[] _explosionSprites;
 	public CannonTower(Vec2f vec, Referee ref, BufferedImage sprite, BufferedImage[] explosionSprites) {
-		super(30, 4000000, 5000000000l, 150, Constants.CANNON_BLURB, vec, ref, sprite);
+		super(30, 4000000, 5000000000l, 160, Constants.CANNON_BLURB, vec, ref, sprite);
 		_explosionSprites = explosionSprites;
 	}
 	

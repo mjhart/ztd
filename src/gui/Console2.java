@@ -98,8 +98,6 @@ public class Console2 {
 			_tbs.add(new TowerButton("Electric Tower", leftstart+_tbwidth+towerspace, 2*_h/7 + _tbwidth + 5, _tf.makeElectric(zero, _ref)));
 			_tbs.add(new TowerButton("Laser Tower", leftstart+2*_tbwidth+2*towerspace, 2*_h/7 + _tbwidth + 5, _tf.makeLaser(zero, _ref)));
 			//_tbs.add(new TowerButton("Stun Tower", _cw*7/4, 2*_h/7 + _tbwidth + 5, _tf.makeStun(zero, _ref)));
-
-
 			_first = false;
 		}
 		
@@ -335,17 +333,17 @@ public class Console2 {
 				RoundRectangle2D r = _doubledamage.getRoundRect();
 				g.fill(r);
 			}
-			g.setColor(Color.BLACK);
-			g.setStroke(new BasicStroke(2));
+			g.setColor(Color.RED);
+			g.setStroke(new BasicStroke(3));
 			if (exOutUpgrade(1,_t)) {
 				RoundRectangle2D r = _halfdelay.getRoundRect();
-				g.drawLine((int) r.getX() + 2, (int) r.getY(), (int) (r.getX() + r.getWidth() - 2), (int) (r.getY() + r.getHeight()));
-				g.drawLine((int) r.getX() + 2, (int) (r.getY() + r.getHeight()), (int) (r.getX() + r.getWidth() - 2),(int) r.getY());
+				g.drawLine((int) r.getX() + 5, (int) r.getY() + 5, (int) (r.getX() + r.getWidth() - 5), (int) (r.getY() + r.getHeight() - 5));
+				g.drawLine((int) r.getX() + 5, (int) (r.getY() + r.getHeight() - 5), (int) (r.getX() + r.getWidth() - 5),(int) r.getY() + 5);
 			}
 			if (exOutUpgrade(2,_t)) {
 				RoundRectangle2D r = _doubledamage.getRoundRect();
-				g.drawLine((int) r.getX() + 2, (int) r.getY(), (int) (r.getX() + r.getWidth() - 2), (int) (r.getY() + r.getHeight()));
-				g.drawLine((int) r.getX() + 2, (int) (r.getY() + r.getHeight()), (int) (r.getX() + r.getWidth() - 2),(int) r.getY());
+				g.drawLine((int) r.getX() + 5, (int) r.getY() + 5, (int) (r.getX() + r.getWidth() - 5), (int) (r.getY() + r.getHeight() - 5));
+				g.drawLine((int) r.getX() + 5, (int) (r.getY() + r.getHeight() - 5), (int) (r.getX() + r.getWidth() - 5),(int) r.getY() + 5);
 			}
 
 			g.setColor(Color.BLACK);

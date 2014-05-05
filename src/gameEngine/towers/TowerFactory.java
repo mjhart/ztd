@@ -114,10 +114,10 @@ public class TowerFactory {
 		_poisonsprite = img.getSubimage(10, 10, 108, 98);		
 		w = _poisonsprite.getWidth();
 		h = _poisonsprite.getHeight();
-		scaled = new BufferedImage(4*w, 4*h, _poisonsprite.getType());
+		scaled = new BufferedImage((int) (3.5*w), (int) (3.5*h), _poisonsprite.getType());
 		g = scaled.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		g.drawImage(_poisonsprite, 0, 0, 4*w, 4*h, 0, 0, w, h, null);
+		g.drawImage(_poisonsprite, 0, 0, (int) (3.5*w), (int) (3.5*h), 0, 0, w, h, null);
 	    g.dispose();
 	    _poisonsprite = scaled;
 		
