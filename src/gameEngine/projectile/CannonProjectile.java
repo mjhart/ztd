@@ -66,12 +66,7 @@ public class CannonProjectile implements Projectile {
 	public void draw(Graphics2D g) {
 		// TODO Auto-generated method stub
 		if(_explode) {
-			/*
-			Color c = g.getColor();
-			g.setColor(java.awt.Color.ORANGE);
-			g.fillOval((int) (_coords.x * 6) - 25, (int) (_coords.y * 5) - 25, 50, 50);
-			g.setColor(c);
-			*/
+
 			AffineTransform af = new AffineTransform();
 			af.translate(_coords.x - 32 * 10, _coords.y - 32 * 10);
 			af.scale(10, 10);

@@ -51,7 +51,7 @@ public class MainMenu {
 			_addline2 = new EditableTextBox(_etbwidth, _w/2, _h/5 + 2*c, _line2);
 			_cbs.add(new ControlButton("Brown University", 3*_w/2, _h/5 + 2*c, g));
 			_cbs.add(new ControlButton("Wall Street", 3*_w/2, _h/5 + 3*c, g));
-			_cbs.add(new ControlButton("The White House", 3*_w/2, _h/5 + 4*c, g));
+			_cbs.add(new ControlButton("White House", 3*_w/2, _h/5 + 4*c, g));
 			_cbs.add(new ControlButton("Eiffel Tower", 3*_w/2, _h/5 + 5*c, g));
 			_cbs.add(new ControlButton("San Francisco", 3*_w/2, _h/5 + 6*c, g));
 			_cbs.add(new ControlButton("Philadelphia Museum of Art", 3*_w/2, _h/5 + 7*c, g));

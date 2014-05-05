@@ -65,7 +65,7 @@ public class Referee {
 	private void getBaseSprite() {
 		BufferedImage img = null;
 		try {
-			img = ImageIO.read(new File("towerpics/house.png"));
+			img = ImageIO.read(new File("assets/towerpics/house.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (house.png)");
 		}	
