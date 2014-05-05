@@ -22,6 +22,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import mapbuilder.Building;
@@ -99,6 +100,9 @@ public class TestFrontEnd extends SwingFrontEnd {
 			if(_ref != null) {
 				_ref.tick(nanosSincePreviousTick);
 			}
+		}
+		else {
+			_lScreen.tick(nanosSincePreviousTick);
 		}
 	}
 
@@ -433,7 +437,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 				String add = _mm.contains(e.getX(), e.getY(), true);
 				if (add != null) {
 					_loading.set(true);
-					_lScreen = new Screen("Loading", _size.x, _size.y, _ref);
+					_lScreen = new LoadingScreen(_size.x, _size.y, _ref);
 					Thread t = new MapImportThread(add, this);
 					t.start();
 				}
@@ -708,7 +712,7 @@ public class TestFrontEnd extends SwingFrontEnd {
 			_border = new Rectangle((int) _consoleWidth, (int) _mapSize, (int) _mapSize, (int) (newSize.x - _consoleWidth));
 		}
 		if(_loading.get()) {
-			_lScreen = new Screen("Loading", _size.x, _size.y, _ref);
+			_lScreen = new LoadingScreen(_size.x, _size.y, _ref);
 		}
 		if(_hasScreen) {
 			_screen = new Screen(_screen.getType(), _size.x, _size.y, _ref);

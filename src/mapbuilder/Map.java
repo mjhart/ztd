@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.concurrent.TimeoutException;
 
 import javax.imageio.ImageIO;
 
@@ -61,71 +62,76 @@ public class Map {
 	private boolean _sentDataError = false;
 	
 	public Map(String address, Referee ref, TestFrontEnd tf) {
-		
-		_tf = tf;
-		_ref = ref;
-		
-		wMin = new double[2];
-		wMax = new double[2];
-		
-		File stadd = Retriever.getFromAddress(address);
-		//File stadd = new File("stadd.xml");
-		if (stadd == null) {
-			_tf.dataError(1);
-			_sentDataError = true;
-		}
-		else {
-			XmlParser x = new XmlParser(this);
-			Point2D.Double cent = x.parseAddress(stadd);
-			if ((cent == null) && (!_sentDataError)) {
-				_tf.dataError(2);
+		try {
+			_tf = tf;
+			_ref = ref;
+
+			wMin = new double[2];
+			wMax = new double[2];
+
+			File stadd = Retriever.getFromAddress(address);
+			//File stadd = new File("stadd.xml");
+			if (stadd == null) {
+				_tf.dataError(1);
 				_sentDataError = true;
 			}
 			else {
-				DistConverter dc = new DistConverter(cent.y, cent.x);
-				wMin[0] = dc.getLeft(cent.x);
-				wMin[1] = dc.getBott(cent.y);
-				wMax[0] = dc.getRight(cent.x);
-				wMax[1] = dc.getTop(cent.y);
-				File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
-				//File box = new File("box.xml");
-				if ((box == null) && (!_sentDataError)) {
-					_tf.dataError(1);
+				XmlParser x = new XmlParser(this);
+				Point2D.Double cent = x.parseAddress(stadd);
+				if ((cent == null) && (!_sentDataError)) {
+					_tf.dataError(2);
 					_sentDataError = true;
 				}
 				else {
-					if ((!x.parseBox(box)) && (!_sentDataError)) {
-						_tf.dataError(2);
+					DistConverter dc = new DistConverter(cent.y, cent.x);
+					wMin[0] = dc.getLeft(cent.x);
+					wMin[1] = dc.getBott(cent.y);
+					wMax[0] = dc.getRight(cent.x);
+					wMax[1] = dc.getTop(cent.y);
+					File box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
+					//File box = new File("box.xml");
+					if ((box == null) && (!_sentDataError)) {
+						_tf.dataError(1);
 						_sentDataError = true;
 					}
 					else {
-						_ways = x.getWays();
-						_nodes = x.getNodes();
-						_highways = x.getHighs();
-						_buildings = x.getBuildings();
-						_landuse = x.getLanduse();
-						_waterways = x.getWaterways();
-						_footways = x.getFootways();
-						_residential = x.getResidential();
-						_secondary = x.getSecondary();
-						_tertiary = x.getTertiary();
-						_waterrels = x.getWaterrels();
-						_streams = x.getStreams();
+						if ((!x.parseBox(box)) && (!_sentDataError)) {
+							_tf.dataError(2);
+							_sentDataError = true;
+						}
+						else {
+							_ways = x.getWays();
+							_nodes = x.getNodes();
+							_highways = x.getHighs();
+							_buildings = x.getBuildings();
+							_landuse = x.getLanduse();
+							_waterways = x.getWaterways();
+							_footways = x.getFootways();
+							_residential = x.getResidential();
+							_secondary = x.getSecondary();
+							_tertiary = x.getTertiary();
+							_waterrels = x.getWaterrels();
+							_streams = x.getStreams();
 
-						// find closest highway node to center
-						double dist = Double.MAX_VALUE;
-						for(MapWay w : _highways) {
-							for(MapNode n : w.getNodes()) {
-								double d2 = (n.getX()-5000)*(n.getX()-5000) + (n.getY()-5000)*(n.getY()-5000);
-								if(d2 < dist) {
-									dist = d2;
-									_baseNode = n;
+							// find closest highway node to center
+							double dist = Double.MAX_VALUE;
+							for(MapWay w : _highways) {
+								for(MapNode n : w.getNodes()) {
+									double d2 = (n.getX()-5000)*(n.getX()-5000) + (n.getY()-5000)*(n.getY()-5000);
+									if(d2 < dist) {
+										dist = d2;
+										_baseNode = n;
+									}
 								}
 							}
 						}
 					}
 				}
 			}
+		}
+		catch(TimeoutException e) {
+			_tf.dataError(1);
+			_sentDataError = true;
 		}
 	}
 	
@@ -339,7 +345,7 @@ public class Map {
 		MapNode node;
 		while(!pq.isEmpty()) {
 			node = pq.poll();
-			System.out.println("Popped: " + node);
+			//System.out.println("Popped: " + node);
 			//System.out.println("Popped dist: " + dist.get(node));
 			Vec2f nv = node._coords;
 			visited.add(node);
