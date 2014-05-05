@@ -199,7 +199,6 @@ public class XmlParser {
 		}
 		catch (Exception e) {
 			System.out.println("ERROR: Problem in parseBox");
-			e.printStackTrace();
 		}
 		return false;
 	}
