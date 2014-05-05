@@ -61,6 +61,8 @@ public class Map {
 	private boolean _sentDataError = false;
 	
 	public Map(String address, Referee ref, TestFrontEnd tf) {
+		
+		System.out.println(address);
 		_tf = tf;
 		_ref = ref;
 
@@ -71,8 +73,10 @@ public class Map {
 		try {
 			XmlParser x = new XmlParser(this);
 			if(isStored(address)) {
+				System.out.println("found file");
 				String formatted = address.replace(' ', '_');
 				box = new File("assets/maps/" + formatted + ".xml");
+				System.out.println(box);
 			}
 			else {
 				File stadd = Retriever.getFromAddress(address);
