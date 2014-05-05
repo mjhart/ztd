@@ -24,8 +24,6 @@ import java.util.PriorityQueue;
 import java.util.concurrent.TimeoutException;
 
 import javax.imageio.ImageIO;
-
-import ztdpac.ImageRet;
 import gui.TestFrontEnd;
 
 import cs195n.Vec2f;
