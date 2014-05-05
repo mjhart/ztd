@@ -27,6 +27,7 @@ public class TowerFactory {
 	private BufferedImage _lasersprite;
 	private BufferedImage _poisonsprite;
 	private BufferedImage _stunsprite;
+	private BufferedImage _flamecircle;
 	private BufferedImage[] _explosionSprites;
 	private BufferedImage[] _lightningSprites;
 
@@ -143,12 +144,19 @@ public class TowerFactory {
 		try {
 			img = ImageIO.read(new File("stuff/lightning.png"));
 		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (explosion.png)");
+			System.out.println("ERROR: Could not get image (lightning.png)");
 		}
 		_lightningSprites = new BufferedImage[3];
 		_lightningSprites[0] = img.getSubimage(0, 0, 135, 90);
 		_lightningSprites[1] = img.getSubimage(135, 0, 250, 90);
 		_lightningSprites[2] = img.getSubimage(385, 0, 405, 90);
+		
+		// read electric projectile sprites
+		try {
+			_flamecircle = ImageIO.read(new File("stuff/flames4.png"));
+		} catch (IOException e) {
+			System.out.println("ERROR: Could not get image (flamecircle.png)");
+		}
 		
 		
 		
@@ -183,7 +191,7 @@ public class TowerFactory {
 	}
 	
 	public FlameTower makeFlame(Vec2f vec, Referee ref) {
-		return new FlameTower(vec, ref, _flamesprite);
+		return new FlameTower(vec, ref, _flamesprite, _flamecircle);
 	}
 	
 	public GooTower makeGoo(Vec2f vec, Referee ref) {
