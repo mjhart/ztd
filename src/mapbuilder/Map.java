@@ -62,7 +62,6 @@ public class Map {
 	
 	public Map(String address, Referee ref, TestFrontEnd tf) {
 		
-		System.out.println(address);
 		_tf = tf;
 		_ref = ref;
 
@@ -73,13 +72,9 @@ public class Map {
 		try {
 			XmlParser x = new XmlParser(this);
 			if(isStored(address)) {
-				System.out.println("found file");
 				String formatted = address.replace(" ", "_");
 				box = new File("assets/maps/" + formatted + ".xml");
 				setW(address);
-				//box = new File("assets/maps/box.xml");
-				System.out.println(box);
-				System.out.println(box.exists());
 			}
 			else {
 				File stadd = Retriever.getFromAddress(address);
@@ -99,12 +94,7 @@ public class Map {
 				wMin[1] = dc.getBott(cent.y);
 				wMax[0] = dc.getRight(cent.x);
 				wMax[1] = dc.getTop(cent.y);
-				System.out.println(wMin[0]);
-				System.out.println(wMin[1]);
-				System.out.println(wMax[0]);
-				System.out.println(wMax[1]);
-
-			
+		
 				box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
 			}
 			if ((box == null) && (!_sentDataError)) {
@@ -118,7 +108,6 @@ public class Map {
 				return;
 			}
 			_ways = x.getWays();
-			System.out.println(_ways);
 			_nodes = x.getNodes();
 			_highways = x.getHighs();
 			_buildings = x.getBuildings();
@@ -445,11 +434,8 @@ public class Map {
 	}
 	
 	public List<MapNode> calculatePath() {
-		System.out.println(_baseNode);
 		List<MapNode> srcs = potentialSrcs();
-		System.out.println(srcs);
 		_srcs = findPaths(srcs, _baseNode);
-		System.out.println("Sources set " + _srcs);
 		return _srcs;
 	}
 	
@@ -526,6 +512,41 @@ public class Map {
 		wMin[1] = 38.89500243518224;
 		wMax[0] = -77.03308655721868;
 		wMax[1] = 38.900398364817754;
+	}
+	
+	public void setWEiffel() {
+		wMin[0] = 2.2903993633314004;
+		wMin[1] = 48.85556293518224;
+		wMax[0] = 2.29860081119386;
+		wMax[1] = 48.86095886481775;
+	}
+	
+	public void setWSan() {
+		wMin[0] = -122.42261250327931;
+		wMin[1] = 37.77626213518224;
+		wMax[0] = -122.4157854967207;
+		wMax[1] = 37.781658064817755;
+	}
+	
+	public void setWPhiladelphia() {
+		wMin[0] = -75.18503682899697;
+		wMin[1] = 39.96286273518224;
+		wMax[0] = -75.17799649274744;
+		wMax[1] = 39.96825866481775;
+	}
+	
+	public void setWLondon() {
+		wMin[0] = -0.13199437017418134;
+		wMin[1] = 51.50457793518225;
+		wMax[0] = -0.12332502982581865;
+		wMax[1] = 51.50997386481776;
+	}
+	
+	public void setWAmsterdam() {
+		wMin[0] = 4.8956925620078575;
+		wMin[1] = 52.36831083518224;
+		wMax[0] = 4.904530437992143;
+		wMax[1] = 52.373706764817754;
 	}
 	
 	

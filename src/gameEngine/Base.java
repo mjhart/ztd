@@ -24,7 +24,6 @@ public class Base extends BasicTower {
 	public boolean dealDamage(int damage) {
 		if(_health - damage <= 0) {
 			_health = 0;
-			System.out.println("Base Destroyed!!");
 			return true;
 		}
 		_health-=damage;

@@ -31,7 +31,7 @@ public class Referee {
 	private List<AbstractTower> _towers;
 	private ZombieFactory _zFactory;
 	private int _money;
-	private static final int STARTING_MONEY = 10000;
+	private static final int STARTING_MONEY = 350;
 	private static final int STARTING_HEALTH = 100;
 	private BufferedImage _basesprite;
 	private boolean _gameOver;
@@ -68,6 +68,7 @@ public class Referee {
 			img = ImageIO.read(new File("assets/towerpics/house.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (house.png)");
+			System.exit(0);
 		}	
 		_basesprite = img.getSubimage(60, 18, 200, 180);
 		int w = _basesprite.getWidth();
@@ -129,14 +130,10 @@ public class Referee {
 		}
 		
 		if(_inRound && _running && _numZombies == 0 && _zombies.size() == 0) {
-			System.out.println("Round Over");
 			_inRound = false;
-			//_running = false;
 			_roundInterestEarned = _money/20;
 			_totalInterestEarned = _totalInterestEarned + _roundInterestEarned;
 			_fe.roundEnded();
-			//startRound();
-			System.out.println("Starting round " + _round);
 		}
 	}
 	

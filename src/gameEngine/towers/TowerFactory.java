@@ -39,6 +39,7 @@ public class TowerFactory {
 			_basicsprite = ImageIO.read(new File("assets/towerpics/tower.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (tower.png)");
+			System.exit(0);
 		}
 		
 		// read flame sprite
@@ -46,6 +47,7 @@ public class TowerFactory {
 			img = ImageIO.read(new File("assets/towerpics/flames.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (flames.png)");
+			System.exit(0);
 		}
 		_flamesprite = img.getSubimage(0, 0, 48, 64);		
 		int w = _flamesprite.getWidth();
@@ -63,6 +65,7 @@ public class TowerFactory {
 			_cannonsprite = ImageIO.read(new File("assets/towerpics/cannonTower.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (cannonTower.png)");
+			System.exit(0);
 		}
 		w = _cannonsprite.getWidth();
 		h = _cannonsprite.getHeight();
@@ -79,6 +82,7 @@ public class TowerFactory {
 			img = ImageIO.read(new File("assets/towerpics/stuntowersheet.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (stuntowersheet.png)");
+			System.exit(0);
 		}
 		_electricsprite = img.getSubimage(20, 0, 68, 118);		
 		w = _electricsprite.getWidth();
@@ -95,6 +99,7 @@ public class TowerFactory {
 			img = ImageIO.read(new File("assets/towerpics/gooTowerSheet.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (gooTowerSheet.png)");
+			System.exit(0);
 		}
 		_goosprite = img.getSubimage(20, 15, 98, 98);		
 		w = _goosprite.getWidth();
@@ -111,6 +116,7 @@ public class TowerFactory {
 			img = ImageIO.read(new File("assets/towerpics/poisontower.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (poisontower.png)");
+			System.exit(0);
 		}
 		_poisonsprite = img.getSubimage(10, 10, 108, 98);		
 		w = _poisonsprite.getWidth();
@@ -127,6 +133,7 @@ public class TowerFactory {
 			img = ImageIO.read(new File("assets/towerpics/laserTowerReal.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (laserTowerReal.png)");
+			System.exit(0);
 		}
 		_lasersprite = img.getSubimage(0, 0, 1024, 1024);		
 		w = _lasersprite.getWidth();
@@ -145,6 +152,7 @@ public class TowerFactory {
 			img = ImageIO.read(new File("stuff/lightning.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (lightning.png)");
+			System.exit(0);
 		}
 		_lightningSprites = new BufferedImage[3];
 		_lightningSprites[0] = img.getSubimage(0, 0, 135, 90);
@@ -158,6 +166,7 @@ public class TowerFactory {
 			_flamecircle = ImageIO.read(new File("stuff/flames4.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (flamecircle.png)");
+			System.exit(0);
 		}
 		
 		
@@ -168,6 +177,7 @@ public class TowerFactory {
 			img = ImageIO.read(new File("stuff/explosion.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (explosion.png)");
+			System.exit(0);
 		}
 		for(int i=0; i<4; i++) {
 			for(int j=0; j<4; j++)

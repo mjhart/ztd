@@ -23,7 +23,7 @@ public class BasicTower extends AbstractTower {
 	//private static final String blurb = "A basic tower that shoots regular bullets";
 
 	public BasicTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(10, 1000000, 1000000000, 100, Constants.BASIC_BLURB, vec, ref, sprite);
+		super(10, 1000000, 700000000, 100, Constants.BASIC_BLURB, vec, ref, sprite);
 	}
 
 	@Override
@@ -37,7 +37,6 @@ public class BasicTower extends AbstractTower {
 		if (z != null) {
 			super.addProjectile(new BasicProjectile(super._vec, z.getCoords()));
 			_ref.dealDamage(z, _damage);
-			System.out.println("Basic Tower Firing");
 			return true;
 		}
 		return false;

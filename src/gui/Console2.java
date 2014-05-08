@@ -291,7 +291,7 @@ public class Console2 {
 	
 	
 	private class UpgradeInfo {
-		private final float _width = _cw - 16;
+		private final float _width = 160;
 		private float x;
 		private float y;
 		private RoundRectangle2D _back;
@@ -304,7 +304,7 @@ public class Console2 {
 			_t = t;
 			this.x = centerRect(_width, rightline);
 			this.y = y;
-			_back = new RoundRectangle2D.Float(x,y,_width,_width + 30, 5, 5);
+			_back = new RoundRectangle2D.Float(x,y,_width,_width + 35, 5, 5);
 			g.setFont(new Font("Helvetica", Font.BOLD, 15));
 			_text1 = new Text("Upgrades cost 200", rightline, y + 50);
 			_text2 = new Text("resources each", rightline, y + 70);

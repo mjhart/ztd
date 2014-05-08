@@ -16,7 +16,6 @@ public class GooProjectile implements Projectile {
 	private Zombie _zombie;
 
 	public GooProjectile(Vec2f coords, Zombie zombie) {
-		//System.out.println("Projectile created");
 		_coords = coords;
 		_zombie = zombie;
 		_target = zombie.getCoords();
@@ -26,7 +25,6 @@ public class GooProjectile implements Projectile {
 	
 	@Override
 	public boolean action(long nanosSincePrevTick) {
-		//System.out.println("Projectile moving");
 
 		if(_zombie.getHealth() <= 0) {
 			return true;
@@ -46,7 +44,6 @@ public class GooProjectile implements Projectile {
 	
 	@Override
 	public void draw(Graphics2D g) {
-		//System.out.println("Drawing projectile at " + _coords.smult(5));
 		if(_onZombie) {
 			g.setColor(java.awt.Color.GREEN);
 			g.fillOval((int) _zombie.getCoords().x - 50, (int) _zombie.getCoords().y - 50, 100, 100);

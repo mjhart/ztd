@@ -29,7 +29,6 @@ public class PoisonTower extends AbstractTower {
 		if (z != null) {
 			//TODO Goo Projectile
 			super.addProjectile(new PoisonProjectile(super._vec, z, super._ref, super._damage));
-			System.out.println("Goo Tower Firing");
 			return true;
 		}
 		return false;

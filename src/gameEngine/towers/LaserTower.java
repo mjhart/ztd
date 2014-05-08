@@ -18,7 +18,7 @@ public class LaserTower extends AbstractTower {
 	
 	
 	public LaserTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(30, 1000000, 3000000000l, 500, Constants.LASER_BLURB, vec, ref, sprite);
+		super(30, 1000000, 3000000000l, 900, Constants.LASER_BLURB, vec, ref, sprite);
 	}
 	
 	@Override
@@ -38,7 +38,6 @@ public class LaserTower extends AbstractTower {
 			List<Zombie> toDamage = new LinkedList<Zombie>();
 			for(Zombie z1 : zs) {
 				float d = _vec.minus(z1.getCoords()).minus(n.smult(_vec.minus(z1.getCoords()).dot(n))).mag2();
-				System.out.println(d);
 				if(d < 80000) {
 					toDamage.add(z1);
 					
@@ -46,7 +45,6 @@ public class LaserTower extends AbstractTower {
 			}
 			for(Zombie z1 : toDamage) {
 				_ref.dealDamage(z1, _damage);
-				System.out.println("dealing damage to " + z1.getCoords());
 			}
 			Vec2f end = _vec.plus(z.getCoords().minus(_vec).normalized().smult(10000));
 			addProjectile(new LaserProjectile(_vec.x, _vec.y, end.x, end.y));

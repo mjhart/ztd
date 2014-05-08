@@ -322,11 +322,13 @@ public class TestFrontEnd extends SwingFrontEnd {
 	}
 	
 	public void checkGameOver() {
-		if (_ref.getGameOver()) {
-			_screen = new Screen("Game Over", _size.x, _size.y, _ref);
-			_hasMap = false;
-			_showMap = true;
-			_hasScreen = true;
+		if (!_hasScreen) {
+			if (_ref.getGameOver()) {
+				_screen = new Screen("Game Over", _size.x, _size.y, _ref);
+				_hasMap = false;
+				_showMap = true;
+				_hasScreen = true;
+			}
 		}
 	}
 	
@@ -628,7 +630,6 @@ public class TestFrontEnd extends SwingFrontEnd {
 			return _tf.makeStun(new Vec2f(xToLon(e.getX()), yToLat(e.getY())), _ref);
 		}
 		else {
-			System.out.println("Bad tower button command. This should never happen");
 			return null;
 		}
 	}

@@ -25,7 +25,6 @@ public class LaserProjectile extends Line2D.Float implements Projectile {
 
 	@Override
 	public void draw(Graphics2D g) {
-		// TODO Auto-generated method stub
 		g.setColor(java.awt.Color.RED);
 		g.draw(this);
 	}

@@ -13,7 +13,6 @@ public class BasicProjectile implements Projectile {
 	private Vec2f _target;
 
 	public BasicProjectile(Vec2f coords, Vec2f target) {
-		//System.out.println("Projectile created");
 		_coords = coords;
 		_path =  target.minus(_coords);
 		_target = target;
@@ -21,7 +20,6 @@ public class BasicProjectile implements Projectile {
 	
 	@Override
 	public boolean action(long nanosSincePrevTick) {
-		//System.out.println("Projectile moving");
 		if(_coords.dist2(_target) < 10000) {
 			return true;
 		}
@@ -31,7 +29,6 @@ public class BasicProjectile implements Projectile {
 	
 	@Override
 	public void draw(Graphics2D g) {
-		//System.out.println("Drawing projectile at " + _coords.smult(5));
 		g.setColor(java.awt.Color.BLACK);
 		g.fillOval((int) _coords.x - 25, (int) _coords.y - 25, 50, 50);
 	}

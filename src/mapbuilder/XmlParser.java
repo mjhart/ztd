@@ -195,10 +195,10 @@ public class XmlParser {
 		
 		}
 		catch (NumberFormatException nfe) {
-			System.out.println("ERROR: Bad input file");
+			//System.out.println("ERROR: Bad input file");
 		}
 		catch (Exception e) {
-			System.out.println("ERROR: Problem in parseBox");
+			//System.out.println("ERROR: Problem in parseBox");
 		}
 		return false;
 	}
@@ -306,11 +306,11 @@ public class XmlParser {
 				return mn;
 			}
 			else {
-				System.out.println("ERROR: Could not find address");
+				//System.out.println("ERROR: Could not find address");
 			}
 		}
 		catch (Exception e) {
-			System.out.println("ERROR: Problem in parseAddress");
+			//System.out.println("ERROR: Problem in parseAddress");
 		}
 		return null;
 		

@@ -44,13 +44,6 @@ public class ElectricProjectile implements Projectile {
 		g.setStroke(new BasicStroke(20));
 		g.setColor(new Color(0,255,255));
 		g.drawLine((int)_source.x, (int)_source.y, (int)_dest.x, (int)_dest.y);
-		/*
-		AffineTransform af1 = new AffineTransform();
-		af1.translate(_source.x, _source.y - _sprites[_frame].getHeight() / 2);
-		af1.scale(_dest.dist(_source) / 1000  , 5);
-		af1.rotate(_angle, 0, _sprites[_frame].getHeight() / 2);
-		g.drawImage(_sprites[_frame], af1, null);
-		*/
 	}
 
 }

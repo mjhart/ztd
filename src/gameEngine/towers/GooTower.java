@@ -15,7 +15,7 @@ import cs195n.Vec2f;
 public class GooTower extends AbstractTower {
 
 	public GooTower(Vec2f vec, Referee ref, BufferedImage sprite) {
-		super(10, 1000000, 2000000000, 150, Constants.GOO_BLURB, vec, ref, sprite);
+		super(10, 1000000, 2000000000, 250, Constants.GOO_BLURB, vec, ref, sprite);
 	}
 
 	@Override
@@ -44,7 +44,6 @@ public class GooTower extends AbstractTower {
 			}
 			super.addProjectile(new GooProjectile(super._vec, z));
 			_ref.dealDamage(z, _damage);
-			System.out.println("Goo Tower Firing");
 			return true;
 		}
 		return false;

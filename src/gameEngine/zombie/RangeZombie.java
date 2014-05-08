@@ -32,7 +32,6 @@ public class RangeZombie extends Zombie {
 			super.move(nanosSincePrevTick);
 			
 			if(super.getCoords().dist2(_base.getCoords()) < 4000000) {
-				System.out.println("in range");
 				_inRange = true;
 				super._atBase = true;
 			}

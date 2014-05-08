@@ -59,8 +59,19 @@ public class Screen {
 			if (_first) {
 				g.setColor(Color.BLACK);
 				g.setFont(new Font("Helvetica", Font.PLAIN, 15));
-				_cbs.add(new HugeButton("Restart", _w, _h/2, g));
-				_cbs.add(new HugeButton("Main Menu", _w, _h/2 + 60, g));
+				int d = 30;
+				int f = 70;
+				g.setFont(new Font("Helvetica", Font.PLAIN, 20));
+				g.drawString("Zombies Killed This Round: " + _ref.getRoundZombiesKilled(), _w/3, _h/5 + f + d);
+				g.drawString("Total Zombies Killed: " + _ref.getTotalZombiesKilled(), _w/3, _h/5 + f + 2*d);
+				g.drawString("Interest Earned This Round: " + _ref.getRoundInterestEarned(), _w/3, _h/5 + f + 3*d);
+				g.drawString("Total Interest Earned: " + _ref.getTotalInterestEarned(), _w/3, _h/5 + f + 4*d);
+				g.drawString("Money Earned This Round: " + _ref.getRoundMoneyEarned(), _w/3, _h/5 + f + 5*d);
+				g.drawString("Total Money Earned: " + _ref.getTotalMoneyEarned(), _w/3, _h/5 + f + 6*d);
+				g.drawString("Money Spent This Round: " + _ref.getRoundMoneySpent(), _w/3, _h/5 + f + 7*d);
+				g.drawString("Total Money Spent: " + _ref.getTotalMoneySpent(), _w/3, _h/5 + f + 8*d);
+				_cbs.add(new HugeButton("Restart", _w, _h*2/3, g));
+				_cbs.add(new HugeButton("Main Menu", _w, _h*2/3 + 60, g));
 				_first = false;
 			}
 			g.setFont(new Font("Helvetica", Font.PLAIN, 70));

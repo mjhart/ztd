@@ -23,10 +23,7 @@ public class ZombieFactory {
 	private BufferedImage[] _superAttack;
 	private Base _base;
 	
-	public ZombieFactory(Base base) {
-		
-		System.out.println(base);
-		
+	public ZombieFactory(Base base) {		
 		_base = base;
 		BufferedImage img = null;
 		_basicSprites = new BufferedImage[7];
@@ -37,6 +34,7 @@ public class ZombieFactory {
 			img = ImageIO.read(new File("stuff/zombie_topdown.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (SpriteImp)");
+			System.exit(0);
 		}
 		
 		for(int i=4; i<11; i++) {
@@ -56,6 +54,7 @@ public class ZombieFactory {
 			img = ImageIO.read(new File("stuff/zombies_red.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (SpriteImp)");
+			System.exit(0);
 		}
 		
 		for(int i=4; i<11; i++) {
@@ -75,6 +74,7 @@ public class ZombieFactory {
 			img = ImageIO.read(new File("stuff/zombies_green.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (SpriteImp)");
+			System.exit(0);
 		}
 
 		for(int i=4; i<11; i++) {
@@ -94,6 +94,7 @@ public class ZombieFactory {
 			img = ImageIO.read(new File("stuff/zombies_yellow.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (SpriteImp)");
+			System.exit(0);
 		}
 
 		for(int i=4; i<11; i++) {
@@ -113,6 +114,7 @@ public class ZombieFactory {
 			img = ImageIO.read(new File("stuff/zombies_indigo.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (SpriteImp)");
+			System.exit(0);
 		}
 
 		for(int i=4; i<11; i++) {
@@ -127,7 +129,6 @@ public class ZombieFactory {
 	}
 	
 	public BasicZombie makeBasicZombie(MapNode src) {
-		System.out.println("Creating basic");
 		return new BasicZombie(src, _basicSprites, _basicAttack, _base);
 	}
 	
@@ -140,7 +141,6 @@ public class ZombieFactory {
 	}
 	
 	public RangeZombie makeRangeZombie(MapNode src) {
-		System.out.println("Creating range");
 		return new RangeZombie(src, _rangeSprites, _rangeAttack, _base);
 	}
 	

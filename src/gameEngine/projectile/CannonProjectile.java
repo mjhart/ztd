@@ -38,7 +38,6 @@ public class CannonProjectile implements Projectile {
 	
 	@Override
 	public boolean action(long nanosSincePrevTick) {
-		// TODO Auto-generated method stub
 		if(_explode) {
 			_nanosExploding+=nanosSincePrevTick;
 			if(_nanosExploding > 100000000l / 16) {
@@ -64,7 +63,6 @@ public class CannonProjectile implements Projectile {
 
 	@Override
 	public void draw(Graphics2D g) {
-		// TODO Auto-generated method stub
 		if(_explode) {
 
 			AffineTransform af = new AffineTransform();
