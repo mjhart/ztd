@@ -10,3 +10,5 @@ To Run
 3. Run bin/zombie_tower_defense
 
 Java 7 is required
+
+Please email us at osmzombietowerdefense@gmail.com with any comments or questions.
