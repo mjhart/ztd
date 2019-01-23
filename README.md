@@ -1,20 +1,15 @@
 <img alt="Playing in Trafalgar Square, London" src="https://wiki.openstreetmap.org/w/images/thumb/5/54/Zombie_Tower_Defence_-_London.png/572px-Zombie_Tower_Defence_-_London.png" align="right">
-ztd
-===
 
+# ZTD
 Zombie Tower Defense
 
-To Run
-------
-1. [Download ZIP](https://github.com/mjhart/ztd/archive/master.zip)
-2. Unpack ZIP
+#To Play
+Currently ZTD must be build from source
+1. Clone git repository `https://github.com/mjhart/ztd.git`
+2. Build `mvn package`
 3. Run `bin/zombie_tower_defense`
 
-Java 7 is required
+Java 7 and Maven 3 are required
 
-Please email us at:
-
-osmzombietowerdefense@gmail.com
-
-...with any comments or questions.
+Please [create an issue](https://github.com/mjhart/ztd/issues/new) on github with any comments or questions.
 
