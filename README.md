@@ -3,7 +3,7 @@
 # ZTD
 Zombie Tower Defense
 
-#To Play
+# To Play
 Currently ZTD must be build from source
 1. Clone git repository `https://github.com/mjhart/ztd.git`
 2. Build `mvn package`
