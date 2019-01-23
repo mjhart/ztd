@@ -1,0 +1,14 @@
+### Maven ###
+target/
+*.ser
+*.ec
+dependency-reduced-pom.xml
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### OS X ###
+.DS_Store
