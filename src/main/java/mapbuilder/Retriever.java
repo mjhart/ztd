@@ -30,7 +30,7 @@ public class Retriever {
 	 * @throws TimeoutException 
 	 */
 	public static File getBox(double left, double bottom, double right, double top) throws TimeoutException {
-		String address = "http://api.openstreetmap.org/api/0.6/map?bbox="; //The OSM server address
+		String address = "https://www.openstreetmap.org/api/0.6/map?bbox="; //The OSM server address
 		address = address + left + ",";
 		address = address + bottom + ",";
 		address = address + right + ",";
@@ -79,7 +79,7 @@ public class Retriever {
 	 * @throws TimeoutException 
 	 */
 	public static File getFromAddress(String stadd) throws TimeoutException {
-		String address = "http://nominatim.openstreetmap.org/search?q="; //The OSM server address
+		String address = "https://nominatim.openstreetmap.org/search?q="; //The OSM server address
 		
 		//Cleanup the input and append to the server address
 		String[] staddarr = stadd.split("\\s+");

@@ -31,7 +31,7 @@ public class ZombieFactory {
 		
 		// basic sprites
 		try {
-			img = ImageIO.read(new File("stuff/zombie_topdown.png"));
+			img = ImageIO.read(getClass().getResource("/stuff/zombie_topdown.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (SpriteImp)");
 			System.exit(0);
@@ -51,7 +51,7 @@ public class ZombieFactory {
 		_sprintAttack = new BufferedImage[9];
 		
 		try {
-			img = ImageIO.read(new File("stuff/zombies_red.png"));
+			img = ImageIO.read(getClass().getResource("/stuff/zombies_red.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (SpriteImp)");
 			System.exit(0);
@@ -71,7 +71,7 @@ public class ZombieFactory {
 		_bruiserAttack = new BufferedImage[9];
 
 		try {
-			img = ImageIO.read(new File("stuff/zombies_green.png"));
+			img = ImageIO.read(getClass().getResource("/stuff/zombies_green.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (SpriteImp)");
 			System.exit(0);
@@ -91,7 +91,7 @@ public class ZombieFactory {
 		_rangeAttack = new BufferedImage[9];
 
 		try {
-			img = ImageIO.read(new File("stuff/zombies_yellow.png"));
+			img = ImageIO.read(getClass().getResource("/stuff/zombies_yellow.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (SpriteImp)");
 			System.exit(0);
@@ -111,7 +111,7 @@ public class ZombieFactory {
 		_superAttack = new BufferedImage[9];
 
 		try {
-			img = ImageIO.read(new File("stuff/zombies_indigo.png"));
+			img = ImageIO.read(getClass().getResource("/stuff/zombies_indigo.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (SpriteImp)");
 			System.exit(0);

@@ -9,6 +9,7 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
 
@@ -36,7 +37,7 @@ public class TowerFactory {
 		
 		// read basic sprite
 		try {
-			_basicsprite = ImageIO.read(new File("assets/towerpics/tower.png"));
+			_basicsprite = ImageIO.read(getClass().getResource("/towerpics/tower.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (tower.png)");
 			System.exit(0);
@@ -44,7 +45,7 @@ public class TowerFactory {
 		
 		// read flame sprite
 		try {
-			img = ImageIO.read(new File("assets/towerpics/flames.png"));
+			img = ImageIO.read(getClass().getResource("/towerpics/flames.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (flames.png)");
 			System.exit(0);
@@ -62,7 +63,7 @@ public class TowerFactory {
 	    
 		// read cannon sprite
 		try {
-			_cannonsprite = ImageIO.read(new File("assets/towerpics/cannonTower.png"));
+			_cannonsprite = ImageIO.read(getClass().getResource("/towerpics/cannonTower.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (cannonTower.png)");
 			System.exit(0);
@@ -79,7 +80,7 @@ public class TowerFactory {
 	    
 		// read electric sprite
 		try {
-			img = ImageIO.read(new File("assets/towerpics/stuntowersheet.png"));
+			img = ImageIO.read(getClass().getResource("/towerpics/stuntowersheet.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (stuntowersheet.png)");
 			System.exit(0);
@@ -96,7 +97,7 @@ public class TowerFactory {
 		
 		// read goo sprite
 		try {
-			img = ImageIO.read(new File("assets/towerpics/gooTowerSheet.png"));
+			img = ImageIO.read(getClass().getResource("/towerpics/gooTowerSheet.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (gooTowerSheet.png)");
 			System.exit(0);
@@ -113,7 +114,7 @@ public class TowerFactory {
 	    
 		// read poison sprite
 		try {
-			img = ImageIO.read(new File("assets/towerpics/poisontower.png"));
+			img = ImageIO.read(getClass().getResource("/towerpics/poisontower.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (poisontower.png)");
 			System.exit(0);
@@ -130,7 +131,7 @@ public class TowerFactory {
 		
 		// read laser sprite
 		try {
-			img = ImageIO.read(new File("assets/towerpics/laserTowerReal.png"));
+			img = ImageIO.read(getClass().getResource("/towerpics/laserTowerReal.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (laserTowerReal.png)");
 			System.exit(0);
@@ -149,7 +150,7 @@ public class TowerFactory {
 	    
 		// read electric projectile sprites
 		try {
-			img = ImageIO.read(new File("stuff/lightning.png"));
+			img = ImageIO.read(getClass().getResource("/stuff/lightning.png"));
 		} catch (IOException e) {
 			System.out.println("ERROR: Could not get image (lightning.png)");
 			System.exit(0);
@@ -163,9 +164,9 @@ public class TowerFactory {
 		
 		// read electric projectile sprites
 		try {
-			_flamecircle = ImageIO.read(new File("stuff/flames4.png"));
+			_flamecircle = ImageIO.read(getClass().getResource("/stuff/flames4.png"));
 		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (flamecircle.png)");
+			System.out.println("ERROR: Could not get image (flames4.png)");
 			System.exit(0);
 		}
 		
@@ -174,10 +175,9 @@ public class TowerFactory {
 		// read explosion sprites
 		_explosionSprites = new BufferedImage[16];
 		try {
-			img = ImageIO.read(new File("stuff/explosion.png"));
+			img = ImageIO.read(getClass().getResource("/stuff/explosion.png"));
 		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (explosion.png)");
-			System.exit(0);
+			throw new RuntimeException("ERROR: Could not get image (explosion.png)", e);
 		}
 		for(int i=0; i<4; i++) {
 			for(int j=0; j<4; j++)

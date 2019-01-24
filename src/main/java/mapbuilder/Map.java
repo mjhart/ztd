@@ -73,7 +73,7 @@ public class Map {
 			XmlParser x = new XmlParser(this);
 			if(isStored(address)) {
 				String formatted = address.replace(" ", "_");
-				box = new File("assets/maps/" + formatted + ".xml");
+				box = new File("src/main/resources/maps/" + formatted + ".xml");
 				setW(address);
 			}
 			else {
