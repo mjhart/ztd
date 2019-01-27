@@ -2,6 +2,7 @@ package mapbuilder;
 
 import java.awt.geom.Point2D;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +23,7 @@ import org.w3c.dom.NodeList;
  *
  */
 public class XmlParser {
-	
+
 	private List<MapNode> mapnodes;
 	private List<MapWay> mapways;
 	private List<MapWay> highways;
@@ -40,7 +41,7 @@ public class XmlParser {
 	private HashMap<String, MapWay> mwhash;
 	private boolean doneparsebox;
 	private Map _m;
-	
+
 	public XmlParser(Map m) {
 		mapnodes = new ArrayList<MapNode>(0);
 		mapways = new ArrayList<MapWay>(0);
@@ -59,45 +60,47 @@ public class XmlParser {
 		doneparsebox = false;
 		_m = m;
 	}
-	
-	/**
-	 * This method parses the box info that OSM returns into MapNodes and MapWays
-	 * @param xmlfile All info contained in a box defined by lat and lon bounds
-	 */
-	public boolean parseBox(File xmlfile) {
+
+  /**
+   * This method parses the box info that OSM returns into MapNodes and MapWays
+   *
+   * @param xmlInputStream All info contained in a box defined by lat and lon bounds. The
+   *                       caller is responsible for closing the InputStream.
+   */
+	public boolean parseBox(InputStream xmlInputStream) {
 		try {
 			//Start up the DOM
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document doc = db.parse(xmlfile);
+			Document doc = db.parse(xmlInputStream);
 			doc.getDocumentElement().normalize();
-			
+
 			NodeList nnodes = doc.getElementsByTagName("node"); //Make a list of all elements marked "node"
 			//For each xml node
 			for (int i = 0; i < nnodes.getLength(); i++) {
 				Node node = nnodes.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
 					Element el = (Element) node;
-					MapNode mn = new MapNode(el.getAttribute("id"), 
+					MapNode mn = new MapNode(el.getAttribute("id"),
 							_m.latToY(Double.parseDouble(el.getAttribute("lat"))),
 							_m.lonToX(Double.parseDouble(el.getAttribute("lon")))); //Pull out and save desired attributes
 					mnhash.put(mn.id, mn);
 					mapnodes.add(mn);
 				}
 			}
-			
-			
+
+
 			NodeList wnodes = doc.getElementsByTagName("way");  //Make a list of all elements marked "way"
 			//For each xml way
 			for (int i = 0; i < wnodes.getLength(); i++) {
 				Node node = wnodes.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
-					
-					
+
+
 					Element el = (Element) node;
 					MapWay mw = new MapWay(el.getAttribute("id"));
 					mwhash.put(mw.id, mw);
-					
+
 					boolean isHighway = false;
 					if (XmlParser.isBlank("tag", el, "highway") == true) {
 						isHighway = true;
@@ -120,8 +123,8 @@ public class XmlParser {
 					if(!isHighway) {
 						mapways.add(mw);
 					}
-					
-					
+
+
 					if (XmlParser.isBlank("tag", el, "building") == true) {
 						Building b = new Building(mw);
 						b.setName(XmlParser.getVFromK("tag", el, "name"));
@@ -144,7 +147,7 @@ public class XmlParser {
 								landuse.add(b);
 						}
 					}
-					
+
 					if (XmlParser.isBlank("tag", el, "highway") == true) {
 						if (XmlParser.getVFromK("tag", el, "highway").equals("footway")) {
 							footways.add(mw);
@@ -167,7 +170,7 @@ public class XmlParser {
 					}
 				}
 			}
-			
+
 			NodeList rnodes = doc.getElementsByTagName("relation");  //Make a list of all elements marked "relation"
 			//For each xml relation
 			for (int i = 0; i < rnodes.getLength(); i++) {
@@ -192,7 +195,7 @@ public class XmlParser {
 			}
 
 			return true;
-		
+
 		}
 		catch (NumberFormatException nfe) {
 			//System.out.println("ERROR: Bad input file");
@@ -202,8 +205,8 @@ public class XmlParser {
 		}
 		return false;
 	}
-	
-	
+
+
 	/**
 	 * This helper method returns the map nodes associated with a given way
 	 * @param tag In this case it is "nd"
@@ -222,7 +225,7 @@ public class XmlParser {
 		}
 		return res;
 	}
-	
+
 	private static List<String> getMapWays(String tag, Element e) {
 		List<String> res = new ArrayList<String>(0);
 		NodeList nl = e.getElementsByTagName(tag);
@@ -237,9 +240,9 @@ public class XmlParser {
 		}
 		return res;
 	}
-	
 
-	
+
+
 
 	private static boolean isBlank(String tag, Element e, String key) {
 		boolean markblank = false;
@@ -261,7 +264,7 @@ public class XmlParser {
 		}
 		return markblank;
 	}
-	
+
 	private static String getVFromK(String tag, Element e, String key) {
 		String v = null;
 		HashMap<String, String> res = new HashMap<>(0);
@@ -276,26 +279,27 @@ public class XmlParser {
 		}
 		return res.get(key);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * This mehtod takes in an xml file containing all OSM infor for a particular address
 	 * and parses it to obtain it's lat and lon.
-	 * @param xmlfile An xml file from OSM containing relevant info
+	 * @param xmlInputStream An InputStream of xml data from OSM containing relevant info. The
+	 *                        caller is responsible for closing the InputStream.
 	 * @return A mapnode containing the lat and lon of the location
 	 */
-	public Point2D.Double parseAddress(File xmlfile) {
+	public Point2D.Double parseAddress(InputStream xmlInputStream) {
 		try {
 			//Start up the DOM
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document doc = db.parse(xmlfile);
+			Document doc = db.parse(xmlInputStream);
 			doc.getDocumentElement().normalize();
-			
+
 			//Get a list of all nodes marked search results (there will only be one node in this list)
 			NodeList nnodes = doc.getElementsByTagName("searchresults");
-			
+
 			Node node = nnodes.item(0);
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				Element el = (Element) node;
@@ -313,9 +317,9 @@ public class XmlParser {
 			//System.out.println("ERROR: Problem in parseAddress");
 		}
 		return null;
-		
+
 	}
-	
+
 	/**
 	 * This method takes in a tag, an attribute, and an element and returns the value
 	 * of the attribute. This method should only be used in parseAddress
@@ -334,59 +338,59 @@ public class XmlParser {
 		}
 		return res;
 	}
-	
-	
-	
+
+
+
 	//TODO Make these contingent on doneparsing
-	
+
 	public List<MapWay> getWays() {
 		return mapways;
 	}
-	
+
 	public List<MapWay> getHighs() {
 		return highways;
 	}
-	
+
 	public List<MapNode> getNodes() {
 		return mapnodes;
 	}
-	
+
 	public HashMap<String, MapNode> getNodesHash() {
 		return mnhash;
 	}
-	
+
 	public List<Building> getBuildings() {
 		return buildings;
 	}
-	
+
 	public List<Building> getLanduse() {
 		return landuse;
 	}
-	
+
 	public List<Building> getWaterways() {
 		return bigwaterways;
 	}
-	
+
 	public List<MapWay> getFootways() {
 		return footways;
 	}
-	
+
 	public List<MapWay> getResidential() {
 		return residential;
 	}
-	
+
 	public List<MapWay> getSecondary() {
 		return secondary;
 	}
-	
+
 	public List<MapWay> getTertiary() {
 		return tertiary;
 	}
-	
+
 	public List<Relation> getWaterrels() {
 		return waterrels;
 	}
-	
+
 	public List<MapWay> getStreams() {
 		return streams;
 	}

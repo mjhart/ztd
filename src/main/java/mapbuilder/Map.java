@@ -1,35 +1,27 @@
 package mapbuilder;
 
-import gameEngine.Base;
 import gameEngine.Referee;
-import gameEngine.towers.AbstractTower;
-import gameEngine.zombie.Zombie;
-import gui.SpriteImp;
 
-import java.awt.BasicStroke;
-import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.concurrent.TimeoutException;
 
-import javax.imageio.ImageIO;
 import gui.TestFrontEnd;
 
 import cs195n.Vec2f;
 import cs195n.Vec2i;
-import mapbuilder.MapWay;
 //import mapbuilder.PathFinder.MyComparator;
 
 public class Map {
@@ -67,36 +59,9 @@ public class Map {
 
 		wMin = new double[2];
 		wMax = new double[2];
-		
-		File box;
-		try {
-			XmlParser x = new XmlParser(this);
-			if(isStored(address)) {
-				String formatted = address.replace(" ", "_");
-				box = new File("src/main/resources/maps/" + formatted + ".xml");
-				setW(address);
-			}
-			else {
-				File stadd = Retriever.getFromAddress(address);
-				if (stadd == null) {
-					_tf.dataError(1);
-					_sentDataError = true;
-					return;
-				}
-				Point2D.Double cent = x.parseAddress(stadd);
-				if ((cent == null) && (!_sentDataError)) {
-					_tf.dataError(2);
-					_sentDataError = true;
-					return;
-				}
-				DistConverter dc = new DistConverter(cent.y, cent.x);
-				wMin[0] = dc.getLeft(cent.x);
-				wMin[1] = dc.getBott(cent.y);
-				wMax[0] = dc.getRight(cent.x);
-				wMax[1] = dc.getTop(cent.y);
-		
-				box = Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
-			}
+
+    XmlParser x = new XmlParser(this);
+    try (InputStream box = getBoxInputStream(address, x)){
 			if ((box == null) && (!_sentDataError)) {
 				_tf.dataError(1);
 				_sentDataError = true;
@@ -135,7 +100,47 @@ public class Map {
 		catch(TimeoutException e) {
 			_tf.dataError(1);
 			_sentDataError = true;
+		} catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+	private InputStream getBoxInputStream(String address, XmlParser x) throws TimeoutException {
+		if (isStored(address)) {
+			String formatted = address.replace(" ", "_");
+			try {
+				FileInputStream inputStream =
+								new FileInputStream(new File("src/main/resources/maps/" + formatted + ".xml"));
+				setW(address);
+				return inputStream;
+			} catch (FileNotFoundException e) {
+				throw new IllegalStateException("Cannot find stored file", e);
+			}
 		}
+
+		Point2D.Double cent = null;
+		try (InputStream stadd = Retriever.getFromAddress(address)) {
+			if (stadd == null) {
+				_tf.dataError(1);
+				_sentDataError = true;
+				cent = null;
+			}
+			cent = x.parseAddress(stadd);
+		} catch (IOException e) {
+			System.out.println("Problem closing address input stream: " + e.getMessage());
+		}
+		if ((cent == null) && (!_sentDataError)) {
+			_tf.dataError(2);
+			_sentDataError = true;
+			return null;
+		}
+		DistConverter dc = new DistConverter(cent.y, cent.x);
+		wMin[0] = dc.getLeft(cent.x);
+		wMin[1] = dc.getBott(cent.y);
+		wMax[0] = dc.getRight(cent.x);
+		wMax[1] = dc.getTop(cent.y);
+
+		return Retriever.getBox(wMin[0], wMin[1], wMax[0], wMax[1]);
 	}
 	
 	

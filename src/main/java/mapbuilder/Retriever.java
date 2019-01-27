@@ -3,6 +3,7 @@ package mapbuilder;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
@@ -27,9 +28,8 @@ public class Retriever {
 	 * @param right The right lon bound
 	 * @param top The top lat bound
 	 * @return A File containing all of the xml info from this box
-	 * @throws TimeoutException 
 	 */
-	public static File getBox(double left, double bottom, double right, double top) throws TimeoutException {
+	public static InputStream getBox(double left, double bottom, double right, double top) throws TimeoutException {
 		String address = "https://www.openstreetmap.org/api/0.6/map?bbox="; //The OSM server address
 		address = address + left + ",";
 		address = address + bottom + ",";
@@ -40,27 +40,7 @@ public class Retriever {
 		
 		try {
 			URL osm = new URL(address);
-			BufferedReader in = new BufferedReader(new InputStreamReader(osm.openStream()));
-			File box = new File("box.xml"); //Make a new file called box.xml, or overwrite the existing file
-			PrintWriter pw = new PrintWriter(box);
-			
-			//Read and write line by line
-			String line = in.readLine();
-			long start = System.currentTimeMillis();
-			while (line != null) {
-				pw.write(line);
-				line = in.readLine();
-				if(System.currentTimeMillis() - start > 120000) {
-					in.close();
-					pw.close();
-					throw new TimeoutException();
-				}
-			}
-			
-			//Close resources
-			in.close();
-			pw.close();			
-			return box;
+			return osm.openStream();
 		}
 		catch (MalformedURLException e) {
 			System.out.println("ERROR: Bad URL, could not access OpenStreetMap");
@@ -76,9 +56,8 @@ public class Retriever {
 	 * containing the xml for that location
 	 * @param stadd A street address (or place name, i.e. "Eiffel Tower")
 	 * @return A File containing the xml for this location
-	 * @throws TimeoutException 
 	 */
-	public static File getFromAddress(String stadd) throws TimeoutException {
+	public static InputStream getFromAddress(String stadd) throws TimeoutException {
 		String address = "https://nominatim.openstreetmap.org/search?q="; //The OSM server address
 		
 		//Cleanup the input and append to the server address
@@ -91,28 +70,7 @@ public class Retriever {
 		
 		try {
 			URL nomatim = new URL(address);
-			BufferedReader in = new BufferedReader(new InputStreamReader(nomatim.openStream()));
-			File staddfile = new File("stadd.xml"); //Make a new file called stadd.xml, or overwrite the existing file
-			PrintWriter pw = new PrintWriter(staddfile);
-			
-			//Read and write line by line
-			String line = in.readLine();
-			long start = System.currentTimeMillis();
-			while (line != null) {
-				pw.write(line);
-				line = in.readLine();
-				if(System.currentTimeMillis() - start > 30000) {
-					in.close();
-					pw.close();
-					throw new TimeoutException();
-				}
-			}
-			
-			//Close resources
-			in.close();
-			pw.close();
-			
-			return staddfile;
+			return nomatim.openStream();
 		}
 		catch (MalformedURLException e) {
 			System.out.println("ERROR: Bad URL, could not access Nomatim");

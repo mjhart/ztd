@@ -12,8 +12,3 @@ dependency-reduced-pom.xml
 
 ### OS X ###
 .DS_Store
-
-### Temporary files ###
-# TODO: remove once temporary files no longer here
-box.xml
-stadd.xml
