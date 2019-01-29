@@ -1,9 +1,10 @@
 package gameEngine.projectile;
 
-import java.awt.Graphics2D;
+import cs195n.Vec2f;
+
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import cs195n.Vec2f;
 
 public class FireProjectile implements Projectile {
 
@@ -20,10 +21,7 @@ public class FireProjectile implements Projectile {
 	@Override
 	public boolean action(long nanosSincePrevTick) {
 		_timeAlive += nanosSincePrevTick;
-		if(_timeAlive > 100000000) {
-			return true;
-		}
-		return false;
+		return _timeAlive > 100000000;
 	}
 
 	@Override

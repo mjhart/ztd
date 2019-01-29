@@ -1,11 +1,9 @@
 package gameEngine.projectile;
 
-import gameEngine.towers.BasicTower;
-import gameEngine.zombie.RangeZombie;
-
-import java.awt.Graphics2D;
-
 import cs195n.Vec2f;
+
+import java.awt.*;
+
 
 public class ZombieProjectile implements Projectile {
 
@@ -30,7 +28,7 @@ public class ZombieProjectile implements Projectile {
 	
 	@Override
 	public void draw(Graphics2D g) {
-		g.setColor(java.awt.Color.BLACK);
+		g.setColor(Color.BLACK);
 		g.fillOval((int) _coords.x - 25, (int) _coords.y - 25, 50, 50);
 	}
 

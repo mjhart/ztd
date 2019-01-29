@@ -1,9 +1,9 @@
 package gameEngine.projectile;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+
+import static java.awt.Color.RED;
 
 public class LaserProjectile extends Line2D.Float implements Projectile {
 
@@ -17,15 +17,12 @@ public class LaserProjectile extends Line2D.Float implements Projectile {
 	@Override
 	public boolean action(long nanosSincePrevTick) {
 		_timeToLive+=nanosSincePrevTick;
-		if(_timeToLive > 100000000l) {
-			return true;
-		}
-		return false;
+		return _timeToLive > 100000000l;
 	}
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.setColor(java.awt.Color.RED);
+		g.setColor(RED);
 		g.draw(this);
 	}
 

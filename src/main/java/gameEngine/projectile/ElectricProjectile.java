@@ -1,12 +1,9 @@
 package gameEngine.projectile;
 
-import java.awt.BasicStroke;
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.awt.Color;
-
 import cs195n.Vec2f;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class ElectricProjectile implements Projectile {
 
@@ -15,15 +12,13 @@ public class ElectricProjectile implements Projectile {
 	private long _timeToLive;
 	private BufferedImage[] _sprites;
 	private int _frame;
-	private float _angle;
-	
+
 	public ElectricProjectile(Vec2f source, Vec2f dest, BufferedImage[] sprites) {
 		_source = source;
 		_dest = dest;
 		_timeToLive = 0;
 		_sprites = sprites;
 		_frame = 0;
-		_angle = dest.minus(source).angle();
 	}
 	
 	@Override

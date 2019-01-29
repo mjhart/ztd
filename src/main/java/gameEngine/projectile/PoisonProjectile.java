@@ -1,13 +1,13 @@
 package gameEngine.projectile;
 
+import cs195n.Vec2f;
 import gameEngine.Constants;
 import gameEngine.Referee;
-import gameEngine.towers.GooTower;
 import gameEngine.zombie.Zombie;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 
-import cs195n.Vec2f;
+import static java.awt.Color.GREEN;
 
 public class PoisonProjectile implements Projectile {
 
@@ -22,7 +22,6 @@ public class PoisonProjectile implements Projectile {
 	private Referee _ref;
 
 	public PoisonProjectile(Vec2f coords, Zombie zombie, Referee ref, int damage) {
-		//System.out.println("Projectile created");
 		_coords = coords;
 		_zombie = zombie;
 		_target = zombie.getCoords();
@@ -46,9 +45,7 @@ public class PoisonProjectile implements Projectile {
 				_ref.dealDamage(_zombie, _damage);
 				_nanosSince = 0;
 				_hits++;
-				if(_hits >= Constants.POISON_HITS) {
-					return true;
-				}
+				return _hits >= Constants.POISON_HITS;
 			}
 		}
 		else {
@@ -64,11 +61,11 @@ public class PoisonProjectile implements Projectile {
 	@Override
 	public void draw(Graphics2D g) {
 		if(_onZombie) {
-			g.setColor(java.awt.Color.GREEN.darker());
+			g.setColor(GREEN.darker());
 			g.fillOval((int) _zombie.getCoords().x - 50, (int) _zombie.getCoords().y - 50, 100, 100);
 		}
 		else {
-			g.setColor(java.awt.Color.GREEN.darker());
+			g.setColor(GREEN.darker());
 			g.fillOval((int) _coords.x - 25, (int) _coords.y - 25, 50, 50);
 		}
 	}

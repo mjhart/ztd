@@ -1,23 +1,22 @@
 package gameEngine.projectile;
 
+import cs195n.Vec2f;
 import gameEngine.Referee;
 import gameEngine.towers.CannonTower;
 import gameEngine.zombie.Zombie;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import cs195n.Vec2f;
+import static java.awt.Color.BLACK;
 
 public class CannonProjectile implements Projectile {
 
 	private Vec2f _coords;
 	private Vec2f _path;
 	private Vec2f _target;
-	private CannonTower _t;
 	private boolean _explode;
 	private long _nanosExploding;
 	private Referee _ref;
@@ -29,7 +28,6 @@ public class CannonProjectile implements Projectile {
 		_coords = coords;
 		_path =  target.minus(_coords);
 		_target = target;
-		_t = t;
 		_ref = ref;
 		_damage = damage;
 		_sprites = sprites;
@@ -71,7 +69,7 @@ public class CannonProjectile implements Projectile {
 			g.drawImage(_sprites[_frame], af, null);
 		}
 		else {
-			g.setColor(java.awt.Color.BLACK);
+			g.setColor(BLACK);
 			g.fillOval((int) _coords.x - 25, (int) _coords.y - 25, 50, 50);
 		}
 	}

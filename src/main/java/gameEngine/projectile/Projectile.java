@@ -1,6 +1,6 @@
 package gameEngine.projectile;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 
 public interface Projectile {
 
@@ -9,6 +9,6 @@ public interface Projectile {
 	 * @return True if this projectile should be removed. False
 	 * otherwise
 	 */
-	public boolean action(long nanosSincePrevTick);
-	public void draw(Graphics2D g);
+	boolean action(long nanosSincePrevTick);
+	void draw(Graphics2D g);
 }

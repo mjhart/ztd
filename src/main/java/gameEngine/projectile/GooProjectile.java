@@ -7,6 +7,8 @@ import java.awt.Graphics2D;
 
 import cs195n.Vec2f;
 
+import static java.awt.Color.GREEN;
+
 public class GooProjectile implements Projectile {
 
 	private Vec2f _coords;
@@ -45,11 +47,11 @@ public class GooProjectile implements Projectile {
 	@Override
 	public void draw(Graphics2D g) {
 		if(_onZombie) {
-			g.setColor(java.awt.Color.GREEN);
+			g.setColor(GREEN);
 			g.fillOval((int) _zombie.getCoords().x - 50, (int) _zombie.getCoords().y - 50, 100, 100);
 		}
 		else {
-			g.setColor(java.awt.Color.GREEN);
+			g.setColor(GREEN);
 			g.fillOval((int) _coords.x - 25, (int) _coords.y - 25, 50, 50);
 		}
 	}

@@ -1,10 +1,10 @@
 package gameEngine.projectile;
 
-import gameEngine.towers.BasicTower;
-
-import java.awt.Graphics2D;
-
 import cs195n.Vec2f;
+
+import java.awt.*;
+
+import static java.awt.Color.BLACK;
 
 public class BasicProjectile implements Projectile {
 	
@@ -29,7 +29,7 @@ public class BasicProjectile implements Projectile {
 	
 	@Override
 	public void draw(Graphics2D g) {
-		g.setColor(java.awt.Color.BLACK);
+		g.setColor(BLACK);
 		g.fillOval((int) _coords.x - 25, (int) _coords.y - 25, 50, 50);
 	}
 }
