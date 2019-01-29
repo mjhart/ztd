@@ -1,35 +1,20 @@
 package gameEngine.towers;
 
+import cs195n.Vec2f;
 import gameEngine.Constants;
 import gameEngine.Referee;
 import gameEngine.projectile.CannonProjectile;
 import gameEngine.zombie.Zombie;
 
-import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import javax.imageio.ImageIO;
-
-import cs195n.Vec2f;
-import cs195n.Vec2i;
 
 
 public class CannonTower extends AbstractTower {
 
   private BufferedImage[] _explosionSprites;
-  public CannonTower(Vec2f vec, Referee ref, BufferedImage sprite, BufferedImage[] explosionSprites) {
+  CannonTower(Vec2f vec, Referee ref, BufferedImage sprite, BufferedImage[] explosionSprites) {
     super(30, 4000000, 5000000000l, 160, Constants.CANNON_BLURB, vec, ref, sprite);
     _explosionSprites = explosionSprites;
-  }
-
-
-  @Override
-  public void drawSimple(Graphics2D g) {
-    super.drawSimple(g, java.awt.Color.BLACK);
   }
 
   @Override

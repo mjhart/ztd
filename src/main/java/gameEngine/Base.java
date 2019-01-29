@@ -43,10 +43,4 @@ public class Base extends BasicTower {
 		_health = health;
 	}
 
-	@Override
-	public void drawSimple(Graphics2D g) {
-		super.drawSimple(g, java.awt.Color.BLUE);
-		
-	}
-
 }

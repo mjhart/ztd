@@ -1,34 +1,25 @@
 package gameEngine.towers;
 
 
+import cs195n.Vec2f;
 import gameEngine.Constants;
 import gameEngine.Referee;
 import gameEngine.projectile.ElectricProjectile;
 import gameEngine.zombie.Zombie;
 
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.HashSet;
 import java.util.List;
-
-import cs195n.Vec2f;
 
 
 public class ElectricTower extends AbstractTower {
 	
 	private BufferedImage[] _lightningSprites;
 	
-	public ElectricTower(Vec2f vec, Referee ref, BufferedImage sprite, BufferedImage[] lightningSprites) {
+	ElectricTower(Vec2f vec, Referee ref, BufferedImage sprite, BufferedImage[] lightningSprites) {
 		super(30, 500000, 1000000000, 300, Constants.ELECTRIC_BLURB, vec, ref, sprite);
 		_lightningSprites = lightningSprites;
 	}
-	
-	@Override
-	public void drawSimple(Graphics2D g) {
-		super.drawSimple(g, java.awt.Color.ORANGE);
-	}
-	
-	
 	
 	@Override
 	public boolean action() {

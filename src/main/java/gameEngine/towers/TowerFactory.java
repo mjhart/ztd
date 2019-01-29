@@ -1,25 +1,14 @@
 package gameEngine.towers;
 
+import cs195n.Vec2f;
 import gameEngine.Referee;
 
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.ResourceBundle;
-
 import javax.imageio.ImageIO;
-
-import cs195n.Vec2f;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class TowerFactory {
-	
-	
-	
-	
 	private BufferedImage _basicsprite;
 	private BufferedImage _cannonsprite;
 	private BufferedImage _electricsprite;
@@ -27,30 +16,17 @@ public class TowerFactory {
 	private BufferedImage _goosprite;
 	private BufferedImage _lasersprite;
 	private BufferedImage _poisonsprite;
-	private BufferedImage _stunsprite;
 	private BufferedImage _flamecircle;
 	private BufferedImage[] _explosionSprites;
 	private BufferedImage[] _lightningSprites;
 
 	public TowerFactory() {
-		BufferedImage img = null;
-		
+
 		// read basic sprite
-		try {
-			_basicsprite = ImageIO.read(getClass().getResource("/towerpics/tower.png"));
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (tower.png)");
-			System.exit(0);
-		}
-		
+		_basicsprite = getBufferedImage("/towerpics/tower.png");
+
 		// read flame sprite
-		try {
-			img = ImageIO.read(getClass().getResource("/towerpics/flames.png"));
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (flames.png)");
-			System.exit(0);
-		}
-		_flamesprite = img.getSubimage(0, 0, 48, 64);		
+		_flamesprite = getBufferedImage("/towerpics/flames.png").getSubimage(0, 0, 48, 64);
 		int w = _flamesprite.getWidth();
 		int h = _flamesprite.getHeight();
 		BufferedImage scaled = new BufferedImage(5*w, 5*h, _flamesprite.getType());
@@ -59,15 +35,10 @@ public class TowerFactory {
 		g.drawImage(_flamesprite, 0, 0, 5*w, 5*h, 0, 0, w, h, null);
 	    g.dispose();
 	    _flamesprite = scaled;
-		
-	    
+
+
 		// read cannon sprite
-		try {
-			_cannonsprite = ImageIO.read(getClass().getResource("/towerpics/cannonTower.png"));
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (cannonTower.png)");
-			System.exit(0);
-		}
+		_cannonsprite = getBufferedImage("/towerpics/cannonTower.png");
 		w = _cannonsprite.getWidth();
 		h = _cannonsprite.getHeight();
 		scaled = new BufferedImage(3*w, 3*h, _cannonsprite.getType());
@@ -76,16 +47,10 @@ public class TowerFactory {
 		g.drawImage(_cannonsprite, 0, 0, 3*w, 3*h, 0, 0, w, h, null);
 	    g.dispose();
 	    _cannonsprite = scaled;
-	    
-	    
+
+
 		// read electric sprite
-		try {
-			img = ImageIO.read(getClass().getResource("/towerpics/stuntowersheet.png"));
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (stuntowersheet.png)");
-			System.exit(0);
-		}
-		_electricsprite = img.getSubimage(20, 0, 68, 118);		
+		_electricsprite = getBufferedImage("/towerpics/stuntowersheet.png").getSubimage(20, 0, 68, 118);
 		w = _electricsprite.getWidth();
 		h = _electricsprite.getHeight();
 		scaled = new BufferedImage(4*w, 4*h, _electricsprite.getType());
@@ -94,15 +59,9 @@ public class TowerFactory {
 		g.drawImage(_electricsprite, 0, 0, 4*w, 4*h, 0, 0, w, h, null);
 	    g.dispose();
 	    _electricsprite = scaled;
-		
+
 		// read goo sprite
-		try {
-			img = ImageIO.read(getClass().getResource("/towerpics/gooTowerSheet.png"));
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (gooTowerSheet.png)");
-			System.exit(0);
-		}
-		_goosprite = img.getSubimage(20, 15, 98, 98);		
+		_goosprite = getBufferedImage("/towerpics/gooTowerSheet.png").getSubimage(20, 15, 98, 98);
 		w = _goosprite.getWidth();
 		h = _goosprite.getHeight();
 		scaled = new BufferedImage(4*w, 4*h, _goosprite.getType());
@@ -111,15 +70,9 @@ public class TowerFactory {
 		g.drawImage(_goosprite, 0, 0, 4*w, 4*h, 0, 0, w, h, null);
 	    g.dispose();
 	    _goosprite = scaled;
-	    
+
 		// read poison sprite
-		try {
-			img = ImageIO.read(getClass().getResource("/towerpics/poisontower.png"));
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (poisontower.png)");
-			System.exit(0);
-		}
-		_poisonsprite = img.getSubimage(10, 10, 108, 98);		
+		_poisonsprite = getBufferedImage("/towerpics/poisontower.png").getSubimage(10, 10, 108, 98);
 		w = _poisonsprite.getWidth();
 		h = _poisonsprite.getHeight();
 		scaled = new BufferedImage((int) (3.5*w), (int) (3.5*h), _poisonsprite.getType());
@@ -128,15 +81,9 @@ public class TowerFactory {
 		g.drawImage(_poisonsprite, 0, 0, (int) (3.5*w), (int) (3.5*h), 0, 0, w, h, null);
 	    g.dispose();
 	    _poisonsprite = scaled;
-		
+
 		// read laser sprite
-		try {
-			img = ImageIO.read(getClass().getResource("/towerpics/laserTowerReal.png"));
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (laserTowerReal.png)");
-			System.exit(0);
-		}
-		_lasersprite = img.getSubimage(0, 0, 1024, 1024);		
+		_lasersprite = getBufferedImage("/towerpics/laserTowerReal.png").getSubimage(0, 0, 1024, 1024);
 		w = _lasersprite.getWidth();
 		h = _lasersprite.getHeight();
 		scaled = new BufferedImage(w/3, h/3, _lasersprite.getType());
@@ -147,123 +94,69 @@ public class TowerFactory {
 	    _lasersprite = scaled;
 
 
-	    
+
 		// read electric projectile sprites
-		try {
-			img = ImageIO.read(getClass().getResource("/stuff/lightning.png"));
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (lightning.png)");
-			System.exit(0);
-		}
+		BufferedImage lightningBufferedImg = getBufferedImage("/stuff/lightning.png");
 		_lightningSprites = new BufferedImage[3];
-		_lightningSprites[0] = img.getSubimage(0, 0, 135, 90);
-		_lightningSprites[1] = img.getSubimage(135, 0, 250, 90);
-		_lightningSprites[2] = img.getSubimage(385, 0, 405, 90);
-		
-		
-		
+		_lightningSprites[0] = lightningBufferedImg.getSubimage(0, 0, 135, 90);
+		_lightningSprites[1] = lightningBufferedImg.getSubimage(135, 0, 250, 90);
+		_lightningSprites[2] = lightningBufferedImg.getSubimage(385, 0, 405, 90);
+
+
+
 		// read electric projectile sprites
-		try {
-			_flamecircle = ImageIO.read(getClass().getResource("/stuff/flames4.png"));
-		} catch (IOException e) {
-			System.out.println("ERROR: Could not get image (flames4.png)");
-			System.exit(0);
-		}
-		
-		
-		
+		_flamecircle = getBufferedImage("/stuff/flames4.png"
+    );
+
+
 		// read explosion sprites
 		_explosionSprites = new BufferedImage[16];
-		try {
-			img = ImageIO.read(getClass().getResource("/stuff/explosion.png"));
-		} catch (IOException e) {
-			throw new RuntimeException("ERROR: Could not get image (explosion.png)", e);
-		}
+			BufferedImage explosionSpriteSheet = getBufferedImage("/stuff/explosion.png");
 		for(int i=0; i<4; i++) {
 			for(int j=0; j<4; j++)
-			_explosionSprites[i * 4 + j] = img.getSubimage(64 * j, 64 * i, 64, 64);
+			_explosionSprites[i * 4 + j] = explosionSpriteSheet.getSubimage(64 * j, 64 * i, 64, 64);
 		}
-		
+
 	}
-	
-	
-	
-	
-	
+
+	private BufferedImage getBufferedImage(String fileName) {
+		try {
+			return ImageIO.read(getClass().getResource(fileName));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+
 	public BasicTower makeBasic(Vec2f vec, Referee ref) {
 		return new BasicTower(vec, ref, _basicsprite);
 	}
-	
+
 	public CannonTower makeCannon(Vec2f vec, Referee ref) {
 		return new CannonTower(vec, ref, _cannonsprite, _explosionSprites);
 	}
-	
+
 	public ElectricTower makeElectric(Vec2f vec, Referee ref) {
 		return new ElectricTower(vec, ref, _electricsprite, _lightningSprites);
 	}
-	
+
 	public FlameTower makeFlame(Vec2f vec, Referee ref) {
 		return new FlameTower(vec, ref, _flamesprite, _flamecircle);
 	}
-	
+
 	public GooTower makeGoo(Vec2f vec, Referee ref) {
 		return new GooTower(vec, ref, _goosprite);
 	}
-	
+
 	public LaserTower makeLaser(Vec2f vec, Referee ref) {
 		return new LaserTower(vec, ref, _lasersprite);
 	}
-	
+
 	public PoisonTower makePoison(Vec2f vec, Referee ref) {
 		return new PoisonTower(vec, ref, _poisonsprite);
 	}
-	
-	public StunTower makeStun(Vec2f vec, Referee ref) {
-		return new StunTower(vec, ref, _stunsprite);
-	}
-	
-	
-	
-	public BufferedImage getBasicSprite() {
-		return _basicsprite;
-	}
-		
-	public BufferedImage getCannonSprite() {
-		return _cannonsprite;
-	}
-	
-	public BufferedImage getElectricSprite() {
-		return _electricsprite;
-	}
-	
-	public BufferedImage getFlameSprite() {
-		return _flamesprite;
-	}
-	
-	public BufferedImage getGooSprite() {
-		return _goosprite;
-	}
-	
-	public BufferedImage getLaserSprite() {
-		return _lasersprite;
-	}
-	
-	public BufferedImage getPoisonSprite() {
-		return _poisonsprite;
-	}
-	
-	public BufferedImage getStunSprite() {
-		return _stunsprite;
-	}
-	
-}
 
-//Scaling options
-/*
-//BufferedImage scaled = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-//AffineTransform at = new AffineTransform();
-//at.scale(.3, .3);
-//AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-//scaled = scaleOp.filter(_flamesprite, scaled);
-//_flamesprite = scaled;
-*/
+	public StunTower makeStun(Vec2f vec, Referee ref) {
+		return new StunTower(vec, ref, null);
+	}
+}

@@ -1,17 +1,16 @@
 package gameEngine.towers;
 
+import cs195n.Vec2f;
 import gameEngine.Referee;
 import gameEngine.projectile.Projectile;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
-
-import cs195n.Vec2f;
 
 
 public abstract class AbstractTower {
@@ -28,8 +27,8 @@ public abstract class AbstractTower {
 	private BufferedImage _sprite;
 	private boolean _doubled = false;
 	private boolean _faster = false;
-	private final int HALF_DELAY_COST = 200;
-	private final int DOUBLE_DAMAGE_COST = 200;
+	private static final int HALF_DELAY_COST = 200;
+	private static final int DOUBLE_DAMAGE_COST = 200;
 	
 	public AbstractTower(int damage, float radius, long delay, int price, String blurb, Vec2f vec, Referee ref, BufferedImage sprite) {
 		_damage = damage;
@@ -39,13 +38,13 @@ public abstract class AbstractTower {
 		_blurb = blurb;
 		_vec = vec;
 		_ref = ref;
-		_projectiles = new HashSet<Projectile>();
+		_projectiles = new HashSet<>();
 		_nanosSinceAction = _delay + 1;
 		_sprite = sprite;
 	}
 	
 	public void doAction(long nanosSincePrevTick) {
-		LinkedList<Projectile> toRemove = new LinkedList<Projectile>();
+		LinkedList<Projectile> toRemove = new LinkedList<>();
 		for(Projectile p : _projectiles) {
 			if(p.action(nanosSincePrevTick)) {
 				toRemove.add(p);
@@ -78,9 +77,7 @@ public abstract class AbstractTower {
 		af1.translate(_vec.x - (_sprite.getWidth() / 2), _vec.y - (_sprite.getHeight() / 2));
 		g.drawImage(_sprite, af1, null);
 	}
-	
-	public abstract void drawSimple(Graphics2D g);
-	
+
 	public BufferedImage getSprite() {
 		return _sprite;
 	}
@@ -88,20 +85,14 @@ public abstract class AbstractTower {
 	public boolean intersectRect(Rectangle2D r) {
 		int w = _sprite.getWidth();
 		int h = _sprite.getHeight();
-		if (r.intersects(_vec.x - w/2, _vec.y - h/2, w, h)) {
-			return true;
-		}
-		return false;
+		return r.intersects(_vec.x - w / 2, _vec.y - h / 2, w, h);
 	}
 	
 	public boolean contains(float x, float y) {
 		int w = _sprite.getWidth();
 		int h = _sprite.getHeight();
 		Rectangle2D r = new Rectangle2D.Float(_vec.x - w/2, _vec.y - h/2, w, h);
-		if (r.contains(x, y)) {
-			return true;
-		}
-		return false;
+		return r.contains(x, y);
 	}
 
 	
@@ -135,10 +126,6 @@ public abstract class AbstractTower {
 		else {
 			return _doubled;
 		}
-	}
-	
-	public void removeProjectile(Projectile p) {
-		_projectiles.remove(p);
 	}
 	
 	public void addProjectile(Projectile p) {

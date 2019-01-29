@@ -14,21 +14,14 @@ import cs195n.Vec2f;
 
 public class FlameTower extends AbstractTower {
 	
-	public BufferedImage _flamecircle;
+	private final BufferedImage _flamecircle;
 	
 	
-	public FlameTower(Vec2f vec, Referee ref, BufferedImage sprite, BufferedImage flamecircle) {
+	FlameTower(Vec2f vec, Referee ref, BufferedImage sprite, BufferedImage flamecircle) {
 		super(6, 250000, 500000000, 140, Constants.FLAME_BLURB, vec, ref, sprite);
 		_flamecircle = flamecircle;
 	}
-	
-	@Override
-	public void drawSimple(Graphics2D g) {
-		super.drawSimple(g, java.awt.Color.ORANGE);
-	}
-	
-	
-	
+
 	@Override
 	public boolean action() {
 		List<Zombie> zombies = _ref.getZombiesInR(_vec, _radius);

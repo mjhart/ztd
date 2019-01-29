@@ -18,19 +18,10 @@ public class StunTower extends AbstractTower {
 	}
 
 	@Override
-	public void drawSimple(Graphics2D g) {
-		super.drawSimple(g, java.awt.Color.BLUE);
-	}
-
-	@Override
 	public boolean action() {
 		Zombie z = _ref.getFarthest(_vec, _radius);
-		if (z != null) {
-			//TODO Goo Projectile
-			//super.addProjectile(new GooProjectile(super._vec, z.getCoords(), this));
-			return true;
-		}
-		return false;
+		//TODO Goo Projectile
+		return z != null;
 	}
 	
 }

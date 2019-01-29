@@ -1,33 +1,22 @@
 package gameEngine.towers;
 
+import cs195n.Vec2f;
 import gameEngine.Constants;
 import gameEngine.Referee;
 import gameEngine.projectile.LaserProjectile;
 import gameEngine.zombie.Zombie;
 
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import cs195n.Vec2f;
-
 
 public class LaserTower extends AbstractTower {
-	
-	
-	public LaserTower(Vec2f vec, Referee ref, BufferedImage sprite) {
+
+	LaserTower(Vec2f vec, Referee ref, BufferedImage sprite) {
 		super(30, 1000000, 3000000000l, 900, Constants.LASER_BLURB, vec, ref, sprite);
 	}
-	
-	@Override
-	public void drawSimple(Graphics2D g) {
-		super.drawSimple(g, java.awt.Color.ORANGE);
-		
-	}
-	
-	
 	
 	@Override
 	public boolean action() {
