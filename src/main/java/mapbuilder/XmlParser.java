@@ -237,9 +237,6 @@ public class XmlParser {
 		}
 		return res;
 	}
-	
-
-	
 
 	private static boolean isBlank(String tag, Element e, String key) {
 		boolean markblank = false;

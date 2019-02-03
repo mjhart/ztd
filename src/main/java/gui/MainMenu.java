@@ -14,8 +14,6 @@ import java.util.List;
 
 
 public class MainMenu {
-
-	
 	private int _w; //Width of the whole frame
 	private int _h; //Height of the whole frame
 	private Graphics2D g;

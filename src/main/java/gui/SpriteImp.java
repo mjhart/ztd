@@ -8,15 +8,12 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-
-
 @SuppressWarnings("serial")
 public class SpriteImp extends JPanel {
 	
 	private BufferedImage image;
 
 	public SpriteImp(String filepath) {
-		
 		try {
 			image = ImageIO.read(new File(filepath));
 		} catch (IOException e) {
@@ -25,7 +22,6 @@ public class SpriteImp extends JPanel {
 		}
 		
 		this.repaint();
-		
 	}
 	
     @Override
@@ -34,5 +30,4 @@ public class SpriteImp extends JPanel {
         //Will need to be scaled
         g.drawImage(image, 0, 0, null);
     }
-	
 }

@@ -33,7 +33,7 @@ public class LoadingScreen {
 
 	public void draw(Graphics2D g) {
 		java.awt.Color colorholder = g.getColor();
-		g.setColor(new Color(119,136,153));
+		g.setColor(new Color(119, 136, 153));
 		g.fill(new Rectangle2D.Float(0,0,_w,_h));
 		this.g = g;
 		if(_first) {
@@ -71,7 +71,6 @@ public class LoadingScreen {
 		int x = (int) (.5*rightline - .5*c);
 		return x;
 	}
-	
 	
 	private class Text {
 		private String _name;

@@ -183,8 +183,7 @@ public class Screen {
 		int x = (int) (.5*rightline - .5*c);
 		return x;
 	}
-	
-	
+
 	private class Text {
 		private String _name;
 		private float x;

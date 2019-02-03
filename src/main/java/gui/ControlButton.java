@@ -23,6 +23,7 @@ public class ControlButton {
 		this.y = y;
 		_highlight = false;
 	}
+
 	public void draw(Graphics2D g, Color background) {
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Helvetica", Font.BOLD, 15));
@@ -38,6 +39,7 @@ public class ControlButton {
 		g.draw(_r);
 		g.drawString(_name, x+5,(int) (y+_bb.getHeight()+1));
 	}
+
 	public RoundRectangle2D getRoundRect() {
 		return _r;
 	}

@@ -17,13 +17,9 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-
 import cs195n.Vec2f;
 
-
 public class Console2 {
-
-	
 	private float _cw; //Width of console
 	private float _h; //Height of the whole frame
 	private float _x;
@@ -45,7 +41,6 @@ public class Console2 {
 	private UpgradeInfo _ui;
 	private final float _tbwidth;
 
-	
 	private List<ControlButton> _cbs; //A list of control buttons. Needed to check for mouse clicks
 	private List<TowerButton> _tbs; //A list of tower buttons. Needed to check for mouse clicks
 
@@ -120,8 +115,6 @@ public class Console2 {
 			_info.draw();
 		}
 		
-
-		
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Helvetica", Font.BOLD, 15));
 		for (ControlButton cb: _cbs) {
@@ -152,9 +145,7 @@ public class Console2 {
 		float x = (float) (.5*rightline - .5*width);
 		return x;
 	}
-	
 
-	
 	private class TowerButton {
 		private String _name;
 		private RoundRectangle2D _r;
@@ -172,10 +163,11 @@ public class Console2 {
 			this.y = y;
 			_r = new RoundRectangle2D.Float(x,y,_tbwidth,_tbwidth, 5, 5);
 		}
+
 		public void draw() {
 			g.setColor(Color.BLACK);
 			//TODO this won't work right now
-			//g.drawImage(_sprite, new AffineTransform(), null);
+			g.drawImage(_sprite, new AffineTransform(), null);
 			g.draw(_r);
 			String first = _name.substring(0, 1);
 			first.toUpperCase();
@@ -211,9 +203,6 @@ public class Console2 {
 			_info = null;
 		}
 	}
-	
-
-
 
 	private class TowerInfo {
 		private String _name;
@@ -223,6 +212,7 @@ public class Console2 {
 		private RoundRectangle2D _back;
 		private AbstractTower _t;
 		public float _rightline;
+
 		public TowerInfo(String name, AbstractTower t, float rightline, float y) {
 			_name = name;
 			_t = t;
@@ -288,8 +278,7 @@ public class Console2 {
 
 		}
 	}
-	
-	
+
 	private class UpgradeInfo {
 		private final float _width = 160;
 		private float x;
@@ -300,6 +289,7 @@ public class Console2 {
 		private Text _text1;
 		private Text _text2;
 		private AbstractTower _t;
+
 		public UpgradeInfo(float rightline, float y, AbstractTower t) {
 			_t = t;
 			this.x = centerRect(_width, rightline);
@@ -312,8 +302,8 @@ public class Console2 {
 			_doubledamage = new ControlButton("Double Damage", rightline,  y + 130, g);
 			_cbs.add(_halfdelay);
 			_cbs.add(_doubledamage);
-
 		}
+
 		public void draw() {
 			g.setColor(Color.ORANGE);
 			g.draw(_back);
@@ -349,6 +339,7 @@ public class Console2 {
 			g.setColor(Color.BLACK);
 			g.setStroke(new BasicStroke(1));
 		}
+
 		public void removeButtons() {
 			_cbs.remove(_halfdelay);
 			_cbs.remove(_doubledamage);
@@ -375,8 +366,6 @@ public class Console2 {
 			_name = name;
 		}
 	}
-	
-	
 
 	public String contains(int x, int y, boolean click) {
 		for (ControlButton cb: _cbs) {
@@ -445,6 +434,4 @@ public class Console2 {
 	private boolean colorOutUpgrade(int i, AbstractTower t) {
 		return t.isUpgraded(i);
 	}
-	
-	
 }
